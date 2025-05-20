@@ -18,5 +18,8 @@ export interface Product {
 export interface Child {
     id: number;
     name: string;
+    parent_id : number;
+    products?:[]
   }
+  
   

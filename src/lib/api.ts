@@ -1,8 +1,39 @@
 import { Category } from "@/types/product.js";
 import Fetch from "./fetch";
-
+import { cookies } from "next/headers.js";
 const API_BACKEND = "http://localhost:3000";
 
+/***
+ *      _    _  _____ ______ _____   _____
+ *     | |  | |/ ____|  ____|  __ \ / ____|
+ *     | |  | | (___ | |__  | |__) | (___
+ *     | |  | |\___ \|  __| |  _  / \___ \
+ *     | |__| |____) | |____| | \ \ ____) |
+ *      \____/|_____/|______|_|  \_\_____/
+ */
+
+export async function loginUser(email: string, password: string) {
+  const res = await fetch(`${API_BACKEND}/users/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+    credentials: 'include', // très important pour accepter les cookies
+
+  });
+  if (!res.ok) throw new Error("Login failed");
+  const data = await res.json();
+  const response={ok:true}
+ return response
+}
+
+/***
+ *       _____       _______ ______ _____  ____  _____  _____ ______  _____
+ *      / ____|   /\|__   __|  ____/ ____|/ __ \|  __ \|_   _|  ____|/ ____|
+ *     | |       /  \  | |  | |__ | |  __| |  | | |__) | | | | |__  | (___
+ *     | |      / /\ \ | |  |  __|| | |_ | |  | |  _  /  | | |  __|  \___ \
+ *     | |____ / ____ \| |  | |___| |__| | |__| | | \ \ _| |_| |____ ____) |
+ *      \_____/_/    \_\_|  |______\_____|\____/|_|  \_\_____|______|_____/
+ */
   export async function getCategories(): Promise<Category[]> {
     const response=await Fetch({
        url: `${API_BACKEND}/categories`,
@@ -41,6 +72,22 @@ export async function getCategoryById(id: number) {
   return response
 }
 
+export async function getCategoryBySlug(slug: string,parentSlug:string) {
+
+  const cleanSlug=slug.toLowerCase().trim()
+  const cleanParentSlug=parentSlug?.toLowerCase().trim()
+  console.log('cleanParentSlug',cleanParentSlug)
+  const response=await Fetch({
+     url: `${API_BACKEND}/categories/slug/${cleanSlug}/${cleanParentSlug}`,
+     options: {
+       headers: {
+         // Authorization: `Bearer ${yourToken}`,
+       },
+     },
+   });
+   return response
+ }
+
 export function getProductsByCategory(id:number)
 {
     try {
@@ -56,5 +103,54 @@ export function getProductsByCategory(id:number)
     } catch (error) {
         
     }
-
 }
+
+export async function addCategorie({formData}:{formData:{name:string,description:string,parent_id?:number}}) {
+  const res = await fetch(`${API_BACKEND}/categories`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify( formData),
+    credentials: 'include', // très important pour accepter les cookies
+
+  });
+  if (!res.ok) throw new Error("Login failed");
+  const data = await res.json();
+  const response={ok:true}
+ return response
+}
+
+export async function updateCategorie({id,formData}:{id:number,formData:{name:string,parent_id:number}}) {
+  const res = await fetch(`${API_BACKEND}/categories/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify( formData),
+    credentials: 'include', // très important pour accepter les cookies
+
+  });
+  if (!res.ok) throw new Error("Login failed");
+  const data = await res.json();
+  const response={ok:true}
+ return response
+}
+
+
+
+/***
+ *      _____  _____   ____  _____  _    _  _____ _______ _____
+ *     |  __ \|  __ \ / __ \|  __ \| |  | |/ ____|__   __/ ____
+ *     | |__) | |__) | |  | | |  | | |  | | |       | | | (___
+ *     |  ___/|  _  /| |  | | |  | | |  | | |       | |  \___ \
+ *     | |    | | \ \| |__| | |__| | |__| | |____   | |  ____) |
+ *     |_|    |_|  \_\\____/|_____/ \____/ \_____|  |_| |_____/
+ */
+
+
+
+/***
+ *       ____  _____  _____  ______ _____   _____
+ *      / __ \|  __ \|  __ \|  ____|  __ \ / ____|
+ *     | |  | | |__) | |  | | |__  | |__) | (___
+ *     | |  | |  _  /| |  | |  __| |  _  / \___ \
+ *     | |__| | | \ \| |__| | |____| | \ \ ____) |
+ *      \____/|_|  \_\_____/|______|_|  \_\_____/
+ */

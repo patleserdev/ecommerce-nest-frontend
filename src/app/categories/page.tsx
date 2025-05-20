@@ -25,8 +25,6 @@ export default async function Categories() {
   return (
     <div className="p-2">
       <h1>E-commerce - Categories</h1>
-      <Nav />
-
       <div>
         <ul className="p-5">
           {mainCategories.map((parent) => (
