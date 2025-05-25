@@ -1,9 +1,6 @@
-import { getCategories } from "@/lib/api";
-import { Category, Child } from "@/types/product";
+import { getCategories, getProducts } from "@/lib/api";
 import { notFound } from "next/navigation.js";
-import Link from "next/link.js";
-import { MdAddCircle } from "react-icons/md";
-import Modal from "@/components/Modal";
+
 import DashboardClientWrapper from "@/components/Admin/DashboardClientWrapper";
 
 export default async function Dashboard() {
@@ -11,8 +8,11 @@ export default async function Dashboard() {
   const categories = await getCategories();
   if (!categories) return notFound();
 
+  const products = await getProducts();
+  if (!products) return notFound();
+
 
   return (
-   <DashboardClientWrapper categories={categories}/>
+   <DashboardClientWrapper categories={categories} products={products}/>
   );
 }

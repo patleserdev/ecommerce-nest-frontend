@@ -25,6 +25,7 @@ export default function Nav() {
     })();
   }, []);
 
+
   const structured = transformCategories(arbo);
 
   return (
@@ -55,7 +56,7 @@ export default function Nav() {
             onMouseEnter={() => setIsDropdownOpen(true)}
             onMouseLeave={() => setIsDropdownOpen(false)}
           >
-            <span className="cursor-pointer">Catégories</span>
+            <Link href="/categories"><span className="cursor-pointer">Catégories</span></Link>
 
             {/* Dropdown principal */}
             {isDropdownOpen && (
@@ -63,7 +64,7 @@ export default function Nav() {
                 {structured.map((cat) => (
                   <li key={cat.id} className="relative group capitalize">
                     <Link
-                      href={`/categories/${cat.name}`}
+                      href={`/categories/${cat.slug}`}
                       className="block px-4 py-2 hover:bg-gray-100 text-black capitalize"
                     >
                       {cat.name}

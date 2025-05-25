@@ -1,0 +1,262 @@
+"use client";
+import { useForm, useFieldArray } from "react-hook-form";
+import { ProductVariations } from "../../types/product";
+import { MdAddCircle } from "react-icons/md";
+/**
+ * {
+  "name": "T-shirt",
+  "description": "T-shirt en coton bio",
+  "price": 19.99,
+  "sku": "TSHIRT001",
+  "quantity": 100,
+  "category": 1,
+  "variations": [
+    {
+      "gender": "homme",
+      "size": "M",
+      "color": "noir",
+      "stock": 10
+    },
+    {
+      "gender": "femme",
+      "size": "S",
+      "color": "rouge",
+      "stock": 5
+    }
+  ]
+}
+ */
+
+type FormValues = {
+  name: String;
+  description: String;
+  price: Number;
+  sku: String;
+  //quantity:Number;
+  categoryId: Number;
+  variations?: ProductVariations[];
+};
+
+type Props = {
+  // facultatif
+  defaultValues?: FormValues;
+  onSubmit: (data: FormValues) => void;
+};
+
+export default function ProductForm({ defaultValues, onSubmit }: Props) {
+  const mergedDefaults: FormValues = {
+    name: defaultValues?.name ?? "",
+    description: defaultValues?.description ?? "",
+    price: defaultValues?.price ?? 0,
+    sku: defaultValues?.sku ?? "",
+    // quantity:defaultValues?.quantity ?? 0,
+    categoryId: defaultValues?.categoryId ?? 0,
+    variations: defaultValues?.variations ?? [{ gender: "", size: "", color: "", stock: 0 }],
+  };
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    control,
+    watch,
+    formState: { errors },
+  } = useForm<FormValues>({
+    defaultValues: mergedDefaults,
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "variations",
+  });
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div className="flex flex-col gap-2">
+        <label>Nom</label>
+        <input
+          type="text"
+          {...register("name", { required: true })}
+          className="w-full border p-2"
+        />
+        {errors.name && <p className="text-red-500">Nom requis</p>}
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label>Description</label>
+        <input
+          type="text"
+          {...register("description", { required: true })}
+          className="w-full border p-2"
+        />
+        {errors.description && (
+          <p className="text-red-500">Description requise</p>
+        )}
+      </div>
+      <div className="flex flex-row items-start justify-between gap-2">
+        <div className="flex flex-col gap-2 w-[50%]">
+          <label>Prix</label>
+          <input
+            type="number"
+            min={0}
+            {...register("price", { required: true })}
+            className="w-full border p-2"
+          />
+          {errors.price && <p className="text-red-500">Prix requise</p>}
+        </div>
+
+        <div className="flex flex-col gap-2 w-[50%]">
+          <label>SKU</label>
+          <input
+            type="text"
+            min={0}
+            {...register("sku", { required: true })}
+            className="w-full border p-2"
+          />
+          {errors.sku && <p className="text-red-500">SKU requis</p>}
+        </div>
+      </div>
+      {/* <div className="flex flex-col gap-2">
+        <label>Quantité</label>
+        <input
+          type="number"
+          {...register("quantity", { required: true })}
+          className="w-full border p-2"
+        />
+        {errors.price && <p className="text-red-500">Quantité requise</p>}
+      </div> */}
+
+      {fields.map((field, index) => (
+        <div
+          key={field.id}
+          className="border p-2 mb-1 flex flex-row items-center justify-between"
+        >
+          <i>Variation {index+1}</i>
+          <select
+            {...register(`variations.${index}.gender`, { required: true })}
+            className="bg-white text-black w-[20%] p-1"
+          >
+            <option value="">-- Genre --</option>
+            <option value="homme">Homme</option>
+            <option value="femme">Femme</option>
+            <option value="enfant">Enfant</option>
+          </select>
+          <div className="flex flex-row items-center justify-between w-[30%]">
+            <div className="flex flex-row gap-2">
+              <label className="flex flex-row items-center justify-center gap-1">
+                <input
+                  type="radio"
+                  value="XS"
+                  {...register(`variations.${index}.size`, { required: true })}
+                />
+                XS
+              </label>
+            </div>
+            <div>
+              <label className="flex flex-row items-center justify-center gap-1">
+                <input
+                  type="radio"
+                  value="S"
+                  {...register(`variations.${index}.size`, { required: true })}
+                />
+                S
+              </label>
+            </div>
+            <div>
+              <label className="flex flex-row items-center justify-center gap-1">
+                <input
+                  type="radio"
+                  value="M"
+                  {...register(`variations.${index}.size`, { required: true })}
+                />
+                M
+              </label>
+            </div>
+            <div>
+              <label className="flex flex-row items-center justify-center gap-1">
+                <input
+                  type="radio"
+                  value="L"
+                  {...register(`variations.${index}.size`, { required: true })}
+                />
+                L
+              </label>
+            </div>
+            <div>
+              <label className="flex flex-row items-center justify-center gap-1">
+                <input
+                  type="radio"
+                  value="XL"
+                  {...register(`variations.${index}.size`, { required: true })}
+                />
+                XL
+              </label>
+            </div>
+            <div>
+              <label className="flex flex-row items-center justify-center gap-1">
+                <input
+                  type="radio"
+                  value="XXL"
+                  {...register(`variations.${index}.size`, { required: true })}
+                />
+                XXL
+              </label>
+            </div>
+          </div>
+          <div className="flex flex-col items-center justify-center">
+            <label>Couleur</label>
+            <input
+              {...register(`variations.${index}.color`, { required: true })}
+              type="color"
+              placeholder="Couleur"
+              className="cursor-pointer h-10"
+            />
+          </div>
+
+          <div className="flex flex-col items-center justify-center">
+            <label>Quantité</label>
+            <input
+              className="border p-1"
+              type="number"
+              {...register(`variations.${index}.stock`, { required: true })}
+              placeholder="Stock"
+            />
+          </div>
+
+          <button type="button" onClick={() => remove(index)}>
+            Supprimer
+          </button>
+        </div>
+      ))}
+
+      <div className="py-2">
+        <button
+          className="flex flex-row gap-1"
+          type="button"
+          onClick={() =>
+            append({
+              gender: "",
+              size: "",
+              color: "",
+              stock: 0,
+            })
+          }
+        >
+          <MdAddCircle size={24} /> Ajouter une variation
+        </button>
+      </div>
+
+      <input
+        type="hidden"
+        {...register("categoryId", { valueAsNumber: true })}
+      />
+
+      <button
+        type="submit"
+        className="bg-blue-600 text-white px-4 py-2 rounded"
+      >
+        Valider
+      </button>
+    </form>
+  );
+}

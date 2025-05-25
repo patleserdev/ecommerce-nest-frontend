@@ -1,18 +1,13 @@
-type Category = {
-    id: number;
-    name: string;
-    parent_id: number;
-    products: any[];
-  };
-  
-  type CategoryWithChildren = Category & { children?: Category[] };
-  
+import { Category,CategoryWithChildren } from "@/types/product";
+   
   export function transformCategories(categories: Category[]): CategoryWithChildren[] {
     const categoryMap: Record<number, CategoryWithChildren> = {};
     const result: CategoryWithChildren[] = [];
   
     // Initialise les catégories avec un tableau vide pour les enfants
     categories.forEach((cat) => {
+     
+
       categoryMap[cat.id] = { ...cat, children: [] };
     });
   
@@ -37,7 +32,11 @@ type Category = {
   
     // Trie les parents aussi
     result.sort((a, b) => a.name.localeCompare(b.name));
-  
+
     return result;
   }
   
+  export function toFirstLetterUpper(str: string): string {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }

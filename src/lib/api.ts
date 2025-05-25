@@ -1,4 +1,4 @@
-import { Category } from "@/types/product.js";
+import { Category, Product } from "@/types/product.js";
 import Fetch from "./fetch";
 import { cookies } from "next/headers.js";
 const API_BACKEND = "http://localhost:3000";
@@ -72,13 +72,30 @@ export async function getCategoryById(id: number) {
   return response
 }
 
+export async function getCategoriesByParentId(id: number) {
+  const response=await Fetch({
+     url: `${API_BACKEND}/categories/sub/${id}`,
+     options: {
+       headers: {
+         // Authorization: `Bearer ${yourToken}`,
+       },
+     },
+   });
+   return response
+ }
+
 export async function getCategoryBySlug(slug: string,parentSlug:string) {
 
   const cleanSlug=slug.toLowerCase().trim()
   const cleanParentSlug=parentSlug?.toLowerCase().trim()
-  console.log('cleanParentSlug',cleanParentSlug)
+  let parent=""
+  if(cleanParentSlug != "")
+  {
+    parent=`?parent=${cleanParentSlug}`
+  }
+  // console.log('cleanSlug',cleanSlug)
   const response=await Fetch({
-     url: `${API_BACKEND}/categories/slug/${cleanSlug}/${cleanParentSlug}`,
+     url: `${API_BACKEND}/categories/slug/${cleanSlug}${parent}`,
      options: {
        headers: {
          // Authorization: `Bearer ${yourToken}`,
@@ -105,7 +122,24 @@ export function getProductsByCategory(id:number)
     }
 }
 
-export async function addCategorie({formData}:{formData:{name:string,description:string,parent_id?:number}}) {
+export function getProductBySlug(slug:string)
+{
+    try {
+        const response= Fetch({
+            url: `${API_BACKEND}/products/slug/${slug}`,
+            options: {
+              headers: {
+                // Authorization: `Bearer ${yourToken}`,
+              },
+            },
+          });
+          return response 
+    } catch (error) {
+        
+    }
+}
+
+export async function addCategorie({formData}:{formData:{name:String,parent_id?:Number}}) {
   const res = await fetch(`${API_BACKEND}/categories`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -119,7 +153,7 @@ export async function addCategorie({formData}:{formData:{name:string,description
  return response
 }
 
-export async function updateCategorie({id,formData}:{id:number,formData:{name:string,parent_id:number}}) {
+export async function updateCategorie({id,formData}:{id:Number,formData:{name:String,parent_id?:Number}}) {
   const res = await fetch(`${API_BACKEND}/categories/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -129,6 +163,19 @@ export async function updateCategorie({id,formData}:{id:number,formData:{name:st
   });
   if (!res.ok) throw new Error("Login failed");
   const data = await res.json();
+  const response={ok:true}
+ return response
+}
+
+export async function destroyCategorie(id:Number) {
+  const res = await fetch(`${API_BACKEND}/categories/${id}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include', // très important pour accepter les cookies
+
+  });
+  if (!res.ok) throw new Error("Login failed");
+  // const data = await res.json();
   const response={ok:true}
  return response
 }
@@ -144,7 +191,58 @@ export async function updateCategorie({id,formData}:{id:number,formData:{name:st
  *     |_|    |_|  \_\\____/|_____/ \____/ \_____|  |_| |_____/
  */
 
+export async function getProducts(): Promise<Product[]> {
+  const response=await Fetch({
+     url: `${API_BACKEND}/products`,
+     options: {
+       headers: {
+         // Authorization: `Bearer ${yourToken}`,
+       },
+     },
+   });
+   return response
+ }
 
+ export async function addProduct({formData}:{formData:Product}) {
+  const res = await fetch(`${API_BACKEND}/products`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify( formData),
+    credentials: 'include', // très important pour accepter les cookies
+
+  });
+  if (!res.ok) throw new Error("Login failed");
+  const data = await res.json();
+  const response={ok:true}
+ return response
+}
+
+export async function updateProduct({id,formData}:{id:Number,formData:Product}) {
+  const res = await fetch(`${API_BACKEND}/products/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify( formData),
+    credentials: 'include', // très important pour accepter les cookies
+
+  });
+  if (!res.ok) throw new Error("Login failed");
+  const data = await res.json();
+  const response={ok:true}
+ return response
+}
+
+export async function destroyProduct(id:Number) {
+  const res = await fetch(`${API_BACKEND}/products/${id}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include', // très important pour accepter les cookies
+
+  });
+  if (!res.ok) throw new Error("Login failed");
+  // const data = await res.json();
+  const response={ok:true}
+ return response
+}
 
 /***
  *       ____  _____  _____  ______ _____   _____

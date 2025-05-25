@@ -8,19 +8,17 @@ type FormValues = {
 };
 
 type Props = {
-  parentId?: number; // facultatif
   defaultValues?: FormValues;
   onSubmit: (data: FormValues) => void;
 };
 
-export default function AddCategoryForm({
-  parentId,
+export default function CategoryForm({
   defaultValues,
   onSubmit,
 }: Props) {
   const mergedDefaults: FormValues = {
     name: defaultValues?.name ?? "",
-    parent_id: defaultValues?.parent_id ?? parentId ?? 0,
+    parent_id: defaultValues?.parent_id ?? 0,
   };
 
   const {
@@ -31,13 +29,6 @@ export default function AddCategoryForm({
   } = useForm<FormValues>({
     defaultValues: mergedDefaults,
   });
-
-  useEffect(() => {
-    if (parentId !== undefined && !defaultValues?.parent_id) {
-      setValue("parent_id", parentId);
-      console.log("🔄 set parent_id to:", parentId);
-    }
-  }, [parentId, defaultValues, setValue]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
