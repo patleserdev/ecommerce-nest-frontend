@@ -9,11 +9,11 @@ export default function SizeSelector({ product }: { product: Product }) {
   const cart = useSelector((state: RootState) => state.cart.items);
 
   const [selected, setSelected] = useState<{
-    productId: Number;
-    variationId: Number;
-    gender: String;
-    size: String;
-    quantity:Number;
+    product: Product;
+    variation: ProductVariations;
+    gender: string;
+    size: string;
+    quantity:number;
   } | null>(null);
 
   const sizes = [
@@ -27,19 +27,20 @@ export default function SizeSelector({ product }: { product: Product }) {
   const genders = ["homme", "femme", "enfant"];
 
   const handleToCart = () => {
-    console.log("to cart");
-    if (selected?.productId && selected?.variationId) {
+    console.log("to cart",selected);
+    if (selected?.product.id && selected?.variation.id) {
       dispatch(
         addToCart({
-          productId: selected.productId,
-          variationId: selected.variationId,
-          price: 10,
+          product: selected.product,
+          variation: selected.variation,
+          price: product.price,
+          quantity: selected.quantity,
         })
       );
     }
   };
 
-  console.log(selected);
+
   return (
     <>
       {genders.map((gender: string) => {
@@ -78,11 +79,11 @@ export default function SizeSelector({ product }: { product: Product }) {
                   <div
                     key={matchedVariation?.id ?? `${gender}-${size.id}`}
                     title={isAvailable ? "Disponible" : "Non disponible"}
-                    className={`border px-5 rounded-md transition-all shadow-sm
+                    className={`border px-5 rounded-md transition-all shadow-md
             ${
               isAvailable
-                ? `hover:bg-[#ff00ff] hover:font-bold shadow-[#ff00ff] cursor-pointer  ${
-                    isSelected ? "border-[#ff00ff] font-bold" : ""
+                ? `hover:bg-[#000000] hover:text-[#ffffff] font-bold shadow-[#b4b1c0] cursor-pointer  ${
+                    isSelected ? "border-[#82bbea] font-bold" : ""
                   }`
                 : "opacity-40 cursor-not-allowed pointer-events-none"
             }
@@ -90,9 +91,9 @@ export default function SizeSelector({ product }: { product: Product }) {
                     onClick={() =>
                       isAvailable && product.id && matchedVariation?.id
                         ? setSelected({
-                            productId: product.id,
-                            variationId: matchedVariation?.id,
-                            quantity:selected?.quantity,
+                            product: product,
+                            variation: matchedVariation,
+                            quantity:selected?.quantity || 1,
                             gender,
                             size: size.value,
                           })
@@ -115,12 +116,25 @@ export default function SizeSelector({ product }: { product: Product }) {
 
       <div className="flex flex-col gap-2 w-50 font-bold">
         <label>Quantité</label>
-        <input className="border p-1" type="number" min={0} value={selected?.quantity}/>
+        <input className="border p-1" 
+        type="number" 
+        min={0} 
+        value={selected?.quantity ?? 0}
+        onChange={(e) => {
+          const newQuantity = parseInt(e.target.value, 10);
+    
+          setSelected((prev) =>
+            prev
+              ? { ...prev, quantity: isNaN(newQuantity) ? 0 : newQuantity }
+              : null
+          );
+        }}
+        />
       </div>
 
       <div className="flex flex-row items-center justify-center md:justify-start mt-5">
         <button
-          className={`border px-8 p-2 hover:bg-white hover:text-black transition-all cursor-pointer`}
+          className={`border px-8 p-2 hover:bg-[var(--foreground)] hover:text-[var(--background)] transition-all cursor-pointer`}
           style={selected ? { opacity: 1 } : { opacity: 0.5 }}
           disabled={selected ? false : true}
           onClick={() => handleToCart()}

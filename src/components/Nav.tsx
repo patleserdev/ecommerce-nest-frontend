@@ -6,6 +6,8 @@ import { getCategories } from "@/lib/api";
 import { Category } from "@/types/product.js";
 import { transformCategories } from "@/lib/utils";
 import { MdLogin } from "react-icons/md";
+import ThemeToggle from "./ThemeToggler";
+import CartIcon from "./cart/CartIcon";
 
 /**
  * Générer l'arborescence des catégories
@@ -45,7 +47,11 @@ export default function Nav() {
         
       </div> */}
       <div className="border">
-        <ul className="flex gap-5 mr-5">
+        <ul className="flex gap-5 ml-5 mr-5">
+        <li className="relative p-2">
+            <Link href="/">Home</Link>
+          </li>
+
           <li className="relative p-2">
             <Link href="/products">Produits</Link>
           </li>
@@ -95,10 +101,13 @@ export default function Nav() {
             <Link href="/orders">Commandes</Link>
           </li>
 
-          <li className="relative p-2"><Link href="/admin"><MdLogin size={24}/></Link></li>
+          <li className="relative p-2"><Link href="/admin" title="Se connecter"><MdLogin size={24}/></Link></li>
+         
 
         </ul>
       </div>
+<ThemeToggle/>
+<CartIcon/>
     </div>
   );
 }

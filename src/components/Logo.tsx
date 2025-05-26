@@ -10,11 +10,11 @@ export default function logo(categorie: string) {
       break;
 
     case "jeans-pantalons":
-      icon = "/icons/jeans - pantalons.png";
+      icon = "/icons/jeans-pantalons.png";
       break;
 
     case "t-shirts":
-      icon = "/icons/tshirt.png";
+      icon = "/icons/t-shirts.png";
       break;
 
     case "chaussures":
@@ -22,11 +22,11 @@ export default function logo(categorie: string) {
       break;
 
     case "sweats-pulls":
-      icon = "/icons/sweats - pulls.png";
+      icon = "/icons/sweats-pulls.png";
       break;
 
     case "blousons-vestes":
-      icon = "/icons/blousons - vestes.png";
+      icon = "/icons/blousons-vestes.png";
       break;
 
     case "chemises":
@@ -50,15 +50,15 @@ export default function logo(categorie: string) {
       break;
 
     case "robes-jupes":
-      icon = "/icons/robes - jupes.png";
+      icon = "/icons/robes-jupes.png";
       break;
 
     case "shorts-bermudas":
-      icon = "/icons/shorts - bermudas.png";
+      icon = "/icons/shorts-bermudas.png";
       break;
 
     case "sous-vetements":
-      icon = "/icons/sous - vetements.png";
+      icon = "/icons/sous-vetements.png";
       break;
 
     default:

@@ -33,7 +33,7 @@ export default function CategoryForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="flex flex-col gap-4">
-        <label>Nom</label>
+        <label >Nom</label>
         <input
           type="text"
           {...register("name", { required: true })}
@@ -46,7 +46,7 @@ export default function CategoryForm({
 
       <button
         type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded"
+        className="bg-[var(--background)] text-[var(--foreground)] hover:text-[var(--background)] hover:bg-[var(--foreground)] hover:border-[var(--background)] border px-4 py-2 rounded transition-all"
       >
         Valider
       </button>

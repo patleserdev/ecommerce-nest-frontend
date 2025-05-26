@@ -10,6 +10,7 @@ import {
   getCategoriesByParent,
   getCategoryBySlug,
 } from "@/lib/api";
+import DisplayIcon from "@/components/DisplayIcon";
 
 type Props = {
   params: {
@@ -90,13 +91,7 @@ export default async function CategorieSlug({ params }: Props) {
   return (
     <div className="p-6 border">
       <h1 className="text-3xl font-bold mb-4 capitalize underline flex justify-start align-center gap-2">
-        <Image
-          style={{ filter: "invert(1)" }}
-          src={icon}
-          alt="logo"
-          height={50}
-          width={50}
-        />
+        <DisplayIcon icon={icon} size={50}/>
         {currentCategory.name} {parentSlug}
       </h1>
 

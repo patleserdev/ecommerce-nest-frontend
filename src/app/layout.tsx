@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Lexend } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Providers from "@/redux/providers/Providers";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,12 +31,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${lexendRegular.variable} antialiased`}>
-        <Providers>
-          <Nav />
-          {children}
-        </Providers>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${lexendRegular.variable} antialiased `}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Providers>
+            <Nav />
+            {children}
+          </Providers>
+        </ThemeProvider>
       </body>
     </html>
   );

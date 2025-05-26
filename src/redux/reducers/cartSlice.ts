@@ -1,11 +1,12 @@
 // src/redux/cartSlice.ts
+import { Product, ProductVariations } from '@/types/product.js';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface CartItem {
-  productId: Number;
-  variationId: Number;
-  price: Number;
-  quantity: Number;
+  product: Product;
+  variation: ProductVariations;
+  price: number;
+  quantity: number;
 }
 
 interface CartState {
@@ -21,26 +22,46 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     // Ajouter ou augmenter quantité
-    addToCart: (state, action: PayloadAction<Omit<CartItem, 'quantity'> & { quantity?: number }>) => {
-      const existingItem = state.items.find(item => item.productId === action.payload.productId);
+    addToCart: (
+      state,
+      action: PayloadAction<Omit<CartItem, 'quantity'> & { quantity?: number }>
+    ) => {
+      const existingItem = state.items.find(
+        item =>
+          item.product.id === action.payload.product.id &&
+          item.variation.id === action.payload.variation.id
+      );
+    
       if (existingItem) {
         existingItem.quantity += action.payload.quantity || 1;
       } else {
-        state.items.push({ ...action.payload, quantity: action.payload.quantity || 1 });
+        state.items.push({
+          ...action.payload,
+          quantity: action.payload.quantity || 1,
+        });
       }
     },
+    
 
     // Changer quantité d’un item
-    updateQuantity: (state, action: PayloadAction<{ productId: number; quantity: number }>) => {
-      const item = state.items.find(item => item.productId === action.payload.productId);
+    updateQuantity: (state, action: PayloadAction<{ productId: number;variationId: number; quantity: number }>) => {
+      const item = state.items.find(item => item.product.id === action.payload.productId && item.variation.id === action.payload.variationId);
       if (item) {
-        item.quantity = action.payload.quantity;
+        if (action.payload.quantity <= 0) {
+          state.items = state.items.filter(
+            (i) =>
+              !(i.product.id === action.payload.productId &&
+                i.variation.id === action.payload.variationId)
+          );
+        } else {
+          item.quantity = action.payload.quantity;
+        }
       }
     },
 
     // Supprimer un item
-    removeFromCart: (state, action: PayloadAction<number>) => {
-      state.items = state.items.filter(item => item.productId !== action.payload);
+    removeFromCart: (state, action: PayloadAction<{ productId: number;variationId: number}>) => {
+      state.items = state.items.filter(item => item.product.id !== action.payload.productId && item.variation.id !== action.payload.variationId);
     },
 
     // Vider le panier

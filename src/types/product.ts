@@ -10,21 +10,21 @@ export type CategoryWithChildren = Category & { children?: Category[] };
 
 export type ProductVariations = {
   id: number;
-  gender: String;
-  size: String;
-  color: String;
-  stock: Number;
+  gender: string;
+  size: string;
+  color: string;
+  stock: number;
   // quantity:Number
 };
 
 export interface Product {
-  description: String;
-  id?: Number;
-  name: String;
-  slug: String;
-  price: Number;
+  description: string;
+  id?: number;
+  name: string;
+  slug: string;
+  price: number;
   // quantity: Number;
-  sku: String;
+  sku: string;
   category: Category;
   variations: ProductVariations[];
 }
@@ -33,5 +33,6 @@ export interface Child {
   id: number;
   name: string;
   parent_id?: number;
+  slug:string;
   products?: [];
 }

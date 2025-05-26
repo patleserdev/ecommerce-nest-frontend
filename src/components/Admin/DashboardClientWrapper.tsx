@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { MdAddCircle } from "react-icons/md";
 import Modal from "@/components/Modal";
@@ -45,6 +44,7 @@ export default function DashboardClientWrapper({
       acc[cat.parent_id].push({
         id: cat.id,
         name: cat.name,
+        slug:cat.slug,
         parent_id: cat.parent_id,
         products: cat.products,
       });
@@ -66,8 +66,8 @@ export default function DashboardClientWrapper({
   };
 
   const handleAddCategory = async (datas: {
-    name: String;
-    parent_id?: Number;
+    name: string;
+    parent_id?: number;
   }) => {
     try {
       await addCategorie({ formData: datas });
@@ -97,7 +97,7 @@ export default function DashboardClientWrapper({
     }
   };
 
-  const handleToDestroyCategory = (id: Number) => {
+  const handleToDestroyCategory = (id: number) => {
     var result = confirm(`Détruire irrémédiablement la catégorie ${id}`);
     if (result) {
       try {
@@ -134,7 +134,7 @@ export default function DashboardClientWrapper({
     setIsModalOpen(true);
   };
 
-  const handleUpdateProduct = async (product_id: Number, datas: Product) => {
+  const handleUpdateProduct = async (product_id: number, datas: Product) => {
     try {
       await updateProduct({ id: product_id, formData: datas });
       console.log("Produit modifiée !");
@@ -147,7 +147,7 @@ export default function DashboardClientWrapper({
     }
   };
 
-  const handleToDestroyProduct = (id: Number) => {
+  const handleToDestroyProduct = (id: number) => {
     var result = confirm(`Détruire irrémédiablement le produit ${id}`);
     if (result) {
       try {
@@ -162,6 +162,21 @@ export default function DashboardClientWrapper({
   return (
     <main className="relative">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
+      <div className="border p-3">
+      <span className="flex items-center gap-2">
+            <h2 className="text-lg font-bold underline">
+              Marques 
+              {/* ({categories.length}) */}
+            </h2>
+
+            <div
+              className="cursor-pointer"
+              onClick={() => handleOpenAddCategory()}
+            >
+              <MdAddCircle size={24} />
+            </div>
+          </span>
+      </div>
         <div className="border p-3">
           <span className="flex items-center gap-2">
             <h2 className="text-lg font-bold underline">
@@ -430,7 +445,7 @@ export default function DashboardClientWrapper({
             setParent(null);
           }}
         >
-          <h2 className="text-white mb-2">
+          <h2 className="mb-2">
             <span>
               {mode === "categories" && (
                 <>
@@ -485,7 +500,7 @@ export default function DashboardClientWrapper({
                   ...data,
                 };
                 console.log("Produit à ajouter :", safeData);
-                isEditProduct
+                isEditProduct?.id && safeData
                   ? handleUpdateProduct(isEditProduct.id, safeData)
                   : handleAddProduct(safeData);
                 setIsEditProduct(null);

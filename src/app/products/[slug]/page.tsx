@@ -7,46 +7,7 @@ type Props = {
 };
 import { toFirstLetterUpper } from "@/lib/utils";
 import Image from "next/image.js";
-import SizeSelector from "@/components/SizeSelector";
-// id: 9,
-//   name: 'ceinture en acajou de poulet',
-//   slug: 'ceint-acajou',
-//   description: "ceinture faite d'un magnifique acajou de poulet ",
-//   price: '45',
-//   sku: 'test-1-1',
-//   quantity: 0,
-//   category: Category {
-//     id: 32,
-//     name: 'accessoires',
-//     slug: 'accessoires',
-//     parent_id: 0,
-//     products: undefined
-//   },
-//   variations: [
-//     ProductVariation {
-//       id: 1,
-//       gender: 'homme',
-//       size: 'L',
-//       color: '#f00000',
-//       stock: 0,
-//       product: undefined
-//     },
-//     ProductVariation {
-//       id: 2,
-//       gender: 'homme',
-//       size: '',
-//       color: '#442c2c',
-//       stock: 0,
-//       product: undefined
-//     },
-//     ProductVariation {
-//       id: 3,
-//       gender: 'femme',
-//       size: 'XL',
-//       color: '#bc988f',
-//       stock: 14454,
-//       product: undefined
-//     }
+import SizeSelector from "@/components/products/SizeSelector";
 
 export default async function Products({ params }: Props) {
   const slug = params.slug;
@@ -56,7 +17,7 @@ export default async function Products({ params }: Props) {
   const product = await getProductBySlug(slug);
 
   return (
-    <div className="mt-5 p-5 flex flex-col-reverse gap-5 md:flex-row  justify-between">
+    <div className="mt-5 md:mx-10 p-5 flex flex-col-reverse gap-5 md:flex-row justify-between items-center">
       <div className=" flex flex-col md:flex-col gap-5">
         <h1 className="text-5xl capitalize underline">{product.name}</h1>
         <h2>

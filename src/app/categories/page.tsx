@@ -5,6 +5,8 @@ import { Category, Child } from "@/types/product.js";
 import Link from "next/link.js";
 import Image from "next/image.js";
 import logo from "@/components/Logo";
+import DisplayIcon from "@/components/DisplayIcon";
+
 export default async function Categories() {
   const categories = await getCategories();
   if (!categories) return notFound();
@@ -35,16 +37,11 @@ export default async function Categories() {
               <div key={parent.id} className="p-2 uppercase border w-80">
                 <Link
                   className="text-2xl font-bold"
-                  href={`categories/${parent.name.replaceAll(" ","_")}`}
+                  href={`categories/${parent.slug}`}
                 >
                   <div className="flex flex-col items-center justify-center">
-                    <Image
-                      src={`/icons/${parent.name}.png`}
-                      alt="logo"
-                      width={50}
-                      height={50}
-                      style={{ filter: "invert(1)" }}
-                    />
+                    <DisplayIcon icon={`/icons/${parent.slug}.png`}/>
+             
                     {parent.name}
                   </div>
                 </Link>

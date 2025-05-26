@@ -28,12 +28,13 @@ import { MdAddCircle } from "react-icons/md";
  */
 
 type FormValues = {
-  name: String;
-  description: String;
-  price: Number;
-  sku: String;
+  id?: number;
+  name: string;
+  description: string;
+  price: number;
+  sku: string;
   //quantity:Number;
-  categoryId: Number;
+  categoryId: number;
   variations?: ProductVariations[];
 };
 
@@ -51,7 +52,9 @@ export default function ProductForm({ defaultValues, onSubmit }: Props) {
     sku: defaultValues?.sku ?? "",
     // quantity:defaultValues?.quantity ?? 0,
     categoryId: defaultValues?.categoryId ?? 0,
-    variations: defaultValues?.variations ?? [{ gender: "", size: "", color: "", stock: 0 }],
+    variations: defaultValues?.variations ?? [
+      { id: 0, gender: "", size: "", color: "", stock: 0 },
+    ],
   };
 
   const {
@@ -72,7 +75,7 @@ export default function ProductForm({ defaultValues, onSubmit }: Props) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 ">
         <label>Nom</label>
         <input
           type="text"
@@ -131,10 +134,10 @@ export default function ProductForm({ defaultValues, onSubmit }: Props) {
           key={field.id}
           className="border p-2 mb-1 flex flex-row items-center justify-between"
         >
-          <i>Variation {index+1}</i>
+          <i>Variation {index + 1}</i>
           <select
             {...register(`variations.${index}.gender`, { required: true })}
-            className="bg-white text-black w-[20%] p-1"
+            className="border w-[20%] p-1"
           >
             <option value="">-- Genre --</option>
             <option value="homme">Homme</option>
@@ -235,6 +238,7 @@ export default function ProductForm({ defaultValues, onSubmit }: Props) {
           type="button"
           onClick={() =>
             append({
+              id: 0,
               gender: "",
               size: "",
               color: "",
@@ -253,7 +257,7 @@ export default function ProductForm({ defaultValues, onSubmit }: Props) {
 
       <button
         type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded"
+        className="bg-[var(--background)] text-[var(--foreground)] hover:text-[var(--background)] hover:bg-[var(--foreground)] hover:border-[var(--background)] border px-4 py-2 rounded transition-all"
       >
         Valider
       </button>

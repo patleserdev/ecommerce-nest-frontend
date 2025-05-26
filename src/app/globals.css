@@ -3,21 +3,32 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --font-lexend: var(--font-lexend);
 }
 
-@theme inline {
+/* @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-lexend: var(--font-lexend);
-}
+} */
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #ffffff;
+    --foreground: #171717;
+  
+    --font-sans: 'Geist Sans', sans-serif;
+    --font-mono: 'Geist Mono', monospace;
+    --font-lexend: 'Lexend', sans-serif;
   }
+} */
+
+/* Mode sombre si classe `.dark` sur <html> */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
 }
 
 body {
