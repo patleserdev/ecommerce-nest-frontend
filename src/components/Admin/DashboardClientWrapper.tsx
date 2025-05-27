@@ -110,6 +110,8 @@ export default function DashboardClientWrapper({
   };
 
   const handleOpenAddProduct = (category: Category) => {
+    setIsEditProduct(null)
+    setIsEditCategory(null)
     setMode("products");
     setIsModalOpen(true);
     setProductCategory(category);

@@ -2,30 +2,9 @@
 import { useForm, useFieldArray } from "react-hook-form";
 import { ProductVariations } from "../../types/product";
 import { MdAddCircle } from "react-icons/md";
-/**
- * {
-  "name": "T-shirt",
-  "description": "T-shirt en coton bio",
-  "price": 19.99,
-  "sku": "TSHIRT001",
-  "quantity": 100,
-  "category": 1,
-  "variations": [
-    {
-      "gender": "homme",
-      "size": "M",
-      "color": "noir",
-      "stock": 10
-    },
-    {
-      "gender": "femme",
-      "size": "S",
-      "color": "rouge",
-      "stock": 5
-    }
-  ]
-}
- */
+import { useState } from "react";
+
+const sizes = ["XS", "S", "M", "L", "XL", "XXL", "Unique"];
 
 type FormValues = {
   id?: number;
@@ -56,6 +35,8 @@ export default function ProductForm({ defaultValues, onSubmit }: Props) {
       { id: 0, gender: "", size: "", color: "", stock: 0 },
     ],
   };
+
+  const [isUnisex, setIsUnisex] = useState(false);
 
   const {
     register,
@@ -104,6 +85,7 @@ export default function ProductForm({ defaultValues, onSubmit }: Props) {
             min={0}
             {...register("price", { required: true })}
             className="w-full border p-2"
+            step=".01"
           />
           {errors.price && <p className="text-red-500">Prix requise</p>}
         </div>
@@ -134,78 +116,43 @@ export default function ProductForm({ defaultValues, onSubmit }: Props) {
           key={field.id}
           className="border p-2 mb-1 flex flex-row items-center justify-between"
         >
-          <i>Variation {index + 1}</i>
+          <i>Var {index + 1}</i>
+          <div className="flex flex-col w-[20%]">
           <select
             {...register(`variations.${index}.gender`, { required: true })}
-            className="border w-[20%] p-1"
+            className="border p-1"
+            onChange={(e) => setIsUnisex(e.target.value === "unisexe")}
           >
             <option value="">-- Genre --</option>
+            <option value="unisexe">Unisexe</option>
             <option value="homme">Homme</option>
             <option value="femme">Femme</option>
             <option value="enfant">Enfant</option>
           </select>
-          <div className="flex flex-row items-center justify-between w-[30%]">
-            <div className="flex flex-row gap-2">
-              <label className="flex flex-row items-center justify-center gap-1">
-                <input
-                  type="radio"
-                  value="XS"
-                  {...register(`variations.${index}.size`, { required: true })}
-                />
-                XS
-              </label>
-            </div>
-            <div>
-              <label className="flex flex-row items-center justify-center gap-1">
-                <input
-                  type="radio"
-                  value="S"
-                  {...register(`variations.${index}.size`, { required: true })}
-                />
-                S
-              </label>
-            </div>
-            <div>
-              <label className="flex flex-row items-center justify-center gap-1">
-                <input
-                  type="radio"
-                  value="M"
-                  {...register(`variations.${index}.size`, { required: true })}
-                />
-                M
-              </label>
-            </div>
-            <div>
-              <label className="flex flex-row items-center justify-center gap-1">
-                <input
-                  type="radio"
-                  value="L"
-                  {...register(`variations.${index}.size`, { required: true })}
-                />
-                L
-              </label>
-            </div>
-            <div>
-              <label className="flex flex-row items-center justify-center gap-1">
-                <input
-                  type="radio"
-                  value="XL"
-                  {...register(`variations.${index}.size`, { required: true })}
-                />
-                XL
-              </label>
-            </div>
-            <div>
-              <label className="flex flex-row items-center justify-center gap-1">
-                <input
-                  type="radio"
-                  value="XXL"
-                  {...register(`variations.${index}.size`, { required: true })}
-                />
-                XXL
-              </label>
-            </div>
+          {errors.variations?.[index]?.gender && (
+            <p className="text-red-500 text-sm mt-1">Genre requis</p>
+          )}
           </div>
+
+          <div className="flex flex-row items-center justify-between w-[30%]">
+            {!isUnisex &&
+              sizes.map((size) => (
+                <label
+                  key={size}
+                  className="flex flex-row items-center justify-center gap-1"
+                >
+                  <input
+                    type="radio"
+                    value={size}
+                    {...register(`variations.${index}.size`, {
+                      required: true,
+                    })}
+                  />
+                  {size}
+                </label>
+              ))}
+          </div>
+
           <div className="flex flex-col items-center justify-center">
             <label>Couleur</label>
             <input

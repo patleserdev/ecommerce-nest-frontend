@@ -46,6 +46,14 @@ export default function CartIcon() {
     variationId: number,
     quantity: number
   ) => {
+    console.log('quantity',quantity)
+    if(quantity == 1 )
+    {
+      const confirmDelete=confirm("Voulez-vous vraiment supprimer le produit du panier ?")
+      if (!confirmDelete) return
+
+    }
+
     dispatch(
       updateQuantity({
         productId: productId,

@@ -27,7 +27,6 @@ export default function SizeSelector({ product }: { product: Product }) {
   const genders = ["homme", "femme", "enfant"];
 
   const handleToCart = () => {
-    console.log("to cart",selected);
     if (selected?.product.id && selected?.variation.id) {
       dispatch(
         addToCart({
@@ -37,6 +36,7 @@ export default function SizeSelector({ product }: { product: Product }) {
           quantity: selected.quantity,
         })
       );
+      setSelected(null)
     }
   };
 
