@@ -1,6 +1,6 @@
 "use client";
 import { useForm, useFieldArray } from "react-hook-form";
-import { ProductVariations } from "../../types/product";
+import { Brand, ProductVariations } from "../../types/product";
 import { MdAddCircle } from "react-icons/md";
 import { useState } from "react";
 
@@ -15,15 +15,21 @@ type FormValues = {
   //quantity:Number;
   categoryId: number;
   variations?: ProductVariations[];
+  brandId: number;
 };
 
 type Props = {
   // facultatif
   defaultValues?: FormValues;
   onSubmit: (data: FormValues) => void;
+  brands: Brand[];
 };
 
-export default function ProductForm({ defaultValues, onSubmit }: Props) {
+export default function ProductForm({
+  defaultValues,
+  onSubmit,
+  brands,
+}: Props) {
   const mergedDefaults: FormValues = {
     name: defaultValues?.name ?? "",
     description: defaultValues?.description ?? "",
@@ -34,6 +40,7 @@ export default function ProductForm({ defaultValues, onSubmit }: Props) {
     variations: defaultValues?.variations ?? [
       { id: 0, gender: "", size: "", color: "", stock: 0 },
     ],
+    brandId: defaultValues?.brandId ?? 0,
   };
 
   const [isUnisex, setIsUnisex] = useState(false);
@@ -56,6 +63,19 @@ export default function ProductForm({ defaultValues, onSubmit }: Props) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div className="flex flex-col gap-2 ">
+        <select
+          {...register(`brandId`, { required: true,valueAsNumber:true })}
+          className="border p-1 capitalize"
+        >
+          <option value="">-- Marque --</option>
+          {brands.map((brand) => (
+            <option key={brand.id} value={brand.id}>
+              {brand.name}
+            </option>
+          ))}
+        </select>
+      </div>
       <div className="flex flex-col gap-2 ">
         <label>Nom</label>
         <input
@@ -118,20 +138,20 @@ export default function ProductForm({ defaultValues, onSubmit }: Props) {
         >
           <i>Var {index + 1}</i>
           <div className="flex flex-col w-[20%]">
-          <select
-            {...register(`variations.${index}.gender`, { required: true })}
-            className="border p-1"
-            onChange={(e) => setIsUnisex(e.target.value === "unisexe")}
-          >
-            <option value="">-- Genre --</option>
-            <option value="unisexe">Unisexe</option>
-            <option value="homme">Homme</option>
-            <option value="femme">Femme</option>
-            <option value="enfant">Enfant</option>
-          </select>
-          {errors.variations?.[index]?.gender && (
-            <p className="text-red-500 text-sm mt-1">Genre requis</p>
-          )}
+            <select
+              {...register(`variations.${index}.gender`, { required: true })}
+              className="border p-1"
+              onChange={(e) => setIsUnisex(e.target.value === "unisexe")}
+            >
+              <option value="">-- Genre --</option>
+              <option value="unisexe">Unisexe</option>
+              <option value="homme">Homme</option>
+              <option value="femme">Femme</option>
+              <option value="enfant">Enfant</option>
+            </select>
+            {errors.variations?.[index]?.gender && (
+              <p className="text-red-500 text-sm mt-1">Genre requis</p>
+            )}
           </div>
 
           <div className="flex flex-row items-center justify-between w-[30%]">

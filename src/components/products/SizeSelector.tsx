@@ -23,6 +23,7 @@ export default function SizeSelector({ product }: { product: Product }) {
     { id: 4, value: "L" },
     { id: 5, value: "XL" },
     { id: 6, value: "XXL" },
+    { id: 7, value: "Unique" },
   ];
   const genders = ["homme", "femme", "enfant"];
 

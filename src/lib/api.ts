@@ -1,6 +1,7 @@
 import { Category, Product } from "@/types/product.js";
 import Fetch from "./fetch";
 import { cookies } from "next/headers.js";
+import { Brand } from '../../../ecommerce-nest-backend/src/brands/entities/brand.entity';
 const API_BACKEND = "http://localhost:3000";
 
 /***
@@ -243,6 +244,70 @@ export async function destroyProduct(id:Number) {
   const response={ok:true}
  return response
 }
+
+/***
+ *      ____  _____            _   _ _____   _____
+ *     |  _ \|  __ \     /\   | \ | |  __ \ / ____|
+ *     | |_) | |__) |   /  \  |  \| | |  | | (___
+ *     |  _ <|  _  /   / /\ \ | . ` | |  | |\___ \
+ *     | |_) | | \ \  / ____ \| |\  | |__| |____) |
+ *     |____/|_|  \_\/_/    \_\_| \_|_____/|_____/
+ */
+
+export async function getBrands(): Promise<Brand[]> {
+  const response=await Fetch({
+     url: `${API_BACKEND}/brands`,
+     options: {
+       headers: {
+         // Authorization: `Bearer ${yourToken}`,
+       },
+     },
+   });
+   return response
+ }
+
+ export async function addBrand({formData}:{formData:Brand}) {
+  const res = await fetch(`${API_BACKEND}/brands`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify( formData),
+    credentials: 'include', // très important pour accepter les cookies
+
+  });
+  if (!res.ok) throw new Error("Login failed");
+  const data = await res.json();
+  const response={ok:true}
+ return response
+}
+
+export async function updateBrand({id,formData}:{id:Number,formData:Brand}) {
+  console.log("update product",formData)
+  const res = await fetch(`${API_BACKEND}/brands/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify( formData),
+    credentials: 'include', // très important pour accepter les cookies
+
+  });
+  if (!res.ok) throw new Error("Login failed");
+  const data = await res.json();
+  const response={ok:true}
+ return response
+}
+
+export async function destroyBrand(id:Number) {
+  const res = await fetch(`${API_BACKEND}/brands/${id}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    credentials: 'include', // très important pour accepter les cookies
+
+  });
+  if (!res.ok) throw new Error("Login failed");
+  // const data = await res.json();
+  const response={ok:true}
+ return response
+}
+
 
 /***
  *       ____  _____  _____  ______ _____   _____

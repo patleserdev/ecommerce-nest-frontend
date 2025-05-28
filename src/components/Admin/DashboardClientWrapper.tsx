@@ -3,22 +3,27 @@ import { useEffect, useState } from "react";
 import { MdAddCircle } from "react-icons/md";
 import Modal from "@/components/Modal";
 import Link from "next/link";
-import { Category, Child, Product } from "@/types/product";
+import { Category, Child, Product, Brand } from "@/types/product";
 import CategoryForm from "./CategoryForm";
 import { addCategorie, destroyCategorie, updateCategorie } from "@/lib/api";
 import { addProduct, updateProduct, destroyProduct } from "@/lib/api";
+import { addBrand, updateBrand, destroyBrand } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { MdEdit } from "react-icons/md";
 import { MdCancel } from "react-icons/md";
 import ProductForm from "./ProductForm";
+import BrandForm from "./BrandForm";
+import Accordion from "../motions/Accordion";
 type Props = {
   categories: Category[];
   products: Product[];
+  brands: Brand[];
 };
 
 export default function DashboardClientWrapper({
   categories,
   products,
+  brands,
 }: Props) {
   const router = useRouter();
 
@@ -29,12 +34,23 @@ export default function DashboardClientWrapper({
   const [isEditProduct, setIsEditProduct] = useState<
     Product | null | undefined
   >(null);
+  const [isEditBrand, setIsEditBrand] = useState<Brand | null | undefined>(
+    null
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [parent, setParent] = useState<Category | null | undefined>(null);
   const [productCategory, setProductCategory] = useState<
     Category | null | undefined
   >(null);
+  const [productbrand, setProductBrand] = useState<Brand | null | undefined>(
+    null
+  );
 
+  const [expanded, setExpanded] = useState<false | number>(0);
+
+  /**
+   * Réorganisation des catégories pour le display
+   */
   const mainCategories = categories
     .filter((cat) => cat.parent_id === 0)
     .sort((a, b) => a.name.localeCompare(b.name));
@@ -44,7 +60,7 @@ export default function DashboardClientWrapper({
       acc[cat.parent_id].push({
         id: cat.id,
         name: cat.name,
-        slug:cat.slug,
+        slug: cat.slug,
         parent_id: cat.parent_id,
         products: cat.products,
       });
@@ -53,18 +69,20 @@ export default function DashboardClientWrapper({
     {} as Record<number, Child[]>
   );
 
+  /**
+   * Prisen charge d'ajout de catégorie
+   * @param parent
+   */
   const handleOpenAddCategory = async (parent?: Category | null) => {
     setMode("categories");
     setParent(parent);
     setIsModalOpen(true);
   };
 
-  const handleOpenEditCategory = async (category: Category | null) => {
-    setMode("categories");
-    setIsEditCategory(category);
-    setIsModalOpen(true);
-  };
-
+  /**
+   * Ajout de la catégorie
+   * @param datas
+   */
   const handleAddCategory = async (datas: {
     name: string;
     parent_id?: number;
@@ -81,6 +99,20 @@ export default function DashboardClientWrapper({
     }
   };
 
+  /**
+   * Prise en charge de modification de catégorie
+   * @param category
+   */
+  const handleOpenEditCategory = async (category: Category | null) => {
+    setMode("categories");
+    setIsEditCategory(category);
+    setIsModalOpen(true);
+  };
+  /**
+   * Modification de la catégorie
+   * @param category_id
+   * @param datas
+   */
   const handleUpdateCategory = async (
     category_id: number,
     datas: { name: string; parent_id?: number }
@@ -97,6 +129,10 @@ export default function DashboardClientWrapper({
     }
   };
 
+  /**
+   * Destruction de la catégorie
+   * @param id
+   */
   const handleToDestroyCategory = (id: number) => {
     var result = confirm(`Détruire irrémédiablement la catégorie ${id}`);
     if (result) {
@@ -109,14 +145,22 @@ export default function DashboardClientWrapper({
     }
   };
 
+  /**
+   * Prise en charge de l'ajout d'un produit
+   * @param category
+   */
   const handleOpenAddProduct = (category: Category) => {
-    setIsEditProduct(null)
-    setIsEditCategory(null)
+    setIsEditProduct(null);
+    setIsEditCategory(null);
     setMode("products");
     setIsModalOpen(true);
     setProductCategory(category);
   };
 
+  /**
+   * Ajout d'un produit
+   * @param datas
+   */
   const handleAddProduct = async (datas: Product) => {
     try {
       await addProduct({ formData: datas });
@@ -130,16 +174,25 @@ export default function DashboardClientWrapper({
     }
   };
 
+  /**
+   * Prise en charge de la modification d'un produit
+   * @param product
+   */
   const handleOpenEditProduct = async (product: Product | null) => {
     setMode("products");
     setIsEditProduct(product);
     setIsModalOpen(true);
   };
 
+  /**
+   * Modification d'un produit
+   * @param product_id
+   * @param datas
+   */
   const handleUpdateProduct = async (product_id: number, datas: Product) => {
     try {
       await updateProduct({ id: product_id, formData: datas });
-      console.log("Produit modifiée !");
+      console.log("Produit modifiée !",datas);
       setMode("");
       router.refresh();
 
@@ -149,6 +202,10 @@ export default function DashboardClientWrapper({
     }
   };
 
+  /**
+   * Destruction d'un produit
+   * @param id
+   */
   const handleToDestroyProduct = (id: number) => {
     var result = confirm(`Détruire irrémédiablement le produit ${id}`);
     if (result) {
@@ -161,24 +218,134 @@ export default function DashboardClientWrapper({
     }
   };
 
+  /**
+   * Prise en charge de l'ajout d'une marque
+   * @param category
+   */
+  const handleOpenAddBrand = () => {
+    setIsEditProduct(null);
+    setIsEditCategory(null);
+    setIsEditBrand(null);
+    setMode("brands");
+    setIsModalOpen(true);
+  };
+
+  /**
+   * Ajout d'une marque
+   * @param datas
+   */
+  const handleAddBrand = async (datas: Brand) => {
+    try {
+      await addBrand({ formData: datas });
+      console.log("Marque ajoutée !");
+      setMode("");
+      router.refresh();
+
+      // Fermer le modal ou rafraîchir les données ici
+    } catch (err) {
+      console.error("Erreur lors de l'ajout de la marque :", err);
+    }
+  };
+
+  /**
+   * Prise en charge de la modification d'un produit
+   * @param product
+   */
+  const handleOpenEditBrand = async (brand: Brand | null) => {
+    setMode("brands");
+    setIsEditBrand(brand);
+    setIsModalOpen(true);
+  };
+
+  /**
+   * Modification d'un produit
+   * @param product_id
+   * @param datas
+   */
+  const handleUpdateBrand = async (brand_id: number, datas: Brand) => {
+    try {
+      await updateBrand({ id: brand_id, formData: datas });
+      console.log("Marque modifiée !");
+      setMode("");
+      router.refresh();
+
+      // Fermer le modal ou rafraîchir les données ici
+    } catch (err) {
+      console.error("Erreur lors de l'ajout de la marque :", err);
+    }
+  };
+
+  /**
+   * Destruction d'un produit
+   * @param id
+   */
+  const handleToDestroyBrand = (id: number) => {
+    var result = confirm(`Détruire irrémédiablement la marque ${id}`);
+    if (result) {
+      try {
+        destroyBrand(id);
+        router.refresh();
+      } catch (error) {
+        console.error("Erreur lors de la suppression de la marque :", error);
+      }
+    }
+  };
+
   return (
     <main className="relative">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
-      <div className="border p-3">
-      <span className="flex items-center gap-2">
+        <div className="border p-3">
+          <span className="flex items-center gap-2">
             <h2 className="text-lg font-bold underline">
-              Marques 
+              Marques
               {/* ({categories.length}) */}
             </h2>
 
             <div
               className="cursor-pointer"
-              onClick={() => handleOpenAddCategory()}
+              onClick={() => handleOpenAddBrand()}
             >
               <MdAddCircle size={24} />
             </div>
           </span>
-      </div>
+
+          <ul className="p-5">
+            {brands.map((brand) => (
+              <li key={brand.id} className="pb-5 uppercase ">
+                <span className="flex items-center gap-2 border-b-1 pb-1">
+                  <Link
+                    href={`brands/${brand.slug}`}
+                    className="font-bold w-[80%]"
+                  >
+                    {brand.name}
+                  </Link>
+                  <div className="flex gap-1 w-[20%]">
+                    <div
+                      className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
+                      onClick={() => handleOpenAddBrand()}
+                    >
+                      <MdAddCircle size={18} />
+                    </div>
+
+                    <div
+                      className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
+                      onClick={() => handleOpenEditBrand(brand)}
+                    >
+                      <MdEdit size={18} />
+                    </div>
+
+                    <div
+                      className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
+                      onClick={() => handleToDestroyBrand(brand.id)}
+                    >
+                      <MdCancel size={18} />
+                    </div>
+                  </div>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
         <div className="border p-3">
           <span className="flex items-center gap-2">
             <h2 className="text-lg font-bold underline">
@@ -201,7 +368,10 @@ export default function DashboardClientWrapper({
                     href={`categories/${parent.slug}`}
                     className="font-bold w-[80%]"
                   >
-                    {parent.name} <span className="normal-case opacity-[0.6]"><i>/{parent.slug}</i></span>
+                    {parent.name}{" "}
+                    <span className="normal-case opacity-[0.6]">
+                      <i>/{parent.slug}</i>
+                    </span>
                   </Link>
                   <div className="flex gap-1 w-[20%]">
                     <div
@@ -276,7 +446,7 @@ export default function DashboardClientWrapper({
                   // Récupérer tous les produits de ces sous-catégories
                   const productCount = products.filter((product) =>
                     childCategories.some(
-                      (child) => child.id === product.category.id
+                      (child) => product.category && child.id === product.category.id 
                     )
                   ).length;
 
@@ -286,75 +456,68 @@ export default function DashboardClientWrapper({
                       className="uppercase mb-5 flex flex-col border-b-1"
                     >
                       <div className="flex flex-row">
-                      <div className="w-[90%]">
-                        <strong>
-                          {parent.name} ({productCount})
-                        </strong>
-                      </div>
+                        <div className="w-[90%]">
+                          <strong>
+                            {parent.name} ({productCount})
+                          </strong>
+                        </div>
 
-                      <div className="flex flex-row-reverse gap-1 w-[10%] pb-1">
-                        <div
-                          className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
-                          onClick={() => {
-                            setProductCategory(parent);
-                            handleOpenAddProduct(parent);
-                          }}
-                        >
-                          <MdAddCircle size={24} />
+                        <div className="flex flex-row-reverse gap-1 w-[10%] pb-1">
+                          <div
+                            className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
+                            onClick={() => {
+                              setProductCategory(parent);
+                              handleOpenAddProduct(parent);
+                            }}
+                          >
+                            <MdAddCircle size={24} />
+                          </div>
                         </div>
                       </div>
-</div>
                       <ul>
-                                
-                                {products
-                                  .filter(
-                                    (product) =>
-                                      product.category.id === parent.id
-                                  )
-                                  .map((product, k) => (
-                                    <li
-                                      className="capitalize px-5 mb-1"
-                                      key={k}
-                                    >
-                                      <div className="flex justify-between  gap-5">
-                                        <div>
-                                          {product.name.slice(0, 15)}...
-                                        </div>
+                        {products
+                          .filter(
+                            (product) => product.category && product.category.id === parent.id
+                          )
+                          .map((product, k) => (
+                            <li className="capitalize px-5 mb-1" key={k}>
+                              <div className="flex justify-between  gap-5">
+                                <div>{product.name.slice(0, 15)}...</div>
 
-                                        <div className="flex gap-1">
-                                          <div
-                                            className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
-                                            onClick={() => {
-                                              setProductCategory(parent);
-                                              handleOpenEditProduct(product);
-                                            }}
-                                          >
-                                            <MdEdit size={18} />
-                                          </div>
+                                <div className="flex gap-1">
+                                  <div
+                                    className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
+                                    onClick={() => {
+                                      setProductCategory(parent);
+                                      handleOpenEditProduct(product);
+                                    }}
+                                  >
+                                    <MdEdit size={18} />
+                                  </div>
 
-                                          <div
-                                            className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
-                                            onClick={() =>
-                                              handleToDestroyProduct(
-                                                product.id!
-                                              )
-                                            }
-                                          >
-                                            <MdCancel size={18} />
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </li>
-                                  ))}
-
-                              </ul>
+                                  <div
+                                    className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
+                                    onClick={() =>
+                                      handleToDestroyProduct(product.id!)
+                                    }
+                                  >
+                                    <MdCancel size={18} />
+                                  </div>
+                                </div>
+                              </div>
+                            </li>
+                          ))}
+                      </ul>
 
                       <ul>
                         {childCategories.map((child, j) => {
                           const childProductCount = products.filter(
-                            (product) => product.category.id === child.id
+                            (product) => product.category && product.category.id === child.id
                           ).length;
                           return (
+
+                          
+
                             <li
                               key={j}
                               className="capitalize font-bold pl-4 mb-2"
@@ -377,48 +540,56 @@ export default function DashboardClientWrapper({
                               </div>
 
                               <ul>
-                                
                                 {products
                                   .filter(
                                     (product) =>
-                                      product.category.id === child.id
+                                      product.category && product.category.id === child.id
                                   )
-                                  .map((product, k) => (
-                                    <li
-                                      className="font-normal px-5 mb-1"
-                                      key={k}
-                                    >
-                                      <div className="flex justify-between gap-5 border-b-1">
-                                        <div>
-                                          {product.name.slice(0, 15)}...
+                                  .map((product, k) => {
+
+                                    const displayProduct=<li
+                                    className="font-normal px-5 mb-1"
+                                    key={k}
+                                  >
+                                    <div className="flex justify-between gap-5 border-b-1">
+                                      <div>
+                                        {product.name.slice(0, 15)}...
+                                      </div>
+
+                                      <div className="flex gap-1">
+                                        <div
+                                          className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
+                                          onClick={() => {
+                                            setProductCategory(child);
+                                            handleOpenEditProduct(product);
+                                          }}
+                                        >
+                                          <MdEdit size={18} />
                                         </div>
 
-                                        <div className="flex gap-1">
-                                          <div
-                                            className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
-                                            onClick={() => {
-                                              setProductCategory(child);
-                                              handleOpenEditProduct(product);
-                                            }}
-                                          >
-                                            <MdEdit size={18} />
-                                          </div>
-
-                                          <div
-                                            className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
-                                            onClick={() =>
-                                              handleToDestroyProduct(
-                                                product.id!
-                                              )
-                                            }
-                                          >
-                                            <MdCancel size={18} />
-                                          </div>
+                                        <div
+                                          className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
+                                          onClick={() =>
+                                            handleToDestroyProduct(
+                                              product.id!
+                                            )
+                                          }
+                                        >
+                                          <MdCancel size={18} />
                                         </div>
                                       </div>
-                                    </li>
-                                  ))}
+                                    </div>
+                                  </li>
+                                  
+                                    return (
+                                      <Accordion i={k} expanded={expanded} setExpanded={setExpanded} content={displayProduct}/>
 
+                                    )
+                                  }
+
+
+                                    
+                                  )}
                               </ul>
                             </li>
                           );
@@ -462,8 +633,32 @@ export default function DashboardClientWrapper({
                   <b>{` "${productCategory?.name}"`}</b>
                 </>
               )}
+
+              {mode === "brands" && (
+                <>{isEditProduct ? "Modification" : "Ajout"} d'une marque</>
+              )}
             </span>
           </h2>
+
+          {mode == "brands" && (
+            <BrandForm
+              defaultValues={{
+                name: isEditBrand?.name ?? "",
+              }}
+              onSubmit={(data) => {
+                const safeData = {
+                  ...data,
+                };
+                console.log("Catégorie à ajouter :", safeData);
+                isEditBrand
+                  ? handleUpdateBrand(isEditBrand.id, safeData)
+                  : handleAddBrand(safeData);
+                setIsEditBrand(null);
+                setIsModalOpen(false);
+              }}
+            />
+          )}
+
           {mode == "categories" && (
             <CategoryForm
               defaultValues={{
@@ -486,6 +681,7 @@ export default function DashboardClientWrapper({
 
           {mode == "products" && (
             <ProductForm
+              brands={brands}
               defaultValues={{
                 name: isEditProduct?.name ?? "",
                 description: isEditProduct?.description ?? "",
@@ -493,15 +689,14 @@ export default function DashboardClientWrapper({
                 sku: isEditProduct?.sku ?? "",
                 // quantity: isEditProduct?.quantity ?? 0,
                 categoryId:
-                  isEditProduct?.category.id ?? productCategory?.id ?? 0,
-                variations:
-                  isEditProduct?.variations ?? [],
+                (isEditProduct && isEditProduct.category && isEditProduct?.category.id) ?? productCategory?.id ?? 0,
+                variations: isEditProduct?.variations ?? [],
+                brandId:isEditProduct?.brand?.id ?? 0,
               }}
               onSubmit={(data) => {
                 const safeData = {
                   ...data,
                 };
-                console.log("Produit à ajouter :", safeData);
                 isEditProduct?.id && safeData
                   ? handleUpdateProduct(isEditProduct.id, safeData)
                   : handleAddProduct(safeData);

@@ -96,7 +96,7 @@ export default function CartIcon() {
           </div>
         )}
         {isHovered && cart.length > 0 && (
-          <div className="absolute m-5 top-[0px] left-0 min-w-150 h-200 border transition-all bg-[var(--background)] p-5 flex flex-col gap-5">
+          <div className="absolute m-5 top-[0px] left-0 min-w-150 min-h-100 max-h-500 border transition-all bg-[var(--background)] p-5 flex flex-col gap-5">
             <div>
               <h2 className="text-3xl mb-2">Contenu de votre panier :</h2>
               <hr />

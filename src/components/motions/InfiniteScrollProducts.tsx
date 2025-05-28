@@ -29,7 +29,7 @@ export default function InfiniteScrollProducts({
       >
         {duplicatedImages.map((src, i) => (
           <div className="relative" key={i}>
-            <div className="absolute bottom-0 left-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.5)] p-2 z-10 flex flex-col-reverse text-[var(--background)">
+            <div className="absolute bottom-0 left-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.5)] p-3 z-10 flex flex-col-reverse text-[var(--background)">
               <div className="flex flex-row py-1 gap-1">
               {src.variations.map((variation,i) => <div className="px-2 py-1 rounded-lg bg-[var(--background)]" key={i}>{toFirstLetterUpper(variation.gender)}</div>)}
 

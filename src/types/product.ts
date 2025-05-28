@@ -19,14 +19,22 @@ export type ProductVariations = {
 
 export interface Product {
   description: string;
-  id?: number;
+  id: number;
   name: string;
   slug: string;
   price: number;
   // quantity: Number;
   sku: string;
-  category: Category;
+  category?: Category;
+  brand?: Brand;
   variations: ProductVariations[];
+}
+
+export interface Brand {
+  id: number;
+  name: string;
+  slug: string;
+
 }
 
 export interface Child {
