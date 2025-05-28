@@ -3,9 +3,11 @@
 import { loginUser } from "@/lib/api";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import Link from "next/link.js";
 
 export default function LoginForm() {
-
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -18,7 +20,7 @@ export default function LoginForm() {
     setError("");
     setLoading(true);
     try {
-      const res = await loginUser(email, password);
+      const res = await loginUser(email, password,dispatch);
 
       if (!res.ok) {
         throw new Error("Email ou mot de passe incorrect");
@@ -37,9 +39,11 @@ export default function LoginForm() {
   }
 
   return (
+    <div className="h-[80vh] flex items-center justify-center">
+
     <form
       onSubmit={handleSubmit}
-      className="max-w-sm mx-auto p-4 border rounded"
+      className="max-w-sm mx-auto p-4 border rounded shadow-lg"
     >
       <h2 className="text-xl font-bold mb-4">Se connecter</h2>
 
@@ -79,5 +83,9 @@ export default function LoginForm() {
         {loading ? "Connexion..." : "Se connecter"}
       </button>
     </form>
+
+    {/* <div>crée un compte <Link href="/signup">S'inscrire</Link></div>
+    <div><Link href="/forgotPassword">Mot de passe oublié </Link></div> */}
+    </div>
   );
 }

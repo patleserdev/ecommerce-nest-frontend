@@ -4,21 +4,38 @@ import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("oeb-token")?.value;
+  const role = request.cookies.get("role")?.value;
 
-  // 🔐 Protéger certaines routes seulement
-  const protectedRoutes = ["/dashboard", "/admin"];
+  const pathname = request.nextUrl.pathname;
 
-  const isProtected = protectedRoutes.some((route) =>
-    request.nextUrl.pathname.startsWith(route)
-  );
+    // Routes protégées
+    const isDashboard = pathname.startsWith("/dashboard");
+    const isAdminPage = pathname.startsWith("/admin");
 
-  if (isProtected && !token) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
+ // 🔐 Rediriger si pas connecté
+ if ((isDashboard || isAdminPage) && !token) {
+  return NextResponse.redirect(new URL("/login", request.url));
+}
+
+// ✅ Admin a accès à tout
+if (role === "admin") {
+  return NextResponse.next();
+}
+
+// 🚫 Customer n'a pas accès à /admin
+if (isAdminPage && role !== "admin") {
+  return NextResponse.redirect(new URL("/unauthorized", request.url));
+}
+
+// ✅ Customer peut accéder au dashboard
+if (isDashboard && role === "customer") {
+  return NextResponse.next();
+}
 
   return NextResponse.next();
 }
 
+// 🔧 Configuration : match admin & dashboard
 export const config = {
-    matcher: ["/admin/:path*"], // Tu peux ajouter + de chemins
-  };
+  matcher: ["/dashboard/:path*", "/admin/:path*"],
+};

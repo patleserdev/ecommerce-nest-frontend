@@ -1,6 +1,6 @@
 export default function Home() {
   return (
-    <div className="p-2">
+    <div className="p-4">
       <h1 className="text-5xl mb-5">E-commerce</h1>
 
       <div>

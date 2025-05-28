@@ -1,6 +1,7 @@
 // src/redux/store.ts
 import { configureStore,getDefaultMiddleware } from "@reduxjs/toolkit";
 import { cartSlice } from "../reducers/cartSlice";
+import { userSlice } from "../reducers/userSlice";
 import { persistStore, persistReducer } from "redux-persist";
 import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 
@@ -22,7 +23,7 @@ const persistConfig = {
   key: "root",
   storage: isBrowser ? storage : createNoopStorage(),
 };
-const rootReducer = combineReducers({ cart: cartSlice.reducer });
+const rootReducer = combineReducers({ cart: cartSlice.reducer,user:userSlice.reducer });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

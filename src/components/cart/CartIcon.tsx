@@ -6,6 +6,7 @@ import Image from "next/image.js";
 import { MdAddBox, MdIndeterminateCheckBox } from "react-icons/md";
 import { IoMdTrash } from "react-icons/io";
 import { updateQuantity,removeFromCart } from "@/redux/reducers/cartSlice";
+import Link from "next/link.js";
 
 export default function CartIcon() {
   const cart = useSelector((state: RootState) => state.cart.items);
@@ -163,6 +164,8 @@ export default function CartIcon() {
                 </div>
               </div>
             ))}
+
+            <div><Link href="/checkout">Mon panier</Link></div>
           </div>
         )}
       </div>

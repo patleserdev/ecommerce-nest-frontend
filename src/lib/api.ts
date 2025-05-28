@@ -1,8 +1,8 @@
-import { Category, Product } from "@/types/product.js";
+import { Category, Product,Brand } from "@/types/product.js";
 import Fetch from "./fetch";
-import { cookies } from "next/headers.js";
-import { Brand } from '../../../ecommerce-nest-backend/src/brands/entities/brand.entity';
-const API_BACKEND = "http://localhost:3000";
+import { addUser } from "@/redux/reducers/userSlice";
+import { AppDispatch } from "@/redux/store/store.js";
+const API_BACKEND = process.env.NEXT_PUBLIC_API_BACKEND;
 
 /***
  *      _    _  _____ ______ _____   _____
@@ -13,20 +13,43 @@ const API_BACKEND = "http://localhost:3000";
  *      \____/|_____/|______|_|  \_\_____/
  */
 
-export async function loginUser(email: string, password: string) {
-  const res = await fetch(`${API_BACKEND}/users/login`, {
+export async function loginUser(email: string, password: string,dispatch: AppDispatch) {
+
+
+
+  const res = await fetch(`/api/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
-    credentials: 'include', // très important pour accepter les cookies
-
+    credentials: "include", // très important pour accepter les cookies
   });
   if (!res.ok) throw new Error("Login failed");
+
   const data = await res.json();
-  const response={ok:true}
- return response
+  if (data) {
+    dispatch(
+      addUser({
+        role: data.role,
+      })
+    );
+  }
+
+  const response = { ok: true };
+  return response;
 }
 
+export async function logout() {
+  const res = await fetch(`/api/logout`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+  });
+
+  if (!res.ok) throw new Error("Logout failed");
+  const data = await res.json();
+  const response = { ok: true };
+  return response;
+}
 /***
  *       _____       _______ ______ _____  ____  _____  _____ ______  _____
  *      / ____|   /\|__   __|  ____/ ____|/ __ \|  __ \|_   _|  ____|/ ____|
@@ -35,34 +58,32 @@ export async function loginUser(email: string, password: string) {
  *     | |____ / ____ \| |  | |___| |__| | |__| | | \ \ _| |_| |____ ____) |
  *      \_____/_/    \_\_|  |______\_____|\____/|_|  \_\_____|______|_____/
  */
-  export async function getCategories(): Promise<Category[]> {
-    const response=await Fetch({
-       url: `${API_BACKEND}/categories`,
-       options: {
-         headers: {
-           // Authorization: `Bearer ${yourToken}`,
-         },
-       },
-     });
-     return response
-   }
+export async function getCategories(): Promise<Category[]> {
+  const response = await Fetch({
+    url: `${API_BACKEND}/categories`,
+    options: {
+      headers: {
+        // Authorization: `Bearer ${yourToken}`,
+      },
+    },
+  });
+  return response;
+}
 
-   export async function getCategoriesByParent(id:number): Promise<Category[]> {
-    const response=await Fetch({
-       url: `${API_BACKEND}/categories/parent/${id}`,
-       options: {
-         headers: {
-           // Authorization: `Bearer ${yourToken}`,
-         },
-       },
-     });
-     return response
-   }
-
-   
+export async function getCategoriesByParent(id: number): Promise<Category[]> {
+  const response = await Fetch({
+    url: `${API_BACKEND}/categories/parent/${id}`,
+    options: {
+      headers: {
+        // Authorization: `Bearer ${yourToken}`,
+      },
+    },
+  });
+  return response;
+}
 
 export async function getCategoryById(id: number) {
- const response=await Fetch({
+  const response = await Fetch({
     url: `${API_BACKEND}/categories/${id}`,
     options: {
       headers: {
@@ -70,118 +91,115 @@ export async function getCategoryById(id: number) {
       },
     },
   });
-  return response
+  return response;
 }
 
 export async function getCategoriesByParentId(id: number) {
-  const response=await Fetch({
-     url: `${API_BACKEND}/categories/sub/${id}`,
-     options: {
-       headers: {
-         // Authorization: `Bearer ${yourToken}`,
-       },
-     },
-   });
-   return response
- }
+  const response = await Fetch({
+    url: `${API_BACKEND}/categories/sub/${id}`,
+    options: {
+      headers: {
+        // Authorization: `Bearer ${yourToken}`,
+      },
+    },
+  });
+  return response;
+}
 
-export async function getCategoryBySlug(slug: string,parentSlug:string) {
-
-  const cleanSlug=slug.toLowerCase().trim()
-  const cleanParentSlug=parentSlug?.toLowerCase().trim()
-  let parent=""
-  if(cleanParentSlug != "")
-  {
-    parent=`?parent=${cleanParentSlug}`
+export async function getCategoryBySlug(slug: string, parentSlug: string) {
+  const cleanSlug = slug.toLowerCase().trim();
+  const cleanParentSlug = parentSlug?.toLowerCase().trim();
+  let parent = "";
+  if (cleanParentSlug != "") {
+    parent = `?parent=${cleanParentSlug}`;
   }
   // console.log('cleanSlug',cleanSlug)
-  const response=await Fetch({
-     url: `${API_BACKEND}/categories/slug/${cleanSlug}${parent}`,
-     options: {
-       headers: {
-         // Authorization: `Bearer ${yourToken}`,
-       },
-     },
-   });
-   return response
- }
-
-export function getProductsByCategory(id:number)
-{
-    try {
-        const response= Fetch({
-            url: `${API_BACKEND}/products/categories/${id}`,
-            options: {
-              headers: {
-                // Authorization: `Bearer ${yourToken}`,
-              },
-            },
-          });
-          return response 
-    } catch (error) {
-        
-    }
+  const response = await Fetch({
+    url: `${API_BACKEND}/categories/slug/${cleanSlug}${parent}`,
+    options: {
+      headers: {
+        // Authorization: `Bearer ${yourToken}`,
+      },
+    },
+  });
+  return response;
 }
 
-export function getProductBySlug(slug:string)
-{
-    try {
-        const response= Fetch({
-            url: `${API_BACKEND}/products/slug/${slug}`,
-            options: {
-              headers: {
-                // Authorization: `Bearer ${yourToken}`,
-              },
-            },
-          });
-          return response 
-    } catch (error) {
-        
-    }
+export function getProductsByCategory(id: number) {
+  try {
+    const response = Fetch({
+      url: `${API_BACKEND}/products/categories/${id}`,
+      options: {
+        headers: {
+          // Authorization: `Bearer ${yourToken}`,
+        },
+      },
+    });
+    return response;
+  } catch (error) {}
 }
 
-export async function addCategorie({formData}:{formData:{name:String,parent_id?:Number}}) {
+export function getProductBySlug(slug: string) {
+  try {
+    const response = Fetch({
+      url: `${API_BACKEND}/products/slug/${slug}`,
+      options: {
+        headers: {
+          // Authorization: `Bearer ${yourToken}`,
+        },
+      },
+    });
+    return response;
+  } catch (error) {}
+}
+
+export async function addCategorie({
+  formData,
+}: {
+  formData: { name: String; parent_id?: Number };
+}) {
   const res = await fetch(`${API_BACKEND}/categories`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify( formData),
-    credentials: 'include', // très important pour accepter les cookies
-
+    body: JSON.stringify(formData),
+    credentials: "include", // très important pour accepter les cookies
   });
   if (!res.ok) throw new Error("Login failed");
   const data = await res.json();
-  const response={ok:true}
- return response
+  const response = { ok: true };
+  return response;
 }
 
-export async function updateCategorie({id,formData}:{id:Number,formData:{name:String,parent_id?:Number}}) {
+export async function updateCategorie({
+  id,
+  formData,
+}: {
+  id: Number;
+  formData: { name: String; parent_id?: Number };
+}) {
   const res = await fetch(`${API_BACKEND}/categories/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify( formData),
-    credentials: 'include', // très important pour accepter les cookies
-
+    body: JSON.stringify(formData),
+    credentials: "include", // très important pour accepter les cookies
   });
   if (!res.ok) throw new Error("Login failed");
   const data = await res.json();
-  const response={ok:true}
- return response
+  const response = { ok: true };
+  return response;
 }
 
-export async function destroyCategorie(id:Number) {
+export async function destroyCategorie(id: Number) {
   const res = await fetch(`${API_BACKEND}/categories/${id}`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
-    credentials: 'include', // très important pour accepter les cookies
-
+    credentials: "include", // très important pour accepter les cookies
   });
   if (!res.ok) throw new Error("Login failed");
   // const data = await res.json();
-  const response={ok:true}
- return response
+  const response = { ok: true };
+  return response;
 }
-
-
 
 /***
  *      _____  _____   ____  _____  _    _  _____ _______ _____
@@ -193,56 +211,59 @@ export async function destroyCategorie(id:Number) {
  */
 
 export async function getProducts(): Promise<Product[]> {
-  const response=await Fetch({
-     url: `${API_BACKEND}/products`,
-     options: {
-       headers: {
-         // Authorization: `Bearer ${yourToken}`,
-       },
-     },
-   });
-   return response
- }
+  const response = await Fetch({
+    url: `${API_BACKEND}/products`,
+    options: {
+      headers: {
+        // Authorization: `Bearer ${yourToken}`,
+      },
+    },
+  });
+  return response;
+}
 
- export async function addProduct({formData}:{formData:Product}) {
+export async function addProduct({ formData }: { formData: Product }) {
   const res = await fetch(`${API_BACKEND}/products`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify( formData),
-    credentials: 'include', // très important pour accepter les cookies
-
+    body: JSON.stringify(formData),
+    credentials: "include", // très important pour accepter les cookies
   });
   if (!res.ok) throw new Error("Login failed");
   const data = await res.json();
-  const response={ok:true}
- return response
+  const response = { ok: true };
+  return response;
 }
 
-export async function updateProduct({id,formData}:{id:Number,formData:Product}) {
+export async function updateProduct({
+  id,
+  formData,
+}: {
+  id: Number;
+  formData: Product;
+}) {
   const res = await fetch(`${API_BACKEND}/products/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify( formData),
-    credentials: 'include', // très important pour accepter les cookies
-
+    body: JSON.stringify(formData),
+    credentials: "include", // très important pour accepter les cookies
   });
   if (!res.ok) throw new Error("Login failed");
   const data = await res.json();
-  const response={ok:true}
- return response
+  const response = { ok: true };
+  return response;
 }
 
-export async function destroyProduct(id:Number) {
+export async function destroyProduct(id: Number) {
   const res = await fetch(`${API_BACKEND}/products/${id}`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
-    credentials: 'include', // très important pour accepter les cookies
-
+    credentials: "include", // très important pour accepter les cookies
   });
   if (!res.ok) throw new Error("Login failed");
   // const data = await res.json();
-  const response={ok:true}
- return response
+  const response = { ok: true };
+  return response;
 }
 
 /***
@@ -255,59 +276,61 @@ export async function destroyProduct(id:Number) {
  */
 
 export async function getBrands(): Promise<Brand[]> {
-  const response=await Fetch({
-     url: `${API_BACKEND}/brands`,
-     options: {
-       headers: {
-         // Authorization: `Bearer ${yourToken}`,
-       },
-     },
-   });
-   return response
- }
+  const response = await Fetch({
+    url: `${API_BACKEND}/brands`,
+    options: {
+      headers: {
+        // Authorization: `Bearer ${yourToken}`,
+      },
+    },
+  });
+  return response;
+}
 
- export async function addBrand({formData}:{formData:Brand}) {
+export async function addBrand({ formData }: { formData: Brand }) {
   const res = await fetch(`${API_BACKEND}/brands`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify( formData),
-    credentials: 'include', // très important pour accepter les cookies
-
+    body: JSON.stringify(formData),
+    credentials: "include", // très important pour accepter les cookies
   });
   if (!res.ok) throw new Error("Login failed");
   const data = await res.json();
-  const response={ok:true}
- return response
+  const response = { ok: true };
+  return response;
 }
 
-export async function updateBrand({id,formData}:{id:Number,formData:Brand}) {
-  console.log("update product",formData)
+export async function updateBrand({
+  id,
+  formData,
+}: {
+  id: Number;
+  formData: Brand;
+}) {
+  console.log("update product", formData);
   const res = await fetch(`${API_BACKEND}/brands/${id}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify( formData),
-    credentials: 'include', // très important pour accepter les cookies
-
+    body: JSON.stringify(formData),
+    credentials: "include", // très important pour accepter les cookies
   });
   if (!res.ok) throw new Error("Login failed");
   const data = await res.json();
-  const response={ok:true}
- return response
+  const response = { ok: true };
+  return response;
 }
 
-export async function destroyBrand(id:Number) {
+export async function destroyBrand(id: Number) {
   const res = await fetch(`${API_BACKEND}/brands/${id}`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
-    credentials: 'include', // très important pour accepter les cookies
-
+    credentials: "include", // très important pour accepter les cookies
   });
   if (!res.ok) throw new Error("Login failed");
   // const data = await res.json();
-  const response={ok:true}
- return response
+  const response = { ok: true };
+  return response;
 }
-
 
 /***
  *       ____  _____  _____  ______ _____   _____
