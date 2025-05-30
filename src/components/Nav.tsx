@@ -47,8 +47,8 @@ export default function Nav() {
   };
 
   return (
-    <div className="flex flex-row items-center">
-      <div className="">
+    <div className="flex flex-row items-center justify-between">
+      <div className="md:w-[10%]">
         <Image
           src={"/logo.png"}
           alt={"logo"}
@@ -68,7 +68,7 @@ export default function Nav() {
 
         
       </div> */}
-      <div className="border">
+      <div className="border w-[90%] flex items-center justify-between">
         <ul className="flex gap-5 ml-5 mr-5">
           <li className="relative p-2">
             <Link href="/">Home</Link>
@@ -124,10 +124,15 @@ export default function Nav() {
           <li className="relative p-2">
             <Link href="/orders">Commandes</Link>
           </li>
+        </ul>
 
-          {user.role == "admin" || user.role == "customer" && <li className="relative p-2">
-            <Link href="/dashboard">Compte Client</Link>
-          </li>}
+        <ul className="flex gap-5 ml-5 mr-5">
+          {user.role == "admin" ||
+            (user.role == "customer" && (
+              <li className="relative p-2">
+                <Link href="/dashboard">Compte Client</Link>
+              </li>
+            ))}
 
           <li className="relative p-2">
             <Link href="/admin" title="Se connecter">
@@ -142,10 +147,16 @@ export default function Nav() {
               onClick={() => handleToLogout()}
             />
           </li>
+
+          <li>
+            <ThemeToggle />
+          </li>
+
+          <li>
+            <CartIcon />
+          </li>
         </ul>
       </div>
-      <ThemeToggle />
-      <CartIcon />
     </div>
   );
 }

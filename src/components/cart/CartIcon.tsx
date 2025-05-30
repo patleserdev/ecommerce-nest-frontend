@@ -7,7 +7,8 @@ import { MdAddBox, MdIndeterminateCheckBox } from "react-icons/md";
 import { IoMdTrash } from "react-icons/io";
 import { updateQuantity,removeFromCart } from "@/redux/reducers/cartSlice";
 import Link from "next/link.js";
-
+import CustomedButton from "../CustomedButton";
+import { AnimatePresence,motion } from "framer-motion";
 export default function CartIcon() {
   const cart = useSelector((state: RootState) => state.cart.items);
   const [isHovered, setIsHovered] = useState(false);
@@ -97,7 +98,14 @@ export default function CartIcon() {
           </div>
         )}
         {isHovered && cart.length > 0 && (
-          <div className="absolute m-5 top-[0px] left-0 min-w-150 min-h-100 max-h-500 border transition-all bg-[var(--background)] p-5 flex flex-col gap-5">
+           <AnimatePresence>
+          <motion.div 
+          key="dropdown"
+           initial={{ opacity: 0, y:0,x: 0,scale:0 }}
+           animate={{ opacity: 1,y:0, x: 0,scale:1 }}
+           exit={{ opacity: 0, y: -10,x:200, scale: 0.95 }}
+           transition={{duration:0.2}}
+           className="absolute m-5 top-[1rem] right-0 min-w-150 min-h-100 max-h-500 border transition-all bg-[var(--background)] p-5 flex flex-col gap-5 origin-top-right ">
             <div>
               <h2 className="text-3xl mb-2">Contenu de votre panier :</h2>
               <hr />
@@ -163,10 +171,17 @@ export default function CartIcon() {
                   </span>
                 </div>
               </div>
+              
             ))}
 
-            <div><Link href="/checkout">Mon panier</Link></div>
-          </div>
+            <div>
+              
+              <CustomedButton>
+              <Link href="/checkout/basket">Mon panier</Link>
+              </CustomedButton>
+              </div>
+          </motion.div>
+          </AnimatePresence>
         )}
       </div>
     </div>

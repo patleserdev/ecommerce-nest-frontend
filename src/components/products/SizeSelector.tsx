@@ -4,6 +4,7 @@ import { Product, ProductVariations } from "@/types/product";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "@/redux/reducers/cartSlice";
 import { RootState } from "@/redux/store/store.js";
+import CustomedButton from "../CustomedButton";
 export default function SizeSelector({ product }: { product: Product }) {
   const dispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart.items);
@@ -13,7 +14,7 @@ export default function SizeSelector({ product }: { product: Product }) {
     variation: ProductVariations;
     gender: string;
     size: string;
-    quantity:number;
+    quantity: number;
   } | null>(null);
 
   const sizes = [
@@ -37,10 +38,9 @@ export default function SizeSelector({ product }: { product: Product }) {
           quantity: selected.quantity,
         })
       );
-      setSelected(null)
+      setSelected(null);
     }
   };
-
 
   return (
     <>
@@ -94,7 +94,7 @@ export default function SizeSelector({ product }: { product: Product }) {
                         ? setSelected({
                             product: product,
                             variation: matchedVariation,
-                            quantity:selected?.quantity || 1,
+                            quantity: selected?.quantity || 1,
                             gender,
                             size: size.value,
                           })
@@ -117,31 +117,31 @@ export default function SizeSelector({ product }: { product: Product }) {
 
       <div className="flex flex-col gap-2 w-50 font-bold">
         <label>Quantité</label>
-        <input className="border p-1" 
-        type="number" 
-        min={0} 
-        value={selected?.quantity ?? 0}
-        onChange={(e) => {
-          const newQuantity = parseInt(e.target.value, 10);
-    
-          setSelected((prev) =>
-            prev
-              ? { ...prev, quantity: isNaN(newQuantity) ? 0 : newQuantity }
-              : null
-          );
-        }}
+        <input
+          className="border p-1"
+          type="number"
+          min={0}
+          value={selected?.quantity ?? 0}
+          onChange={(e) => {
+            const newQuantity = parseInt(e.target.value, 10);
+
+            setSelected((prev) =>
+              prev
+                ? { ...prev, quantity: isNaN(newQuantity) ? 0 : newQuantity }
+                : null
+            );
+          }}
         />
       </div>
 
       <div className="flex flex-row items-center justify-center md:justify-start mt-5">
-        <button
-          className={`border px-8 p-2 hover:bg-[var(--foreground)] hover:text-[var(--background)] transition-all cursor-pointer`}
-          style={selected ? { opacity: 1 } : { opacity: 0.5 }}
-          disabled={selected ? false : true}
+        <CustomedButton
+          selected={selected ? true : false}
           onClick={() => handleToCart()}
+          disabled={selected ? false : true}
         >
           Ajouter au panier
-        </button>
+        </CustomedButton>
       </div>
     </>
   );

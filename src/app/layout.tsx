@@ -32,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${lexendRegular.variable} antialiased `}>
+      <body className={`${lexendRegular.variable} antialiased overflow-hidden`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Providers>
             <Nav />
