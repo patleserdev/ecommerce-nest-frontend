@@ -10,8 +10,9 @@ import Link from "next/link.js";
 import CustomedButton from "../CustomedButton";
 import { AnimatePresence, motion } from "framer-motion";
 import { logout } from "@/lib/api";
-import { useRouter,usePathname  } from "next/navigation.js";
+import { useRouter, usePathname } from "next/navigation.js";
 import { toFirstLetterUpper } from "../../lib/utils";
+import CustomedLink from "../CustomedLink.jsx";
 export default function UserIcon() {
   const router = useRouter();
   const pathname = usePathname();
@@ -77,22 +78,14 @@ export default function UserIcon() {
                   <hr />
                 </div>
 
-                {user.role == "admin" && pathname != "/admin" &&(
-                  
-                    <CustomedButton onClick={() => router.push("/admin")}>
-                      Gérer le site
-                    </CustomedButton>
-                  
+                {user.role == "admin" && pathname != "/admin" && (
+                  <CustomedLink title="Gérer le site" url="/admin" />
                 )}
 
-                
-{user.role != "" &&(
-                  
-                  <CustomedButton onClick={() => router.push("/user/profile")}>
-                   Mon profil
-                  </CustomedButton>
-                
-              )}
+                {user.role != "" && (
+                   <CustomedLink title="Mon profil" url="/user/profile" />
+              
+                )}
               </div>
 
               <div>

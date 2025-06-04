@@ -5,6 +5,7 @@ type CustomButtonProps = {
   children: React.ReactNode;
   className?: string;
   type?: string;
+  title? : string
 };
 
 export default function CustomedButton({
@@ -14,6 +15,7 @@ export default function CustomedButton({
   children,
   type,
   className = "",
+  title = ""
 }: CustomButtonProps) {
   return (
     <button
@@ -27,7 +29,7 @@ export default function CustomedButton({
           ? "bg-[var(--foreground)] text-[var(--background)] hover:bg-[var(--background)] hover:text-[var(--foreground)] cursor-pointer"
           : null
       }
-      transition-all`}
+      transition-all `}
       style={selected ? { opacity: 1 } : { opacity: 0.5 }}
       disabled={selected ? false : true}
       onClick={onClick}
