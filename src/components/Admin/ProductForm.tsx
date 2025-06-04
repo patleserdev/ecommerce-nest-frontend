@@ -4,7 +4,7 @@ import { Brand, ProductVariations } from "../../types/product";
 import { MdAddCircle } from "react-icons/md";
 import { useState } from "react";
 
-import { genders,sizes } from "@/Constants";
+import { genders, sizes } from "@/Constants";
 
 type FormValues = {
   id?: number;
@@ -61,6 +61,7 @@ export default function ProductForm({
     name: "variations",
   });
 
+  console.log(errors);
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="flex flex-col gap-2 ">
@@ -131,6 +132,7 @@ export default function ProductForm({
         {errors.price && <p className="text-red-500">Quantité requise</p>}
       </div> */}
 
+      {/* Variations */}
       {fields.map((field, index) => (
         <div
           key={field.id}
@@ -142,32 +144,44 @@ export default function ProductForm({
               {...register(`variations.${index}.gender`, { required: true })}
               className="border p-1"
               onChange={(e) => setIsUnisex(e.target.value === "unisexe")}
+              required
             >
               <option value="">-- Genre --</option>
-              {genders.map((gender,i)=> <option key={i} value={gender.value}>{gender.label}</option>)}
+              {genders.map((gender, i) => (
+                <option key={i} value={gender.value}>
+                  {gender.label}
+                </option>
+              ))}
             </select>
             {errors.variations?.[index]?.gender && (
               <p className="text-red-500 text-sm mt-1">Genre requis</p>
             )}
           </div>
 
-          <div className="flex flex-row items-center justify-between w-[30%]">
-            {!isUnisex &&
-              sizes.map((size,i) => (
-                <label
-                  key={i}
-                  className="flex flex-row items-center justify-center gap-1"
-                >
-                  <input
-                    type="radio"
-                    value={size.value}
-                    {...register(`variations.${index}.size`, {
-                      required: true,
-                    })}
-                  />
-                  {size.label}
-                </label>
-              ))}
+          <div className="flex flex-wrap md:flex-row items-center justify-start w-[30%] px-2 gap-1">
+            <div className="flex flex-row flex-wrap gap-2">
+              {!isUnisex &&
+                sizes.map((size, i) => (
+                  <label
+                    key={i}
+                    className="flex flex-col md:flex-row items-center justify-center gap-1"
+                  >
+                    <input
+                      type="radio"
+                      value={size.value}
+                      {...register(`variations.${index}.size`, {
+                        required: true,
+                      })}
+                    />
+                    {size.label}
+                  </label>
+                ))}
+            </div>
+            <div>
+              {errors.variations?.[index]?.size && (
+                <p className="text-red-500 text-sm mt-1">Taille requise</p>
+              )}
+            </div>
           </div>
 
           <div className="flex flex-col items-center justify-center">
@@ -188,12 +202,22 @@ export default function ProductForm({
               {...register(`variations.${index}.stock`, { required: true })}
               placeholder="Stock"
             />
+            <div>
+              {errors.variations?.[index]?.size && (
+                <p className="text-red-500 text-sm mt-1">Quantité requise</p>
+              )}
+            </div>
           </div>
-
-          <button type="button" onClick={() => remove(index)}>
-            Supprimer
-          </button>
-        </div>
+      
+            <button
+              className="cursor-pointer p-2"
+              type="button"
+              onClick={() => remove(index)}
+            >
+              Retirer
+            </button>
+          </div>
+       
       ))}
 
       <div className="py-2">
