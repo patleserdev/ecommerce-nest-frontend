@@ -67,9 +67,9 @@ export default function LoginForm() {
           />
         </label>
 
-        <CustomedButton type="submit" disabled={loading}>
+        <button type="submit" disabled={loading} className={`border w-full px-8 p-2 mt-2 mb-2hover:bg-[var(--foreground)] hover:text-[var(--background)] cursor-pointer transition-all `}>
           {loading ? "Connexion..." : "Se connecter"}
-        </CustomedButton>
+        </button>
       </div>
     </form>
   );
