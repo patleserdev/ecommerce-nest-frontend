@@ -15,6 +15,7 @@ export default function ThemeToggle() {
 
   if (!mounted) return null // éviter les erreurs d’hydratation
 
+  // ajouter aussi en localstorage 
   return (
     <div
       className="flex items-center justify-center p-2"
