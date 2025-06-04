@@ -7,6 +7,10 @@ import Image from "next/image.js";
 import logo from "@/components/Logo";
 import DisplayIcon from "@/components/DisplayIcon";
 
+export const dynamic = "force-static"; // <-- force la génération SSG au moment du build
+export const revalidate = 60;
+
+
 export default async function Categories() {
   const categories = await getCategories();
   if (!categories) return notFound();
@@ -22,7 +26,8 @@ export default async function Categories() {
     Record<number, Child[]>
   >((acc, cat) => {
     if (!acc[cat.parent_id]) acc[cat.parent_id] = [];
-    acc[cat.parent_id].push({ id: cat.id, name: cat.name }); // Ensure it matches `Child` type
+    acc[cat.parent_id].push({ id: cat.id, name: cat.name,slug: cat.slug,  parent_id: cat.parent_id, 
+    }); 
     return acc;
   }, {});
 

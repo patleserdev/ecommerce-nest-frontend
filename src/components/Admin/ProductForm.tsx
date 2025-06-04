@@ -4,7 +4,7 @@ import { Brand, ProductVariations } from "../../types/product";
 import { MdAddCircle } from "react-icons/md";
 import { useState } from "react";
 
-const sizes = ["XS", "S", "M", "L", "XL", "XXL", "Unique"];
+import { genders,sizes } from "@/Constants";
 
 type FormValues = {
   id?: number;
@@ -65,7 +65,7 @@ export default function ProductForm({
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="flex flex-col gap-2 ">
         <select
-          {...register(`brandId`, { required: true,valueAsNumber:true })}
+          {...register(`brandId`, { required: true, valueAsNumber: true })}
           className="border p-1 capitalize"
         >
           <option value="">-- Marque --</option>
@@ -144,10 +144,7 @@ export default function ProductForm({
               onChange={(e) => setIsUnisex(e.target.value === "unisexe")}
             >
               <option value="">-- Genre --</option>
-              <option value="unisexe">Unisexe</option>
-              <option value="homme">Homme</option>
-              <option value="femme">Femme</option>
-              <option value="enfant">Enfant</option>
+              {genders.map((gender,i)=> <option key={i} value={gender.value}>{gender.label}</option>)}
             </select>
             {errors.variations?.[index]?.gender && (
               <p className="text-red-500 text-sm mt-1">Genre requis</p>
@@ -156,19 +153,19 @@ export default function ProductForm({
 
           <div className="flex flex-row items-center justify-between w-[30%]">
             {!isUnisex &&
-              sizes.map((size) => (
+              sizes.map((size,i) => (
                 <label
-                  key={size}
+                  key={i}
                   className="flex flex-row items-center justify-center gap-1"
                 >
                   <input
                     type="radio"
-                    value={size}
+                    value={size.value}
                     {...register(`variations.${index}.size`, {
                       required: true,
                     })}
                   />
-                  {size}
+                  {size.label}
                 </label>
               ))}
           </div>

@@ -10,7 +10,7 @@ export default function CheckoutLayout({
     <div className="flex min-h-screen">
       <main className="flex-1 p-6 bg-white">
         <div className="w-[60%] justify-self-center">
-        <Stepper />
+        <Stepper/>
         </div>
         
         {children}

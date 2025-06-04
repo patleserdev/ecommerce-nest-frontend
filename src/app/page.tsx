@@ -1,3 +1,6 @@
+export const revalidate = 60;
+export const dynamic = "force-static"; // <-- force la génération SSG au moment du build
+
 export default function Home() {
   return (
     <div className="p-4">
@@ -25,6 +28,7 @@ export default function Home() {
             </ul>
           </li>
           <li>Panier dynamique dans la navbar</li>
+          <li>Optimisation des temps de réponses de page SSG</li>
         </ul>
       </div>
 

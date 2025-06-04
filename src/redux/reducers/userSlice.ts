@@ -1,8 +1,9 @@
 // src/redux/userSlice.ts
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface UserProfile {
-  role:string
+  role: string;
+  username: string;
 }
 
 interface UserState {
@@ -10,11 +11,11 @@ interface UserState {
 }
 
 const initialState: UserState = {
-  user: {role:""},
+  user: { username: "", role: "" },
 };
 
 export const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     addUser: (state, action: PayloadAction<UserProfile>) => {
@@ -23,7 +24,7 @@ export const userSlice = createSlice({
 
     // Vider le panier
     clearUser: (state) => {
-      state.user = {role:""};
+      state.user =  initialState.user;
     },
   },
 });

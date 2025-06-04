@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { MdAddCircle } from "react-icons/md";
 import Modal from "@/components/Modal";
 import Link from "next/link";
-import { Category, Child, Product, Brand } from "@/types/product";
+import { Category, Child,Product, Brand,ProductVariations, UpdateProduct, CreateProduct } from "@/types/product";
 import CategoryForm from "./CategoryForm";
 import { addCategorie, destroyCategorie, updateCategorie } from "@/lib/api";
 import { addProduct, updateProduct, destroyProduct } from "@/lib/api";
@@ -29,7 +29,7 @@ export default function DashboardClientWrapper({
 
   const [mode, setMode] = useState("");
   const [isEditCategory, setIsEditCategory] = useState<
-    Category | null | undefined
+    Category | Child | null | undefined
   >(null);
   const [isEditProduct, setIsEditProduct] = useState<
     Product | null | undefined
@@ -103,7 +103,13 @@ export default function DashboardClientWrapper({
    * Prise en charge de modification de catégorie
    * @param category
    */
-  const handleOpenEditCategory = async (category: Category | null) => {
+  const handleOpenEditCategory = async (category: Category | Child) => {
+
+    if (typeof category.parent_id !== "number") {
+      console.warn("Impossible d’éditer : parent_id manquant !");
+      return;
+    }
+
     setMode("categories");
     setIsEditCategory(category);
     setIsModalOpen(true);
@@ -161,16 +167,16 @@ export default function DashboardClientWrapper({
    * Ajout d'un produit
    * @param datas
    */
-  const handleAddProduct = async (datas: Product) => {
+  const handleAddProduct = async (datas:CreateProduct) => {
     try {
       await addProduct({ formData: datas });
-      console.log("Catégorie ajoutée !");
+      console.log("Produit ajouté !");
       setMode("");
       router.refresh();
 
       // Fermer le modal ou rafraîchir les données ici
     } catch (err) {
-      console.error("Erreur lors de l'ajout de la catégorie :", err);
+      console.error("Erreur lors de l'ajout du produit :", err);
     }
   };
 
@@ -189,7 +195,7 @@ export default function DashboardClientWrapper({
    * @param product_id
    * @param datas
    */
-  const handleUpdateProduct = async (product_id: number, datas: Product) => {
+  const handleUpdateProduct = async (product_id: number, datas: UpdateProduct) => {
     try {
       await updateProduct({ id: product_id, formData: datas });
       console.log("Produit modifiée !",datas);
@@ -262,7 +268,8 @@ export default function DashboardClientWrapper({
    * @param product_id
    * @param datas
    */
-  const handleUpdateBrand = async (brand_id: number, datas: Brand) => {
+  const handleUpdateBrand = async (brand_id: number|undefined, datas: {name:string}) => {
+    if(brand_id)
     try {
       await updateBrand({ id: brand_id, formData: datas });
       console.log("Marque modifiée !");
@@ -279,16 +286,20 @@ export default function DashboardClientWrapper({
    * Destruction d'un produit
    * @param id
    */
-  const handleToDestroyBrand = (id: number) => {
-    var result = confirm(`Détruire irrémédiablement la marque ${id}`);
-    if (result) {
-      try {
-        destroyBrand(id);
-        router.refresh();
-      } catch (error) {
-        console.error("Erreur lors de la suppression de la marque :", error);
+  const handleToDestroyBrand = (id: number|undefined) => {
+    if(id)
+    {
+      var result = confirm(`Détruire irrémédiablement la marque ${id}`);
+      if (result) {
+        try {
+          destroyBrand(id);
+          router.refresh();
+        } catch (error) {
+          console.error("Erreur lors de la suppression de la marque :", error);
+        }
       }
     }
+   
   };
 
   return (
@@ -445,8 +456,8 @@ export default function DashboardClientWrapper({
                   );
                   // Récupérer tous les produits de ces sous-catégories
                   const productCount = products.filter((product) =>
-                    childCategories.some(
-                      (child) => product.category && child.id === product.category.id 
+                    categories.some(
+                      (child) => product.category && parent.id === product.category.id 
                     )
                   ).length;
 

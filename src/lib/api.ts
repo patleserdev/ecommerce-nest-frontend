@@ -1,4 +1,9 @@
-import { Category, Product,Brand } from "@/types/product.js";
+import {
+  Category,
+  CreateProduct,
+  UpdateProduct,
+  Brand,
+} from "@/types/product.js";
 import Fetch from "./fetch";
 import { addUser } from "@/redux/reducers/userSlice";
 import { AppDispatch } from "@/redux/store/store.js";
@@ -13,10 +18,11 @@ const API_BACKEND = process.env.NEXT_PUBLIC_API_BACKEND;
  *      \____/|_____/|______|_|  \_\_____/
  */
 
-export async function loginUser(email: string, password: string,dispatch: AppDispatch) {
-
-
-
+export async function loginUser(
+  email: string,
+  password: string,
+  dispatch: AppDispatch
+) {
   const res = await fetch(`/api/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -26,13 +32,33 @@ export async function loginUser(email: string, password: string,dispatch: AppDis
   if (!res.ok) throw new Error("Login failed");
 
   const data = await res.json();
+  console.log("userdata", data);
   if (data) {
     dispatch(
       addUser({
         role: data.role,
+        username: data.username,
       })
     );
   }
+
+  const response = { ok: true };
+  return response;
+}
+
+export async function signupUser(
+  email: string,
+  username:string,
+  password: string,
+
+) {
+  const res = await fetch(`/api/signup`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email,username, password }),
+    credentials: "include", // très important pour accepter les cookies
+  });
+  if (!res.ok) throw new Error("Inscription échouée");
 
   const response = { ok: true };
   return response;
@@ -125,34 +151,6 @@ export async function getCategoryBySlug(slug: string, parentSlug: string) {
   return response;
 }
 
-export function getProductsByCategory(id: number) {
-  try {
-    const response = Fetch({
-      url: `${API_BACKEND}/products/categories/${id}`,
-      options: {
-        headers: {
-          // Authorization: `Bearer ${yourToken}`,
-        },
-      },
-    });
-    return response;
-  } catch (error) {}
-}
-
-export function getProductBySlug(slug: string) {
-  try {
-    const response = Fetch({
-      url: `${API_BACKEND}/products/slug/${slug}`,
-      options: {
-        headers: {
-          // Authorization: `Bearer ${yourToken}`,
-        },
-      },
-    });
-    return response;
-  } catch (error) {}
-}
-
 export async function addCategorie({
   formData,
 }: {
@@ -210,7 +208,7 @@ export async function destroyCategorie(id: Number) {
  *     |_|    |_|  \_\\____/|_____/ \____/ \_____|  |_| |_____/
  */
 
-export async function getProducts(): Promise<Product[]> {
+export async function getProducts(): Promise<UpdateProduct[]> {
   const response = await Fetch({
     url: `${API_BACKEND}/products`,
     options: {
@@ -222,7 +220,35 @@ export async function getProducts(): Promise<Product[]> {
   return response;
 }
 
-export async function addProduct({ formData }: { formData: Product }) {
+export function getProductsByCategory(id: number) {
+  try {
+    const response = Fetch({
+      url: `${API_BACKEND}/products/categories/${id}`,
+      options: {
+        headers: {
+          // Authorization: `Bearer ${yourToken}`,
+        },
+      },
+    });
+    return response;
+  } catch (error) {}
+}
+
+export function getProductBySlug(slug: string) {
+  try {
+    const response = Fetch({
+      url: `${API_BACKEND}/products/slug/${slug}`,
+      options: {
+        headers: {
+          // Authorization: `Bearer ${yourToken}`,
+        },
+      },
+    });
+    return response;
+  } catch (error) {}
+}
+
+export async function addProduct({ formData }: { formData: CreateProduct }) {
   const res = await fetch(`${API_BACKEND}/products`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -240,7 +266,7 @@ export async function updateProduct({
   formData,
 }: {
   id: Number;
-  formData: Product;
+  formData: UpdateProduct;
 }) {
   const res = await fetch(`${API_BACKEND}/products/${id}`, {
     method: "PATCH",

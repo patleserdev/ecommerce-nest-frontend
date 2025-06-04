@@ -11,10 +11,12 @@ export interface CartItem {
 
 interface CartState {
   items: CartItem[];
+  step:string
 }
 
 const initialState: CartState = {
   items: [],
+  step:""
 };
 
 export const cartSlice = createSlice({
@@ -66,7 +68,12 @@ export const cartSlice = createSlice({
 
     // Vider le panier
     clearCart: (state) => {
-      state.items = [];
+      initialState
+    },
+
+     // Changer de step
+     updateCartStep: (state, action: PayloadAction<{ step:string }>) => {
+      state.step = action.payload.step;
     },
   },
 });

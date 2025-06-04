@@ -5,7 +5,7 @@ type StepperProps = {
 import React from "react";
 import { usePathname } from "next/navigation";
 
-export default function Stepper({ activeStep = 2 }: StepperProps) {
+export default function Stepper() {
   const pathname = usePathname();
 
   const steps = [

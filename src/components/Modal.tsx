@@ -1,8 +1,13 @@
 "use client";
-import { useState } from "react";
+import { ReactNode,useState } from "react";
 import { MdCancel } from "react-icons/md";
 
-export default function Modal({ children, onClose }) {
+interface ModalProps {
+  children: ReactNode;
+  onClose: () => void;
+}
+
+export default function Modal({ children, onClose }:ModalProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (

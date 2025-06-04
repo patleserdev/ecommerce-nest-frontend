@@ -9,22 +9,52 @@ import {
   getProductsByCategory,
   getCategoriesByParent,
   getCategoryBySlug,
+  getCategories,
 } from "@/lib/api";
 import DisplayIcon from "@/components/DisplayIcon";
+import { Category } from "@/types/product.js";
+
+export const revalidate = 60; // ISR toutes les 60s
 
 type Props = {
-  params: {
-    slug: string[];
-  };
+  params: Promise<{ slug: string[] }>;
 };
 
-export default async function CategorieSlug({ params }: Props) {
-  const slugs = params.slug;
-  if (!slugs || slugs.length === 0) return notFound();
+
+function getSlugChain(category: Category, allCategories: Category[]): string[] {
+  const chain = [];
+  let current: Category | undefined = category;
+
+  while (current) {
+    // On ajoute le slug (ou le nom) en tête du tableau
+    chain.unshift(current.slug /* ou current.name.toLowerCase() */);
+
+    // Si `parent_id` est null/undefined, on casse la boucle
+    if (!current.parent_id) break;
+
+    // `find` renvoie `Category | undefined`, on l’affecte donc à `current`
+    current = allCategories.find((c) => c.id === current?.parent_id);
+  }
+
+  return chain;
+}
+
+export async function generateStaticParams() {
+  const allCategories = await getCategories(); // doit retourner tous les slugs
+  return allCategories.map((category: Category) => ({
+    slug: getSlugChain(category, allCategories),
+
+  }));
+}
+
+export default async function CategorieSlug({ params }: Props)
+{
+  const {slug} = await params;
+  if (!slug || slug.length === 0) return notFound();
   // On récupère la catégorie ciblée : la dernière dans l'URL
 
-  const currentSlug = slugs[slugs.length - 1];
-  const parentSlug = slugs[slugs.length - 2];
+  const currentSlug = slug[slug.length - 1];
+  const parentSlug = slug[slug.length - 2];
   const currentCategory = await getCategoryBySlug(currentSlug, "");
 
  
@@ -69,8 +99,8 @@ export default async function CategorieSlug({ params }: Props) {
   let valid = true;
   let parentId = currentCategory.parent_id;
   // On vérifie chaque parent dans l'ordre inverse des slugs
-  for (let i = slugs.length - 2; i >= 0; i--) {
-    const expectedSlug = slugs[i];
+  for (let i = slug.length - 2; i >= 0; i--) {
+    const expectedSlug = slug[i];
     const parentCategory = await getCategoryById(parentId);
 
     if (!parentCategory || parentCategory.name.toLowerCase() !== expectedSlug) {

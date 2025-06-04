@@ -1,18 +1,26 @@
 import { notFound } from "next/navigation.js";
-import { getProductBySlug, getProductsByCategory } from "@/lib/api";
-type Props = {
-  params: {
-    slug: string;
-  };
-};
+import { getProductBySlug, getProductsByCategory,getProducts} from "@/lib/api";
 import { toFirstLetterUpper } from "@/lib/utils";
 import Image from "next/image.js";
 import SizeSelector from "@/components/products/SizeSelector";
 import { Product } from "@/types/product.js";
 import InfiniteScrollProducts from "@/components/motions/InfiniteScrollProducts";
 
+export const revalidate = 60; // ISR toutes les 60s
+
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+export async function generateStaticParams() {
+  const allProducts = await getProducts(); // doit retourner tous les slugs
+  return allProducts.map((product: Product) => ({
+    slug: product.slug,
+  }));
+}
+
 export default async function Products({ params }: Props) {
-  const slug = params.slug;
+  const {slug} = await params;
 
   if (!slug || slug.length === 0) return notFound();
 
@@ -21,9 +29,9 @@ export default async function Products({ params }: Props) {
   const otherProducts = await getProductsByCategory(product.category.id);
 
   const otherProductsNotThis = otherProducts.filter(
-    (prod) => (prod.id != product.id)
+    (prod:Product) => (prod.id != product.id)
   );
-
+console.log(product)
   return (
     <div className="mt-5 md:mx-10 p-5 flex flex-col gap-5">
       <div className=" flex flex-col-reverse gap-5 md:flex-row justify-between items-center ">

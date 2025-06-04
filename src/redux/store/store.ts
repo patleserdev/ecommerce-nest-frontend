@@ -1,5 +1,5 @@
 // src/redux/store.ts
-import { configureStore,getDefaultMiddleware } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import { cartSlice } from "../reducers/cartSlice";
 import { userSlice } from "../reducers/userSlice";
 import { persistStore, persistReducer } from "redux-persist";

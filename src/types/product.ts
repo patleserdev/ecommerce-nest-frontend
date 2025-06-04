@@ -18,29 +18,51 @@ export type ProductVariations = {
 };
 
 export interface Product {
+  id?:number,
   description: string;
-  id: number;
   name: string;
-  slug: string;
+  slug?:string;
   price: number;
   // quantity: Number;
   sku: string;
   category?: Category;
   brand?: Brand;
-  variations: ProductVariations[];
+  variations?: ProductVariations[];
+}
+
+export interface CreateProduct {
+  description: string;
+  name: string;
+  price: number;
+  // quantity: Number;
+  sku: string;
+  category?: Category;
+  brand?: Brand;
+  variations?: ProductVariations[];
+}
+
+export interface UpdateProduct {
+  description: string;
+  name: string;
+  price: number;
+  // quantity: Number;
+  sku: string;
+  category?: Category;
+  brand?: Brand;
+  variations?: ProductVariations[];
 }
 
 export interface Brand {
-  id: number;
+  id?: number;
   name: string;
-  slug: string;
+  slug?: string;
 
 }
 
 export interface Child {
   id: number;
   name: string;
-  parent_id?: number;
+  parent_id: number;
   slug:string;
   products?: [];
 }

@@ -5,7 +5,7 @@ const API_BACKEND = process.env.NEXT_PUBLIC_API_BACKEND;
 export async function POST(request: NextRequest) {
   const body = await request.json();
 
-  const res = await fetch(`${API_BACKEND}/users/login`, {
+  const res = await fetch(`${API_BACKEND}/users/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),

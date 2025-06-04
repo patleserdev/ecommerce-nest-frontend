@@ -5,37 +5,39 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("oeb-token")?.value;
   const role = request.cookies.get("role")?.value;
-
   const pathname = request.nextUrl.pathname;
 
-    // Routes protégées
-    const isDashboard = pathname.startsWith("/dashboard");
-    const isAdminPage = pathname.startsWith("/admin");
+  // console.log("Middleware check:", { token, role, pathname });
 
- // 🔐 Rediriger si pas connecté
- if ((isDashboard || isAdminPage) && !token) {
-  return NextResponse.redirect(new URL("/login", request.url));
-}
+  const isDashboard = pathname.startsWith("/dashboard");
+  const isAdminPage = pathname.startsWith("/admin");
 
-// ✅ Admin a accès à tout
-if (role === "admin") {
+  if ((isDashboard || isAdminPage) && !token) {
+    // console.log("Redirection vers login car pas de token");
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  if (role === "admin") {
+    // console.log("Accès admin autorisé");
+    return NextResponse.next();
+  }
+
+  if (role === "customer") {
+    if (isDashboard) {
+      // console.log("Accès dashboard customer autorisé");
+      return NextResponse.next();
+    }
+    if (isAdminPage) {
+      // console.log("Redirection unauthorized pour customer sur admin");
+      return NextResponse.redirect(new URL("/unauthorized", request.url));
+    }
+  }
+
+  if (isDashboard || isAdminPage) {
+    // console.log("Redirection vers login par défaut");
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  // console.log("Passage next par défaut");
   return NextResponse.next();
 }
-
-// 🚫 Customer n'a pas accès à /admin
-if (isAdminPage && role !== "admin") {
-  return NextResponse.redirect(new URL("/unauthorized", request.url));
-}
-
-// ✅ Customer peut accéder au dashboard
-if (isDashboard && role === "customer") {
-  return NextResponse.next();
-}
-
-  return NextResponse.next();
-}
-
-// 🔧 Configuration : match admin & dashboard
-export const config = {
-  matcher: ["/dashboard/:path*", "/admin/:path*"],
-};
