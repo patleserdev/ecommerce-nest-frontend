@@ -2,8 +2,7 @@
 import { useForm, useFieldArray } from "react-hook-form";
 import { Brand, ProductVariations } from "../../types/product";
 import { MdAddCircle } from "react-icons/md";
-import { useState } from "react";
-
+import { useEffect } from "react";
 import { genders, sizes } from "@/Constants";
 
 type FormValues = {
@@ -50,6 +49,7 @@ export default function ProductForm({
     register,
     handleSubmit,
     setValue,
+    reset,
     control,
     watch,
     formState: { errors },
@@ -63,6 +63,11 @@ export default function ProductForm({
     control,
     name: "variations",
   });
+
+  // ✅ Re-sync when defaultValues change
+  useEffect(() => {
+    reset(defaultValues);
+  }, [defaultValues, reset]);
 
   console.log(errors);
   return (
