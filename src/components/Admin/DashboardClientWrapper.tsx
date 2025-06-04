@@ -127,6 +127,7 @@ export default function DashboardClientWrapper({
       await updateCategorie({ id: category_id, formData: datas });
       console.log("Catégorie modifiée !");
       setMode("");
+      setIsEditCategory(null);
       router.refresh();
 
       // Fermer le modal ou rafraîchir les données ici
@@ -200,6 +201,7 @@ export default function DashboardClientWrapper({
       await updateProduct({ id: product_id, formData: datas });
       console.log("Produit modifiée !",datas);
       setMode("");
+      setIsEditProduct(null);
       router.refresh();
 
       // Fermer le modal ou rafraîchir les données ici
