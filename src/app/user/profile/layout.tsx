@@ -12,7 +12,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
 
     return (
 
-      <div className="p-4">
+      <div className="p-4 text-[var(--foreground)] bg-[var(--background)]">
         <h1 className="text-3xl mb-5">Mon profil</h1>
         <div className="flex flex-row gap-5">
           <aside className="w-[15%] flex flex-col gap-5">

@@ -32,7 +32,7 @@ export async function loginUser(
   if (!res.ok) throw new Error("Login failed");
 
   const data = await res.json();
-  console.log("userdata", data);
+  // console.log("userdata", data);
   if (data) {
     dispatch(
       addUser({
@@ -42,7 +42,7 @@ export async function loginUser(
     );
   }
 
-  const response = { ok: true };
+  const response = { ok: true,role:data.role };
   return response;
 }
 

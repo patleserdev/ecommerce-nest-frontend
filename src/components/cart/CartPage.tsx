@@ -50,7 +50,7 @@ export default function CartPage() {
   return (
     <table className="table-auto md:w-full">
       <thead>
-        <tr className="flex flex-row items-center justify-around gap-2">
+        <tr className="flex flex-row items-center justify-around gap-2 mb-5">
           <th className="w-[10%]  py-2"></th>
           <th className="w-[25%] border py-2">Produit</th>
           <th className="w-[10%] border py-2">Couleur</th>

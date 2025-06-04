@@ -25,9 +25,10 @@ export default function LoginForm() {
       if (!res.ok) {
         throw new Error("Email ou mot de passe incorrect");
       }
+      console.log(res)
 
       console.log("Connexion réussie");
-      router.replace("/");
+      router.replace(res.role == "customer" ? "/dashboard" :"/admin");
     } catch (err: any) {
       console.log(err.message);
       setError(err.message);

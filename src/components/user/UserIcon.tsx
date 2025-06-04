@@ -78,14 +78,15 @@ export default function UserIcon() {
                   <hr />
                 </div>
 
-                {user.role == "admin" && pathname != "/admin" && (
-                  <CustomedLink title="Gérer le site" url="/admin" />
-                )}
+                <div className="flex flex-col">
 
-                {user.role != "" && (
-                   <CustomedLink title="Mon profil" url="/user/profile" />
-              
-                )}
+                  {user.role == "admin" && pathname != "/admin" && (
+                    <CustomedLink title="Gérer le site" url="/admin" />
+                  )}
+                  {user.role != "" && (
+                    <CustomedLink title="Mon profil" url="/user/profile" />
+                  )}
+                </div>
               </div>
 
               <div>
