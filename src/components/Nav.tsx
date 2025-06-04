@@ -127,7 +127,7 @@ export default function Nav() {
 
           {user.role == "" && (
           <li className="flex items-center justify-center p-2">
-            <Link href="/admin" title="Se connecter">
+            <Link href="/login" title="Se connecter">
               <MdLogin size={30} />
             </Link>
           </li>)}
