@@ -13,14 +13,14 @@ interface CustomThemeProviderProps {
 export function ThemeProvider({
   children,
   attribute = "class",
-  defaultTheme = "system",
+  defaultTheme = "light",
   enableSystem = true,
 }: CustomThemeProviderProps) {
   return (
     <NextThemesProvider
       attribute={attribute}
       defaultTheme={defaultTheme}
-      enableSystem={enableSystem}
+      // enableSystem={enableSystem}
     >
       {children}
     </NextThemesProvider>
