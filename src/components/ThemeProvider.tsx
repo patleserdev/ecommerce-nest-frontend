@@ -14,13 +14,13 @@ export function ThemeProvider({
   children,
   attribute = "class",
   defaultTheme = "light",
-  enableSystem = true,
+  enableSystem = false,
 }: CustomThemeProviderProps) {
   return (
     <NextThemesProvider
       attribute={attribute}
       defaultTheme={defaultTheme}
-      // enableSystem={enableSystem}
+      enableSystem={enableSystem}
     >
       {children}
     </NextThemesProvider>
