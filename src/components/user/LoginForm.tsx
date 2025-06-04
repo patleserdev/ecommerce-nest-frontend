@@ -29,7 +29,7 @@ export default function LoginForm() {
       }
 
       console.log("Connexion réussie");
-      router.push("/admin");
+      router.refresh();
     } catch (err: any) {
       console.log(err.message);
       setError(err.message);
