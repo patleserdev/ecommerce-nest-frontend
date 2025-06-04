@@ -31,11 +31,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="light" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
+<head>
+<script
+  dangerouslySetInnerHTML={{
+    __html: `
+      (function() {
+        const html = document.documentElement;
+        html.classList.add('light');
+        html.classList.remove('dark');
+        html.style.colorScheme = 'light';
+      })();
+    `,
+  }}
+/>
 
+</head>
     
       <body className={`${lexendRegular.variable} antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <Providers>
             <Nav />
             {children}
