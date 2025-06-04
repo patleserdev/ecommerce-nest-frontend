@@ -111,10 +111,7 @@ export default function Nav() {
             )}
           </li>
 
-          <li className="relative p-2">
-            <Link href="/orders">Commandes</Link>
-          </li>
-        </ul>
+              </ul>
 
         <ul className="flex gap-5 ml-5 mr-5">
           {user.role == "admin" ||
