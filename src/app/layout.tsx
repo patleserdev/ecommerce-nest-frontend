@@ -32,6 +32,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="light" suppressHydrationWarning>
+      <head>
+      <script
+  dangerouslySetInnerHTML={{
+    __html: `
+      (function () {
+        try {
+          var theme = localStorage.getItem('theme');
+          if (!theme || theme === 'light') {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.add('light');
+            document.documentElement.style.colorScheme = 'light';
+          }
+        } catch (e) {}
+      })();
+    `,
+  }}
+/>
+      </head>
       <body className={`${lexendRegular.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Providers>
