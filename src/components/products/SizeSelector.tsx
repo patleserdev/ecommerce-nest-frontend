@@ -58,7 +58,7 @@ export default function SizeSelector({ product }: { product: Product }) {
               {sizes.map((size) => {
                 const isAvailable = product.variations?.some(
                   (variation: ProductVariations) =>
-                    variation.gender === gender.value && variation.size === size.value
+                    variation.gender === gender.value && variation.size.toLowerCase() === size.value.toLowerCase()
                 );
 
                 const matchedVariation = product.variations?.find(
@@ -94,7 +94,7 @@ export default function SizeSelector({ product }: { product: Product }) {
                         : null
                     }
                   >
-                    {size.value}
+                    {size.label}
                   </div>
                 );
               })}

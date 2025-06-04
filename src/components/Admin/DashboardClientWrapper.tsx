@@ -324,12 +324,9 @@ export default function DashboardClientWrapper({
             {brands.map((brand) => (
               <li key={brand.id} className="pb-5 uppercase ">
                 <span className="flex items-center gap-2 border-b-1 pb-1">
-                  <Link
-                    href={`brands/${brand.slug}`}
-                    className="font-bold w-[80%]"
-                  >
+      
                     {brand.name}
-                  </Link>
+            
                   <div className="flex gap-1 w-[20%]">
                     <div
                       className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
