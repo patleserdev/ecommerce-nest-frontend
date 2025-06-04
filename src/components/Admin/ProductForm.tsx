@@ -43,7 +43,8 @@ export default function ProductForm({
     brandId: defaultValues?.brandId ?? 0,
   };
 
-  const [isUnisex, setIsUnisex] = useState(false);
+
+ 
 
   const {
     register,
@@ -56,6 +57,8 @@ export default function ProductForm({
     defaultValues: mergedDefaults,
   });
 
+  const variations = watch("variations");
+  
   const { fields, append, remove } = useFieldArray({
     control,
     name: "variations",
@@ -133,7 +136,12 @@ export default function ProductForm({
       </div> */}
 
       {/* Variations */}
-      {fields.map((field, index) => (
+      {fields.map((field, index) => {
+          const isUnisex = variations?.[index]?.gender === "unisexe";
+
+          return (
+
+          
         <div
           key={field.id}
           className="border p-2 mb-1 flex flex-row items-center justify-between"
@@ -143,7 +151,7 @@ export default function ProductForm({
             <select
               {...register(`variations.${index}.gender`, { required: true })}
               className="border p-1"
-              onChange={(e) => setIsUnisex(e.target.value === "unisexe")}
+              // onChange={(e) => setIsUnisex(e.target.value === "unisexe")}
               required
             >
               <option value="">-- Genre --</option>
@@ -217,8 +225,8 @@ export default function ProductForm({
               Retirer
             </button>
           </div>
-       
-      ))}
+       )
+})}
 
       <div className="py-2">
         <button

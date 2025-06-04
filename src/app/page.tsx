@@ -10,7 +10,7 @@ export default function Home() {
         <h2 className="text-2xl underline">Objectifs atteints</h2>
         <ul className="p-2">
           <li>Connexion et session OK</li>
-          <li>Thème dark ok</li>
+          <li>Thème dark ok - Thème clair par défaut</li>
           <li>Routage par slug</li>
           <li>Redux : CART </li>
           <li>Redux Persist </li>
