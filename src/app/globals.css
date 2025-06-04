@@ -36,3 +36,7 @@ body {
   color: var(--foreground);
   font-family: var(--font-lexend);
 }
+
+html {
+  color-scheme: light !important;
+}
