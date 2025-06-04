@@ -12,7 +12,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { logout } from "@/lib/api";
 import { useRouter, usePathname } from "next/navigation.js";
 import { toFirstLetterUpper } from "../../lib/utils";
-import CustomedLink from "../CustomedLink.jsx";
+import CustomedLink from "../CustomedLink";
 export default function UserIcon() {
   const router = useRouter();
   const pathname = usePathname();
