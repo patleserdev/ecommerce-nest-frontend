@@ -1,10 +1,8 @@
 "use client";
-
 import { loginUser } from "@/lib/api";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import CustomedButton from "../CustomedButton";
 
 export default function LoginForm() {
   const dispatch = useDispatch();
@@ -29,7 +27,7 @@ export default function LoginForm() {
       }
 
       console.log("Connexion réussie");
-      router.refresh();
+      router.replace("/");
     } catch (err: any) {
       console.log(err.message);
       setError(err.message);
