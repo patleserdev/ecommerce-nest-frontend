@@ -1,10 +1,9 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 10; // revalidate toutes les 10 secondes
+
 import { getCategories, getProducts,getBrands } from "@/lib/api";
 import { notFound } from "next/navigation.js";
-
 import DashboardClientWrapper from "@/components/Admin/DashboardClientWrapper";
-
-export const dynamic = 'force-dynamic';
-
 export default async function Dashboard() {
 
 
