@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛒 E-commerce
 
-## Getting Started
+## ✅ Objectifs atteints
 
-First, run the development server:
+- Connexion et session **OK**
+- Thème dark **OK** – Thème clair par défaut
+- Routage par *slug*
+- Redux : **CART**
+- Redux Persist
+- Admin :
+  - CRUD **marque** OK
+  - CRUD **catégorie** OK
+  - CRUD **produit** OK
+- Affichage de la liste des catégories
+- Affichage des produits d'une catégorie *(via slug)*
+- Affichage d'une fiche produit *(via slug)*
+- Dans la fiche produit :
+  - Sélecteur de produit *(quantité, taille, genre)*
+  - Carousel Framer des produits de la même catégorie
+- Panier dynamique dans la navbar
+- Optimisation des temps de réponse *(SSG)*
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚧 Objectifs suivants
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- Créer un module **médiathèque** (front/back)
+- Valider les quantités de produits **par variation** (pas globalement)
+- Implémenter le **checkout** (validation du panier)
+- Sécuriser le panier pour qu’il persiste même sans session
+- Tester les rôles *(Admin / Customer)*
+- Créer le tunnel d’achat :
+  - Validation du panier
+  - Création de compte
+  - Création de commande *(livraison/adresse)*
+  - Paiement
+  - Confirmation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Mettre en place un **module de mailing** :
+  - Inscription au site avec lien de validation
+  - Inscription à la newsletter
+  - Mail de bienvenue avec offre spéciale (-10 %)
+  - Relance panier abandonné avec réduction incitative
+  - Confirmation de commande
+  - Confirmation de paiement
+  - Facture
+  - Mise à jour de l’état de la commande
+  - Suivi de livraison
+  - Confirmation de livraison
+  - Demande d’avis
+  - SAV : confirmation de demande
+  - SAV : réponse à une réclamation
+  - Retour : confirmation de demande de retour
+  - Suivi du remboursement
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## ❌ Objectifs manquants
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Gestion des **rôles** pour l’accès à l’admin
+- Ajout d’**icônes** aux catégories
+- Gestion des **codes promotionnels**
