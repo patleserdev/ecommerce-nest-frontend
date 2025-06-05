@@ -57,7 +57,7 @@ export default function ProductForm({
     defaultValues: mergedDefaults,
   });
 
-  const variations = watch("variations");
+  // const variations = watch("variations");
   
   const { fields, append, remove } = useFieldArray({
     control,
@@ -66,9 +66,11 @@ export default function ProductForm({
 
   // ✅ Re-sync when defaultValues change
   useEffect(() => {
-    reset(defaultValues);
-  }, [defaultValues, reset]);
-
+    if (defaultValues) {
+      reset(defaultValues);
+    }
+  }, [ ]);
+  console.log("errors in form",errors);
   console.log("mergedDefaults in form",mergedDefaults);
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -142,7 +144,8 @@ export default function ProductForm({
 
       {/* Variations */}
       {fields.map((field, index) => {
-          const isUnisex = variations?.[index]?.gender === "unisexe";
+          const gender = watch(`variations.${index}.gender`);
+          const isUnisex = gender === "unisexe";
 
           return (
 
@@ -200,7 +203,7 @@ export default function ProductForm({
           <div className="flex flex-col items-center justify-center">
             <label>Couleur</label>
             <input
-              {...register(`variations.${index}.color`, { required: true })}
+              {...register(`variations.${index}.color`)}
               type="color"
               placeholder="Couleur"
               className="cursor-pointer h-10"
@@ -216,7 +219,7 @@ export default function ProductForm({
               placeholder="Stock"
             />
             <div>
-              {errors.variations?.[index]?.size && (
+              {errors.variations?.[index]?.stock && (
                 <p className="text-red-500 text-sm mt-1">Quantité requise</p>
               )}
             </div>
@@ -239,7 +242,6 @@ export default function ProductForm({
           type="button"
           onClick={() =>
             append({
-              id: 0,
               gender: "",
               size: "",
               color: "",

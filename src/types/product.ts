@@ -9,7 +9,7 @@ export interface Category {
 export type CategoryWithChildren = Category & { children?: Category[] };
 
 export type ProductVariations = {
-  id: number;
+  id?: number;
   gender: string;
   size: string;
   color: string;

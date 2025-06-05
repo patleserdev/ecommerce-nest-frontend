@@ -170,6 +170,7 @@ export default function DashboardClientWrapper({
    * @param datas
    */
   const handleAddProduct = async (datas:CreateProduct) => {
+    
     try {
       await addProduct({ formData: datas });
       console.log("Produit ajouté !");
@@ -189,6 +190,7 @@ export default function DashboardClientWrapper({
   const handleOpenEditProduct = async (product: Product | null) => {
     setMode("products");
     setIsEditProduct(product);
+    console.log("passage du product pour edition",product)
     setIsModalOpen(true);
   };
 
@@ -198,6 +200,7 @@ export default function DashboardClientWrapper({
    * @param datas
    */
   const handleUpdateProduct = async (product_id: number, datas: UpdateProduct) => {
+    console.log("datas envoyées à l'update",datas)
     try {
       await updateProduct({ id: product_id, formData: datas });
       console.log("Produit modifiée !",datas);
