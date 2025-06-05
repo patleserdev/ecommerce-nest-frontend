@@ -1,5 +1,5 @@
-export const dynamic = 'force-dynamic';
-export const revalidate = 10; // revalidate toutes les 10 secondes
+export const dynamic = 'force-static';
+
 
 import { getCategories, getProducts,getBrands } from "@/lib/api";
 import { notFound } from "next/navigation.js";

@@ -233,12 +233,12 @@ export function getProductsByCategory(id: number) {
     return response;
   } catch (error) {}
 }
-
 export function getProductBySlug(slug: string) {
   try {
     const response = Fetch({
       url: `${API_BACKEND}/products/slug/${slug}`,
       options: {
+        next: { tags: ['products'] },
         headers: {
           // Authorization: `Bearer ${yourToken}`,
         },

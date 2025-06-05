@@ -14,6 +14,8 @@ import { MdCancel } from "react-icons/md";
 import ProductForm from "./ProductForm";
 import BrandForm from "./BrandForm";
 import Accordion from "../motions/Accordion";
+import { revalidateTag } from 'next/cache';
+
 type Props = {
   categories: Category[];
   products: Product[];
@@ -207,6 +209,8 @@ export default function DashboardClientWrapper({
       setMode("");
       setIsEditProduct(null);
       router.refresh();
+      revalidateTag('products');
+
 
       // Fermer le modal ou rafraîchir les données ici
     } catch (err) {
