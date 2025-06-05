@@ -2,7 +2,7 @@ export const sizes = [
   { value: "xs", label: "XS" },
   { value: "s", label: "S" },
   { value: "m", label: "M" },
-  { value: "L", label: "L" },
+  { value: "l", label: "L" },
   { value: "xl", label: "XL" },
   { value: "xxl", label: "2XL" },
   { value: "unique", label: "Unique" },
