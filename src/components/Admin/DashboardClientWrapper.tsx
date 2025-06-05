@@ -633,6 +633,8 @@ export default function DashboardClientWrapper({
             setIsModalOpen(false);
             setMode("");
             setIsEditCategory(null);
+            setIsEditProduct(null)
+            setIsEditBrand(null)
             setParent(null);
           }}
         >
@@ -658,7 +660,7 @@ export default function DashboardClientWrapper({
             </span>
           </h2>
 
-          {mode == "brands" && (
+          {mode == "brands" && (isEditBrand || mode === "brands" && !isEditBrand) && (
             <BrandForm
               defaultValues={{
                 name: isEditBrand?.name ?? "",
@@ -677,7 +679,7 @@ export default function DashboardClientWrapper({
             />
           )}
 
-          {mode == "categories" && (
+          {mode == "categories" && (isEditCategory || mode === "categories" && !isEditCategory) && (
             <CategoryForm
               defaultValues={{
                 name: isEditCategory?.name ?? "",
@@ -697,7 +699,7 @@ export default function DashboardClientWrapper({
             />
           )}
 
-          {mode == "products" && (
+          {mode == "products" && (isEditProduct || mode === "products" && !isEditProduct) && (
             <ProductForm
               brands={brands}
               defaultValues={{
