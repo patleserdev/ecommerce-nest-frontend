@@ -1,9 +1,16 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MdAddCircle } from "react-icons/md";
 import Modal from "@/components/Modal";
 import Link from "next/link";
-import { Category, Child,Product, Brand,ProductVariations, UpdateProduct, CreateProduct } from "@/types/product";
+import {
+  Category,
+  Child,
+  Product,
+  Brand,
+  UpdateProduct,
+  CreateProduct,
+} from "@/types/product";
 import CategoryForm from "./CategoryForm";
 import { addCategorie, destroyCategorie, updateCategorie } from "@/lib/api";
 import { addProduct, updateProduct, destroyProduct } from "@/lib/api";
@@ -49,8 +56,8 @@ export default function DashboardClientWrapper({
   );
 
   const [expanded, setExpanded] = useState<false | number>(0);
+  const [isWaiting, setIsWaiting] = useState(false);
 
-  console.log("products",products)
   /**
    * Réorganisation des catégories pour le display
    */
@@ -107,7 +114,6 @@ export default function DashboardClientWrapper({
    * @param category
    */
   const handleOpenEditCategory = async (category: Category | Child) => {
-
     if (typeof category.parent_id !== "number") {
       console.warn("Impossible d’éditer : parent_id manquant !");
       return;
@@ -171,8 +177,7 @@ export default function DashboardClientWrapper({
    * Ajout d'un produit
    * @param datas
    */
-  const handleAddProduct = async (datas:CreateProduct) => {
-    
+  const handleAddProduct = async (datas: CreateProduct) => {
     try {
       await addProduct({ formData: datas });
       console.log("Produit ajouté !");
@@ -192,11 +197,14 @@ export default function DashboardClientWrapper({
   const handleOpenEditProduct = async (product: Product | null) => {
     setMode("products");
     setIsEditProduct(null); // Reset
-    setTimeout(() => {
-      setIsEditProduct(product);
-      setIsModalOpen(true);
-    }, 1000);
-    console.log("passage du product pour edition",product)
+
+   
+    if (!isWaiting)
+      {
+        setIsModalOpen(true)
+        console.log("passage du product pour edition", product);
+        setIsEditProduct(product);
+      } 
   };
 
   /**
@@ -204,16 +212,22 @@ export default function DashboardClientWrapper({
    * @param product_id
    * @param datas
    */
-  const handleUpdateProduct = async (product_id: number, datas: UpdateProduct) => {
-    console.log("datas envoyées à l'update",datas)
+  const handleUpdateProduct = async (
+    product_id: number,
+    datas: UpdateProduct
+  ) => {
+    console.log("datas envoyées à l'update", datas);
     try {
       await updateProduct({ id: product_id, formData: datas });
-      console.log("Produit modifiée !",datas);
+      console.log("Produit modifiée !", datas);
       setMode("");
       setIsEditProduct(null);
       router.refresh();
-      await revalidateProducts()
-
+      const response = await revalidateProducts();
+      setIsWaiting(true);
+      if (response.success) {
+        setIsWaiting(false);
+      }
 
       // Fermer le modal ou rafraîchir les données ici
     } catch (err) {
@@ -281,27 +295,29 @@ export default function DashboardClientWrapper({
    * @param product_id
    * @param datas
    */
-  const handleUpdateBrand = async (brand_id: number|undefined, datas: {name:string}) => {
-    if(brand_id)
-    try {
-      await updateBrand({ id: brand_id, formData: datas });
-      console.log("Marque modifiée !");
-      setMode("");
-      router.refresh();
+  const handleUpdateBrand = async (
+    brand_id: number | undefined,
+    datas: { name: string }
+  ) => {
+    if (brand_id)
+      try {
+        await updateBrand({ id: brand_id, formData: datas });
+        console.log("Marque modifiée !");
+        setMode("");
+        router.refresh();
 
-      // Fermer le modal ou rafraîchir les données ici
-    } catch (err) {
-      console.error("Erreur lors de l'ajout de la marque :", err);
-    }
+        // Fermer le modal ou rafraîchir les données ici
+      } catch (err) {
+        console.error("Erreur lors de l'ajout de la marque :", err);
+      }
   };
 
   /**
    * Destruction d'un produit
    * @param id
    */
-  const handleToDestroyBrand = (id: number|undefined) => {
-    if(id)
-    {
+  const handleToDestroyBrand = (id: number | undefined) => {
+    if (id) {
       var result = confirm(`Détruire irrémédiablement la marque ${id}`);
       if (result) {
         try {
@@ -312,7 +328,6 @@ export default function DashboardClientWrapper({
         }
       }
     }
-   
   };
 
   return (
@@ -337,9 +352,8 @@ export default function DashboardClientWrapper({
             {brands.map((brand) => (
               <li key={brand.id} className="pb-5 uppercase ">
                 <span className="flex items-center gap-2 border-b-1 pb-1">
-      
-                    {brand.name}
-            
+                  {brand.name}
+
                   <div className="flex gap-1 w-[20%]">
                     <div
                       className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
@@ -467,7 +481,8 @@ export default function DashboardClientWrapper({
                   // Récupérer tous les produits de ces sous-catégories
                   const productCount = products.filter((product) =>
                     categories.some(
-                      (child) => product.category && parent.id === product.category.id 
+                      (child) =>
+                        product.category && parent.id === product.category.id
                     )
                   ).length;
 
@@ -498,7 +513,9 @@ export default function DashboardClientWrapper({
                       <ul>
                         {products
                           .filter(
-                            (product) => product.category && product.category.id === parent.id
+                            (product) =>
+                              product.category &&
+                              product.category.id === parent.id
                           )
                           .map((product, k) => (
                             <li className="capitalize px-5 mb-1" key={k}>
@@ -533,12 +550,11 @@ export default function DashboardClientWrapper({
                       <ul>
                         {childCategories.map((child, j) => {
                           const childProductCount = products.filter(
-                            (product) => product.category && product.category.id === child.id
+                            (product) =>
+                              product.category &&
+                              product.category.id === child.id
                           ).length;
                           return (
-
-                          
-
                             <li
                               key={j}
                               className="capitalize font-bold pl-4 mb-2"
@@ -564,53 +580,55 @@ export default function DashboardClientWrapper({
                                 {products
                                   .filter(
                                     (product) =>
-                                      product.category && product.category.id === child.id
+                                      product.category &&
+                                      product.category.id === child.id
                                   )
                                   .map((product, k) => {
+                                    const displayProduct = (
+                                      <li
+                                        className="font-normal px-5 mb-1"
+                                        key={k}
+                                      >
+                                        <div className="flex justify-between gap-5 border-b-1">
+                                          <div>
+                                            {product.name.slice(0, 15)}...
+                                          </div>
 
-                                    const displayProduct=<li
-                                    className="font-normal px-5 mb-1"
-                                    key={k}
-                                  >
-                                    <div className="flex justify-between gap-5 border-b-1">
-                                      <div>
-                                        {product.name.slice(0, 15)}...
-                                      </div>
+                                          <div className="flex gap-1">
+                                            <div
+                                              className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
+                                              onClick={() => {
+                                                setProductCategory(child);
+                                                handleOpenEditProduct(product);
+                                              }}
+                                            >
+                                              <MdEdit size={18} />
+                                            </div>
 
-                                      <div className="flex gap-1">
-                                        <div
-                                          className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
-                                          onClick={() => {
-                                            setProductCategory(child);
-                                            handleOpenEditProduct(product);
-                                          }}
-                                        >
-                                          <MdEdit size={18} />
+                                            <div
+                                              className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
+                                              onClick={() =>
+                                                handleToDestroyProduct(
+                                                  product.id!
+                                                )
+                                              }
+                                            >
+                                              <MdCancel size={18} />
+                                            </div>
+                                          </div>
                                         </div>
+                                      </li>
+                                    );
 
-                                        <div
-                                          className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
-                                          onClick={() =>
-                                            handleToDestroyProduct(
-                                              product.id!
-                                            )
-                                          }
-                                        >
-                                          <MdCancel size={18} />
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </li>
-                                  
                                     return (
-                                      <Accordion i={k} expanded={expanded} setExpanded={setExpanded} content={displayProduct}/>
-
-                                    )
-                                  }
-
-
-                                    
-                                  )}
+                                      <Accordion
+                                        i={k}
+                                        expanded={expanded}
+                                        setExpanded={setExpanded}
+                                        content={displayProduct}
+                                      />
+                                    );
+                                  })}
                               </ul>
                             </li>
                           );
@@ -636,8 +654,8 @@ export default function DashboardClientWrapper({
             setIsModalOpen(false);
             setMode("");
             setIsEditCategory(null);
-            setIsEditProduct(null)
-            setIsEditBrand(null)
+            setIsEditProduct(null);
+            setIsEditBrand(null);
             setParent(null);
           }}
         >
@@ -663,71 +681,78 @@ export default function DashboardClientWrapper({
             </span>
           </h2>
 
-          {mode == "brands" && (isEditBrand || mode === "brands" && !isEditBrand) && (
-            <BrandForm
-              defaultValues={{
-                name: isEditBrand?.name ?? "",
-              }}
-              onSubmit={(data) => {
-                const safeData = {
-                  ...data,
-                };
-                console.log("Catégorie à ajouter :", safeData);
-                isEditBrand
-                  ? handleUpdateBrand(isEditBrand.id, safeData)
-                  : handleAddBrand(safeData);
-                setIsEditBrand(null);
-                setIsModalOpen(false);
-              }}
-            />
-          )}
+          {mode == "brands" &&
+            (isEditBrand || (mode === "brands" && !isEditBrand)) && (
+              <BrandForm
+                defaultValues={{
+                  name: isEditBrand?.name ?? "",
+                }}
+                onSubmit={(data) => {
+                  const safeData = {
+                    ...data,
+                  };
+                  console.log("Catégorie à ajouter :", safeData);
+                  isEditBrand
+                    ? handleUpdateBrand(isEditBrand.id, safeData)
+                    : handleAddBrand(safeData);
+                  setIsEditBrand(null);
+                  setIsModalOpen(false);
+                }}
+              />
+            )}
 
-          {mode == "categories" && (isEditCategory || mode === "categories" && !isEditCategory) && (
-            <CategoryForm
-              defaultValues={{
-                name: isEditCategory?.name ?? "",
-                parent_id: isEditCategory?.parent_id ?? parent?.id ?? 0,
-              }}
-              onSubmit={(data) => {
-                const safeData = {
-                  ...data,
-                };
-                console.log("Catégorie à ajouter :", safeData);
-                isEditCategory
-                  ? handleUpdateCategory(isEditCategory.id, safeData)
-                  : handleAddCategory(safeData);
-                setIsEditCategory(null);
-                setIsModalOpen(false);
-              }}
-            />
-          )}
+          {mode == "categories" &&
+            (isEditCategory || (mode === "categories" && !isEditCategory)) && (
+              <CategoryForm
+                defaultValues={{
+                  name: isEditCategory?.name ?? "",
+                  parent_id: isEditCategory?.parent_id ?? parent?.id ?? 0,
+                }}
+                onSubmit={(data) => {
+                  const safeData = {
+                    ...data,
+                  };
+                  console.log("Catégorie à ajouter :", safeData);
+                  isEditCategory
+                    ? handleUpdateCategory(isEditCategory.id, safeData)
+                    : handleAddCategory(safeData);
+                  setIsEditCategory(null);
+                  setIsModalOpen(false);
+                }}
+              />
+            )}
 
-          {mode == "products" && (isEditProduct || mode === "products" && !isEditProduct) && (
-            <ProductForm
-              brands={brands}
-              defaultValues={{
-                name: isEditProduct?.name ?? "",
-                description: isEditProduct?.description ?? "",
-                price: isEditProduct?.price ?? 0,
-                sku: isEditProduct?.sku ?? "",
-                // quantity: isEditProduct?.quantity ?? 0,
-                categoryId:
-                (isEditProduct && isEditProduct.category && isEditProduct?.category.id) ?? productCategory?.id ?? 0,
-                variations: isEditProduct?.variations ?? [],
-                brandId:isEditProduct?.brand?.id ?? 0,
-              }}
-              onSubmit={(data) => {
-                const safeData = {
-                  ...data,
-                };
-                isEditProduct?.id && safeData
-                  ? handleUpdateProduct(isEditProduct.id, safeData)
-                  : handleAddProduct(safeData);
-                setIsEditProduct(null);
-                setIsModalOpen(false);
-              }}
-            />
-          )}
+          {mode == "products" &&
+            (isEditProduct || (mode === "products" && !isEditProduct)) && (
+              <ProductForm
+                brands={brands}
+                defaultValues={{
+                  name: isEditProduct?.name ?? "",
+                  description: isEditProduct?.description ?? "",
+                  price: isEditProduct?.price ?? 0,
+                  sku: isEditProduct?.sku ?? "",
+                  // quantity: isEditProduct?.quantity ?? 0,
+                  categoryId:
+                    (isEditProduct &&
+                      isEditProduct.category &&
+                      isEditProduct?.category.id) ??
+                    productCategory?.id ??
+                    0,
+                  variations: isEditProduct?.variations ?? [],
+                  brandId: isEditProduct?.brand?.id ?? 0,
+                }}
+                onSubmit={(data) => {
+                  const safeData = {
+                    ...data,
+                  };
+                  isEditProduct?.id && safeData
+                    ? handleUpdateProduct(isEditProduct.id, safeData)
+                    : handleAddProduct(safeData);
+                  setIsEditProduct(null);
+                  setIsModalOpen(false);
+                }}
+              />
+            )}
         </Modal>
       )}
     </main>
