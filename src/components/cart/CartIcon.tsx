@@ -156,7 +156,7 @@ export default function CartIcon() {
                       size={24}
                       title="Ajouter une quantité"
                       onClick={() => {
-                        if (item.product.id)
+                        if (item.product.id && item.variation.id)
                           handleToAddQuantity(
                             item.product.id,
                             item.variation.id,
@@ -168,7 +168,7 @@ export default function CartIcon() {
                       size={24}
                       title="Ne plus commander"
                       onClick={() => {
-                        if (item.product.id)
+                        if (item.product.id && item.variation.id)
                           handleToRemoveProductFromCart(
                             item.product.id,
                             item.variation.id
@@ -180,7 +180,7 @@ export default function CartIcon() {
                       size={24}
                       title="Supprimer une quantité"
                       onClick={() => {
-                        if (item.product.id)
+                        if (item.product.id && item.variation.id)
                           handleToReduceQuantity(
                             item.product.id,
                             item.variation.id,

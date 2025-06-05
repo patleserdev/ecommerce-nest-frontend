@@ -95,7 +95,7 @@ export default function CartPage() {
                   size={24}
                   title="Supprimer une quantité"
                   onClick={() => {
-                    if (element.product.id)
+                    if (element.product.id &&  element.variation.id)
                       handleToReduceQuantity(
                         element.product.id,
                         element.variation.id,
@@ -108,7 +108,7 @@ export default function CartPage() {
                   size={24}
                   title="Ajouter une quantité"
                   onClick={() => {
-                    if (element.product.id)
+                    if (element.product.id &&  element.variation.id)
                       handleToAddQuantity(
                         element.product.id,
                         element.variation.id,
