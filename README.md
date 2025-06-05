@@ -1,7 +1,10 @@
 # 🛒 E-commerce
 
+[Version démo](https://ecommerce-nest-frontend.vercel.app/)
+
 ## ✅ Objectifs atteints
 
+- Mise en production (Frontend Next et backend Nest sur Vercel, BDD MySQL sur Railway)
 - Connexion et session **OK**
 - Thème dark **OK** – Thème clair par défaut
 - Routage par *slug*
