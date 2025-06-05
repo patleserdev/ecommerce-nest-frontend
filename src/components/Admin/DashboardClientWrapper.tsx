@@ -195,7 +195,7 @@ export default function DashboardClientWrapper({
     setTimeout(() => {
       setIsEditProduct(product);
       setIsModalOpen(true);
-    }, 100);
+    }, 1000);
     console.log("passage du product pour edition",product)
   };
 
