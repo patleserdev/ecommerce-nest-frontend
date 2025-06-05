@@ -48,6 +48,7 @@ export default function DashboardClientWrapper({
 
   const [expanded, setExpanded] = useState<false | number>(0);
 
+  console.log("products",products)
   /**
    * Réorganisation des catégories pour le display
    */

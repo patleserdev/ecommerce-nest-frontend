@@ -69,7 +69,7 @@ export default function ProductForm({
     reset(defaultValues);
   }, [defaultValues, reset]);
 
-  console.log(errors);
+  console.log("mergedDefaults in form",mergedDefaults);
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div className="flex flex-col gap-2 ">
