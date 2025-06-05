@@ -224,11 +224,10 @@ export default function DashboardClientWrapper({
     product_id: number,
     datas: UpdateProduct
   ) => {
-    console.log("datas envoyées à l'update", datas);
-    
+    setIsWaiting(true);
     try {
       await updateProduct({ id: product_id, formData: datas });
-      setIsWaiting(true);
+      
       console.log("Produit modifiée !", datas);
       setMode("");
       // setIsEditProduct(null);
