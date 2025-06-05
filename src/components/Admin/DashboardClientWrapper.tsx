@@ -199,11 +199,9 @@ export default function DashboardClientWrapper({
     setIsEditProduct(null); // Reset
 
     if (!isWaiting) {
-      setTimeout(() => {
-        setIsModalOpen(true);
-        console.log("passage du product pour edition", product);
-        setIsEditProduct(product);
-      }, 200);
+      setIsModalOpen(true);
+      console.log("passage du product pour edition", product);
+      setIsEditProduct(product);
     }
   };
 
@@ -225,7 +223,7 @@ export default function DashboardClientWrapper({
       router.refresh();
       const response = await revalidateProducts();
       setIsWaiting(true);
-      if (response.success) {
+      if (response) {
         setIsWaiting(false);
       }
 
