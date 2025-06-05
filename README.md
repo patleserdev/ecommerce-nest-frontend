@@ -19,16 +19,19 @@
   - Carousel Framer des produits de la même catégorie
 - Panier dynamique dans la navbar
 - Optimisation des temps de réponse *(SSG)*
-
+- Tester les rôles *(Admin / Customer)*
+- Valider les quantités de produits **par variation** (pas globalement)
+- Gestion des **rôles** pour l’accès à l’admin
+- Ajout d’**icônes** aux catégories
+  
 ---
 
 ## 🚧 Objectifs suivants
 
 - Créer un module **médiathèque** (front/back)
-- Valider les quantités de produits **par variation** (pas globalement)
 - Implémenter le **checkout** (validation du panier)
 - Sécuriser le panier pour qu’il persiste même sans session
-- Tester les rôles *(Admin / Customer)*
+
 - Créer le tunnel d’achat :
   - Validation du panier
   - Création de compte
@@ -52,11 +55,10 @@
   - SAV : réponse à une réclamation
   - Retour : confirmation de demande de retour
   - Suivi du remboursement
+- ReTester les rôles *(Admin / Customer)*
 
 ---
 
 ## ❌ Objectifs manquants
 
-- Gestion des **rôles** pour l’accès à l’admin
-- Ajout d’**icônes** aux catégories
 - Gestion des **codes promotionnels**
