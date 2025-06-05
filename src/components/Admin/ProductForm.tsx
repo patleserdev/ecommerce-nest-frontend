@@ -217,6 +217,7 @@ export default function ProductForm({
               type="number"
               {...register(`variations.${index}.stock`, { required: true })}
               placeholder="Stock"
+              min={0}
             />
             <div>
               {errors.variations?.[index]?.stock && (
