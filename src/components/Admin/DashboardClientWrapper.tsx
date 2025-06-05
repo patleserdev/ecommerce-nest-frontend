@@ -1,5 +1,5 @@
 "use client";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { MdAddCircle } from "react-icons/md";
 import Modal from "@/components/Modal";
 import Link from "next/link";
@@ -60,11 +60,9 @@ export default function DashboardClientWrapper({
   const [isWaiting, setIsWaiting] = useState(false);
 
   useEffect(() => {
-    if (isWaiting)
-    {
-      setIsWaiting(false)
+    if (isWaiting) {
+      setIsWaiting(false);
     }
-    
   }, [products]);
   /**
    * Réorganisation des catégories pour le display
@@ -223,16 +221,15 @@ export default function DashboardClientWrapper({
     datas: UpdateProduct
   ) => {
     console.log("datas envoyées à l'update", datas);
-    setIsWaiting(true);
+    
     try {
       await updateProduct({ id: product_id, formData: datas });
+      setIsWaiting(true);
       console.log("Produit modifiée !", datas);
       setMode("");
       setIsEditProduct(null);
       router.refresh();
-     await revalidateProducts();
-      
-
+      await revalidateProducts();
 
       // Fermer le modal ou rafraîchir les données ici
     } catch (err) {
@@ -528,8 +525,15 @@ export default function DashboardClientWrapper({
                                 <div>{product.name.slice(0, 50)}...</div>
 
                                 <div className="flex gap-1">
-                                  <div title="Aucune variation" className="opacity-[0.5]">{product.variations?.length == 0 && <MdWarningAmber size={18} />}</div>
-                                
+                                  <div
+                                    title="Aucune variation"
+                                    className="opacity-[0.5]"
+                                  >
+                                    {product.variations?.length == 0 && (
+                                      <MdWarningAmber size={18} />
+                                    )}
+                                  </div>
+
                                   <div
                                     className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
                                     onClick={() => {
@@ -548,7 +552,6 @@ export default function DashboardClientWrapper({
                                   >
                                     <MdCancel size={18} />
                                   </div>
-                                  
                                 </div>
                               </div>
                             </li>
@@ -623,9 +626,6 @@ export default function DashboardClientWrapper({
                                             >
                                               <MdCancel size={18} />
                                             </div>
-
-                                           
-
                                           </div>
                                         </div>
                                       </li>
