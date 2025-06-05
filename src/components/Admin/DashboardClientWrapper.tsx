@@ -60,7 +60,11 @@ export default function DashboardClientWrapper({
   const [isWaiting, setIsWaiting] = useState(false);
 
   useEffect(() => {
-    setIsWaiting(false)
+    if (isWaiting)
+    {
+      setIsWaiting(false)
+    }
+    
   }, [products]);
   /**
    * Réorganisation des catégories pour le display
@@ -219,6 +223,7 @@ export default function DashboardClientWrapper({
     datas: UpdateProduct
   ) => {
     console.log("datas envoyées à l'update", datas);
+    setIsWaiting(true);
     try {
       await updateProduct({ id: product_id, formData: datas });
       console.log("Produit modifiée !", datas);
@@ -226,7 +231,7 @@ export default function DashboardClientWrapper({
       setIsEditProduct(null);
       router.refresh();
      await revalidateProducts();
-      setIsWaiting(true);
+      
 
 
       // Fermer le modal ou rafraîchir les données ici
