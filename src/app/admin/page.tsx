@@ -1,13 +1,9 @@
 "use server"
 
-import { revalidateTag } from 'next/cache';
 import { getCategories, getProducts,getBrands } from "@/lib/api";
 import { notFound } from "next/navigation.js";
 import DashboardClientWrapper from "@/components/Admin/DashboardClientWrapper";
 
-export async function revalidateProducts() {
-  revalidateTag('products');
-}
 
 export default async function Dashboard() {
 

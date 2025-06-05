@@ -14,7 +14,7 @@ import { MdCancel } from "react-icons/md";
 import ProductForm from "./ProductForm";
 import BrandForm from "./BrandForm";
 import Accordion from "../motions/Accordion";
-import { revalidateProducts } from "@/app/admin/page";
+import { revalidateProducts } from "@/actions/revalidate.js";
 
 type Props = {
   categories: Category[];
