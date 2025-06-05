@@ -23,7 +23,7 @@ import BrandForm from "./BrandForm";
 import Accordion from "../motions/Accordion";
 import { revalidateProducts } from "@/actions/revalidate";
 import { MdWarningAmber } from "react-icons/md";
-
+import { MoonLoader } from "react-spinners";
 type Props = {
   categories: Category[];
   products: Product[];
@@ -61,7 +61,11 @@ export default function DashboardClientWrapper({
 
   useEffect(() => {
     if (isWaiting) {
-      setIsWaiting(false);
+      setTimeout(() => {
+        setIsWaiting(false);
+        setIsEditProduct(null)
+      }, 500);
+      
     }
   }, [products]);
   /**
@@ -204,11 +208,11 @@ export default function DashboardClientWrapper({
     setMode("products");
     setIsEditProduct(null); // Reset
 
-    if (!isWaiting) {
+
       setIsModalOpen(true);
       console.log("passage du product pour edition", product);
       setIsEditProduct(product);
-    }
+    
   };
 
   /**
@@ -227,7 +231,7 @@ export default function DashboardClientWrapper({
       setIsWaiting(true);
       console.log("Produit modifiée !", datas);
       setMode("");
-      setIsEditProduct(null);
+      // setIsEditProduct(null);
       router.refresh();
       await revalidateProducts();
 
@@ -501,7 +505,7 @@ export default function DashboardClientWrapper({
                         </div>
 
                         <div className="flex flex-row-reverse gap-1 w-[10%] pb-1">
-                          <div
+                         <div
                             className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
                             onClick={() => {
                               setProductCategory(parent);
@@ -534,7 +538,7 @@ export default function DashboardClientWrapper({
                                     )}
                                   </div>
 
-                                  <div
+                                  {!isWaiting &&  <div
                                     className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
                                     onClick={() => {
                                       setProductCategory(parent);
@@ -542,7 +546,14 @@ export default function DashboardClientWrapper({
                                     }}
                                   >
                                     <MdEdit size={18} />
-                                  </div>
+                                  </div>}
+
+                                  {isWaiting && <div
+                                    className=" opacity-[0.5]"
+                                  ><MoonLoader size={15}/>
+                                  </div>}
+
+                                  
 
                                   <div
                                     className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
