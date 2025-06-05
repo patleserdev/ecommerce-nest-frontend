@@ -191,9 +191,12 @@ export default function DashboardClientWrapper({
    */
   const handleOpenEditProduct = async (product: Product | null) => {
     setMode("products");
-    setIsEditProduct(product);
+    setIsEditProduct(null); // Reset
+    setTimeout(() => {
+      setIsEditProduct(product);
+      setIsModalOpen(true);
+    }, 100);
     console.log("passage du product pour edition",product)
-    setIsModalOpen(true);
   };
 
   /**
