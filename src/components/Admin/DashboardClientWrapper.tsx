@@ -198,13 +198,13 @@ export default function DashboardClientWrapper({
     setMode("products");
     setIsEditProduct(null); // Reset
 
-   
-    if (!isWaiting)
-      {
-        setIsModalOpen(true)
+    if (!isWaiting) {
+      setTimeout(() => {
+        setIsModalOpen(true);
         console.log("passage du product pour edition", product);
         setIsEditProduct(product);
-      } 
+      }, 200);
+    }
   };
 
   /**
