@@ -3,7 +3,10 @@ import { notFound } from "next/navigation.js";
 
 import DashboardClientWrapper from "@/components/Admin/DashboardClientWrapper";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Dashboard() {
+
 
   const categories = await getCategories();
   if (!categories) return notFound();
