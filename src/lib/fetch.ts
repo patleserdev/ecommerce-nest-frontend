@@ -1,3 +1,5 @@
+
+
 export default async function Fetch<T = any>({
   url,
   options,
@@ -5,8 +7,12 @@ export default async function Fetch<T = any>({
   url: string;
   options?: RequestInit; // au lieu de {}|null
 }): Promise<T> {
+
+
   try {
     const response = await fetch(url, options);
+
+
 
     if (!response.ok) {
       // throw new Error(`HTTP error! status: ${response.status}`);

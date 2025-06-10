@@ -159,11 +159,11 @@ export default function DashboardClientWrapper({
    * Destruction de la catégorie
    * @param id
    */
-  const handleToDestroyCategory = (id: number) => {
+  const handleToDestroyCategory = async (id: number) => {
     var result = confirm(`Détruire irrémédiablement la catégorie ${id}`);
     if (result) {
       try {
-        destroyCategorie(id);
+        await destroyCategorie(id);
         router.refresh();
       } catch (error) {
         console.error("Erreur lors de la suppression de la catégorie :", error);
@@ -336,7 +336,7 @@ export default function DashboardClientWrapper({
   };
 
   return (
-    <main className="relative">
+    <>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
         <div className="border p-3">
           <span className="flex items-center gap-2">
@@ -776,6 +776,6 @@ export default function DashboardClientWrapper({
             )}
         </Modal>
       )}
-    </main>
+    </>
   );
 }

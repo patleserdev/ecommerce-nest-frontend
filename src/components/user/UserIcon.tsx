@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store.js";
 import { MdOutlineShoppingCart } from "react-icons/md";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image.js";
 import { MdAddBox, MdIndeterminateCheckBox } from "react-icons/md";
 import { IoMdPerson } from "react-icons/io";
@@ -46,6 +46,18 @@ export default function UserIcon() {
       }
     }
   };
+
+  useEffect(() => {
+    const checkCookies = async () => {
+      const res = await fetch('/api/check-cookies');
+      const data = await res.json();
+      if (data.clearRedux) {
+        dispatch(clearUser());
+      }
+    };
+
+    checkCookies();
+  }, []);
 
   return (
     <div

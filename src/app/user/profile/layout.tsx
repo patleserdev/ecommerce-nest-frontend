@@ -7,15 +7,15 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
 
   const pathname= usePathname()
   console.log(pathname)
-  const activeStyle=" text-[var(--background)] bg-[var(--foreground)] text-lg border py-2 text-center"
-  const inactiveStyle="text-lg border py-2 text-center"
+  const activeStyle=" text-[var(--background)] bg-[var(--foreground)] text-lg border py-2 text-center px-2 md:px-0"
+  const inactiveStyle="text-lg border py-2 text-center px-2 md:px-0"
 
     return (
 
       <div className="p-4 text-[var(--foreground)] bg-[var(--background)]">
         <h1 className="text-3xl mb-5">Mon profil</h1>
-        <div className="flex flex-row gap-5">
-          <aside className="w-[15%] flex flex-col gap-5">
+        <div className="flex flex-col md:flex-row gap-5">
+          <aside className="w-full md:w-[15%] flex flex-wrap md:flex-col gap-5">
             {/* Sidebar */}
             {profileLinks.map((link,i) =>  <Link key={i} className={`${pathname == link.url ? activeStyle : inactiveStyle }`} href={link.url}>{link.label}</Link> )}
             {/* <aside className="w-[25%] flex flex-col items-start gap-5">
@@ -46,7 +46,7 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
           </div>
         </aside> */}
           </aside>
-          <div className="w-[85%] border p-2">{children}</div>
+          <div className="w-full md:w-[85%] border p-2 md:p-0">{children}</div>
         </div>
       </div>
     )

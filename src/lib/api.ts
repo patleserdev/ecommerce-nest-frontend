@@ -7,6 +7,9 @@ import {
 import Fetch from "./fetch";
 import { addUser } from "@/redux/reducers/userSlice";
 import { AppDispatch } from "@/redux/store/store.js";
+import { AdresseType } from "@/types/adresses.js";
+import { clearUser } from "@/redux/reducers/userSlice";
+import { useDispatch } from "react-redux";
 const API_BACKEND = process.env.NEXT_PUBLIC_API_BACKEND;
 
 /***
@@ -42,20 +45,19 @@ export async function loginUser(
     );
   }
 
-  const response = { ok: true,role:data.role };
+  const response = { ok: true, role: data.role };
   return response;
 }
 
 export async function signupUser(
   email: string,
-  username:string,
-  password: string,
-
+  username: string,
+  password: string
 ) {
   const res = await fetch(`/api/signup`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email,username, password }),
+    body: JSON.stringify({ email, username, password }),
     credentials: "include", // très important pour accepter les cookies
   });
   if (!res.ok) throw new Error("Inscription échouée");
@@ -238,7 +240,7 @@ export function getProductBySlug(slug: string) {
     const response = Fetch({
       url: `${API_BACKEND}/products/slug/${slug}`,
       options: {
-        next: { tags: ['products'] },
+        next: { tags: ["products"] },
         headers: {
           // Authorization: `Bearer ${yourToken}`,
         },
@@ -365,4 +367,111 @@ export async function destroyBrand(id: Number) {
  *     | |  | |  _  /| |  | |  __| |  _  / \___ \
  *     | |__| | | \ \| |__| | |____| | \ \ ____) |
  *      \____/|_|  \_\_____/|______|_|  \_\_____/
+ */
+
+/***
+ *               _____  _____  ______  _____ _____ ______  _____
+ *         /\   |  __ \|  __ \|  ____|/ ____/ ____|  ____|/ ____|
+ *        /  \  | |  | | |__) | |__  | (___| (___ | |__  | (___
+ *       / /\ \ | |  | |  _  /|  __|  \___ \\___ \|  __|  \___ \
+ *      / ____ \| |__| | | \ \| |____ ____) |___) | |____ ____) |
+ *     /_/    \_\_____/|_|  \_\______|_____/_____/|______|_____/
+ *
+ *
+ */
+
+export async function getAdresses(): Promise<AdresseType[]> {
+  const response = await Fetch({
+    url: `${API_BACKEND}/adresses`,
+    options: {
+      headers: {
+        
+        // Authorization: `Bearer ${yourToken}`,
+      },
+    },
+  });
+  return response;
+}
+
+export async function getAdressesByUser(
+  dispatch: AppDispatch
+): Promise<AdresseType[]> {
+  try {
+    const response = await Fetch({
+      url: `${API_BACKEND}/adresses/user`,
+      options: {
+        headers: {
+          // Authorization: `Bearer ${yourToken}`,
+        },
+        credentials: "include", // très important pour accepter les cookies
+
+      },
+    });
+    return response;
+  } catch (error) {
+
+    if (error.statusCode === 401) {
+      // dispatch l'action logout ici
+      dispatch(clearUser());
+      
+    }
+    throw new Error("Unauthorized");
+  }
+}
+
+export async function addAdress({ formData }: { formData: AdresseType }) {
+  const res = await fetch(`${API_BACKEND}/adresses`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(formData),
+    credentials: "include", // très important pour accepter les cookies
+  });
+  if (!res.ok) throw new Error("Login failed");
+  const data = await res.json();
+  const response = { ok: true };
+  return response;
+}
+
+export async function updateAddress({
+  id,
+  formData,
+}: {
+  id: Number;
+  formData: AdresseType;
+}) {
+  console.log("update adress", formData);
+  const res = await fetch(`${API_BACKEND}/adresses/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(formData),
+    credentials: "include", // très important pour accepter les cookies
+  });
+  if (!res.ok) throw new Error("Login failed");
+  const data = await res.json();
+  const response = { ok: true };
+  return response;
+}
+
+export async function destroyAdress(id: Number) {
+  const res = await fetch(`${API_BACKEND}/adresses/${id}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include", // très important pour accepter les cookies
+  });
+  if (!res.ok) throw new Error("Suppression échouée");
+  // const data = await res.json();
+  console.log(res)
+  const response = { ok: true };
+  return response;
+}
+
+/***
+ *               _____  _____  ______  _____ _____ ______  _____       _____   ____  _      ______  _____
+ *         /\   |  __ \|  __ \|  ____|/ ____/ ____|  ____|/ ____|     |  __ \ / __ \| |    |  ____|/ ____|
+ *        /  \  | |  | | |__) | |__  | (___| (___ | |__  | (___ ______| |__) | |  | | |    | |__  | (___
+ *       / /\ \ | |  | |  _  /|  __|  \___ \\___ \|  __|  \___ \______|  _  /| |  | | |    |  __|  \___ \
+ *      / ____ \| |__| | | \ \| |____ ____) |___) | |____ ____) |     | | \ \| |__| | |____| |____ ____) |
+ *     /_/    \_\_____/|_|  \_\______|_____/_____/|______|_____/      |_|  \_\\____/|______|______|_____/
+ *
+ *
  */

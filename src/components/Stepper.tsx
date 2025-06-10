@@ -20,8 +20,8 @@ export default function Stepper() {
   const inactiveBadge =
     "w-8 h-8 rounded-full border-2 border-gray-300 text-gray-400 flex items-center justify-center font-semibold";
 
-  const activeText = "text-green-600 font-medium";
-  const inactiveText = "";
+  const activeText = "text-green-600 font-medium capitalize";
+  const inactiveText = "capitalize";
 
   const line = <div className="flex-1 h-px bg-gray-300"></div>;
   return (

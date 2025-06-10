@@ -52,7 +52,9 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <Providers>
             <Nav />
+            <main className="relative">
             {children}
+            </main>
           </Providers>
         </ThemeProvider>
       </body>

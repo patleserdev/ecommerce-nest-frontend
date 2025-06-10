@@ -7,11 +7,11 @@ export interface UserProfile {
 }
 
 interface UserState {
-  user: UserProfile;
+  user: UserProfile | null;
 }
 
 const initialState: UserState = {
-  user: { username: "", role: "" },
+  user: null,
 };
 
 export const userSlice = createSlice({

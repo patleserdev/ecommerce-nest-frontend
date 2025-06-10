@@ -1,25 +1,20 @@
 import CartPage from "@/components/cart/CartPage";
-import NavigateTo from "@/components/NavigateTo";
+import CustomedLink from "@/components/CustomedLink";
 
 export default function CheckoutBasket() {
   return (
     <div>
       <div className="mt-5 mb-5">
         <CartPage />
-        <div className="place-self-end w-100">
-          <NavigateTo
-            label={"Valider mon panier"}
-            route={"/checkout/delivery"}
-            type={"primary"}
+        <div className="place-self-end flex my-5 w-[20%]">
+          <CustomedLink
+            title={"Valider mon panier"}
+            url={"/checkout/delivery"}
           />
         </div>
       </div>
-      <div className="place-self-start w-100">
-        <NavigateTo
-          label={"Poursuivre mes achats"}
-          route={"/categories"}
-          type={""}
-        />
+      <div className="place-self-start flex my-5 w-[20%]">
+        <CustomedLink title={"Poursuivre mes achats"} url={"/categories"} />
       </div>
       <div className="opacity-[0.5]">
         <i>

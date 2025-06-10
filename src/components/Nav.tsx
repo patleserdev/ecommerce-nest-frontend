@@ -17,7 +17,7 @@ import UserIcon from "./user/UserIcon";
  */
 
 export default function Nav() {
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user.user);
 
   const router = useRouter();
@@ -110,38 +110,32 @@ export default function Nav() {
               </ul>
             )}
           </li>
-
-              </ul>
+        </ul>
 
         <ul className="flex gap-5 ml-5 mr-5">
-          {user.role == "admin" ||
-            (user.role == "customer" && (
-              <li className="relative p-2">
-                <Link href="/dashboard">Compte Client</Link>
-              </li>
-            ))}
+   
 
           <li className="flex items-center justify-center p-2">
             <CartIcon />
           </li>
 
-          {user.role == "" && (
-          <li className="flex items-center justify-center p-2">
-            <Link href="/login" title="Se connecter">
-              <MdLogin size={30} />
-            </Link>
-          </li>)}
-
-         
+          {!user && (
+            <li className="flex items-center justify-center p-2">
+              <Link href="/login" title="Se connecter">
+                <MdLogin size={30} />
+              </Link>
+            </li>
+          )}
 
           <li className="relative p-2">
             <ThemeToggle />
           </li>
 
-          {user.role && (
-          <li className="relative p-2">
-            <UserIcon/>
-          </li>)}
+          {user && user.role && (
+            <li className="relative p-2">
+              <UserIcon />
+            </li>
+          )}
         </ul>
       </div>
     </div>
