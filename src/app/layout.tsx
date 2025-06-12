@@ -4,6 +4,7 @@ import "./globals.css";
 import Nav from "@/components/Nav";
 import Providers from "@/redux/providers/Providers";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import Navbar from "@/components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,7 +52,8 @@ export default function RootLayout({
       <body className={`${lexendRegular.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <Providers>
-            <Nav />
+            {/* <Nav /> */}
+            <Navbar/>
             <main className="relative">
             {children}
             </main>

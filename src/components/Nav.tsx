@@ -114,8 +114,6 @@ export default function Nav() {
         </ul>
 
         <ul className="flex gap-5 ml-5 mr-5">
-   
-
           <li className="flex items-center justify-center p-2">
             <CartIcon />
           </li>

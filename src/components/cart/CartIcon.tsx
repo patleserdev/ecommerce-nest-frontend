@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store.js";
 import { MdOutlineShoppingCart } from "react-icons/md";
-import { useState, useRef,useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image.js";
 import { MdAddBox, MdIndeterminateCheckBox } from "react-icons/md";
 import { IoMdTrash } from "react-icons/io";
@@ -82,11 +82,10 @@ export default function CartIcon() {
     }
   };
 
-   // Mise à jour pour forcer l'animation sur changement
-   useEffect(() => {
+  // Mise à jour pour forcer l'animation sur changement
+  useEffect(() => {
     setCartCount(cart.length);
   }, [cart.length]);
-
 
   return (
     <div
@@ -112,7 +111,7 @@ export default function CartIcon() {
             </motion.div>
           )}
         </AnimatePresence>
-        
+
         {isHovered && cart.length > 0 && (
           <AnimatePresence>
             <motion.div
@@ -121,18 +120,17 @@ export default function CartIcon() {
               animate={{ opacity: 1, y: 0, x: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, x: 200, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="absolute bg-[var(--background)] m-5 z-10 top-[2rem] right-0 min-w-150 min-h-100 max-h-500 border transition-all p-5 flex flex-col gap-5 origin-top-right"
-
+              className="absolute bg-[var(--background)] bg-[var(--foreground)] md:m-5 z-10 top-[2rem] left-0 md:right-0 md:min-w-150 md:min-h-100 md:max-h-500 border transition-all md:p-5 flex flex-col gap-5 origin-top-left md:origin-top-right"
             >
               <div>
-                <h2 className="text-3xl mb-2">Contenu de votre panier :</h2>
+                <h2 className="text-lg md:text-3xl p-1 mb-2">Contenu de votre panier :</h2>
                 <hr />
               </div>
 
               {cart.map((item, i) => (
                 <div
                   key={i}
-                  className="flex flex-row items-center justify-start gap-10 pb-2 border-b-1 border-[#d8dbde]	"
+                  className="flex flex-row items-center justify-start gap-2 md:gap-10 pb-2 border-b-1 border-[#d8dbde] z-50"
                 >
                   <div className="w-[30%]">
                     <Image
@@ -198,9 +196,7 @@ export default function CartIcon() {
               ))}
 
               <div>
-               
-
-              <CustomedLink title={"Mon panier"} url={"/checkout/basket"}/>
+                <CustomedLink title={"Mon panier"} url={"/checkout/basket"} />
               </div>
             </motion.div>
           </AnimatePresence>
