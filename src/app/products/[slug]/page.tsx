@@ -26,7 +26,7 @@ export default async function Products({ params }: Props) {
 
   const product = await getProductBySlug(slug);
 
-  console.log(product)
+  // console.log(product)
   const otherProducts = await getProductsByCategory(product.category.id);
 
   const otherProductsNotThis = otherProducts.filter(

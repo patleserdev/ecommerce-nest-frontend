@@ -8,7 +8,7 @@ import AddressForm from "./AdressForm";
 import { AdresseType } from "@/types/adresses";
 import { MdEdit } from "react-icons/md";
 import { MdCancel } from "react-icons/md";
-import { addAdress, destroyAdress, updateAddress } from "@/lib/api";
+import { addAdress, addRole, destroyAdress, updateAddress } from "@/lib/api";
 import { useRouter } from "next/navigation.js";
 import { getAdressesByUser } from "@/lib/api";
 import { useDispatch, useSelector } from "react-redux";
@@ -58,13 +58,19 @@ export default function AdressList() {
   /**
    * Définit le type de l'adresse role
    */
-  function handleSetAs(
-    adresseId: number,
-    type: "facturation" | "livraison" | ""
+  async function handleSetAs(
+    adresse: AdresseType,
+    type: "facturation" | "livraison" | undefined
   ) {
-    console.log(`Définir l’adresse ${adresseId} comme ${type}`);
-  }
+    console.log(`Définir l’adresse ${adresse.id} comme ${type}`);
+    console.log("adresse", adresse);
 
+    if (adresse.id) {
+      const formData = { adresse: { id: adresse.id }, type: type };
+      const result = await addRole({ formData });
+      setReload(!reload);
+    }
+  }
   /**
    * Prise en charge d'ajout d'adresse
    */
@@ -77,7 +83,7 @@ export default function AdressList() {
    * Ajout d'adresse
    */
   const handleAddAddress = async (datas: AdresseType) => {
-    //console.log(datas);
+    // console.log(datas);
 
     try {
       await addAdress({ formData: datas });
@@ -126,7 +132,7 @@ export default function AdressList() {
         await destroyAdress(id);
         setReload(!reload);
       } catch (error) {
-        console.error("Erreur lors de la suppression de la catégorie :", error);
+        console.error("Erreur lors de la suppression de l'adresse' :", error);
       }
     }
   };
@@ -175,13 +181,13 @@ export default function AdressList() {
         <div className="border p-2">
           <h3 className="text-lg font-bold underline">Adresse de livraison</h3>
           {currentLivraison && <DisplayAdress adresse={currentLivraison} />}
-          {!currentLivraison && <p>Non définie</p> }
+          {!currentLivraison && <p>Non définie</p>}
         </div>
         <div className="border p-2">
           <h3 className="text-lg font-bold underline">
             Adresse de facturation
           </h3>
-          {!currentFacturation && <p>Non définie</p> }
+          {!currentFacturation && <p>Non définie</p>}
           {currentFacturation && <DisplayAdress adresse={currentFacturation} />}
         </div>
         <div className="border p-2">
@@ -220,8 +226,8 @@ export default function AdressList() {
                     </div>
 
                     {types.length > 0 && (
-                      <div className="absolute top-0 right-0 m-2">
-                        <ul className="flex gap-2">
+                      <div className="">
+                        <ul className="flex flex-row gap-1 my-1">
                           {types.map((type) => (
                             <li
                               key={type}
@@ -238,32 +244,29 @@ export default function AdressList() {
                       </div>
                     )}
 
-                    <div className="flex flex-row items-center gap-2">
+                    <div className="flex flex-row-reverse items-center gap-1">
                       {!isFacturation &&
-                        !currentFacturation &&
+                        /*  !currentFacturation && */
                         typeof adresse.id === "number" && (
                           <button
                             className="mt-2 p-1 border rounded text-xs bg-[var(--foreground)] text-[var(--background)] cursor-pointer"
-                            onClick={() =>
-                              handleSetAs(adresse.id as number, "facturation")
-                            }
+                            onClick={() => handleSetAs(adresse, "facturation")}
                           >
                             Définir comme adresse de facturation
                           </button>
                         )}
                       {!isLivraison &&
-                        !currentLivraison &&
+                        /* !currentLivraison && */
                         typeof adresse.id === "number" && (
                           <button
                             className="mt-2 p-1 border rounded text-xs bg-[var(--foreground)] text-[var(--background)] cursor-pointer"
-                            onClick={() =>
-                              handleSetAs(adresse.id as number, "livraison")
-                            }
+                            onClick={() => handleSetAs(adresse, "livraison")}
                           >
                             Définir comme adresse de livraison
                           </button>
                         )}
-
+                    </div>
+                    <div className="flex flex-row-reverse gap-1 mt-1">
                       <MdEdit
                         size={30}
                         className="cursor-pointer"

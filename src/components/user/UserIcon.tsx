@@ -18,6 +18,11 @@ export default function UserIcon() {
   const pathname = usePathname();
 
   const user = useSelector((state: RootState) => state.user.user);
+
+  if (!user) {
+    return;
+  }
+
   const [isHovered, setIsHovered] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -49,7 +54,7 @@ export default function UserIcon() {
 
   useEffect(() => {
     const checkCookies = async () => {
-      const res = await fetch('/api/check-cookies');
+      const res = await fetch("/api/check-cookies");
       const data = await res.json();
       if (data.clearRedux) {
         dispatch(clearUser());
@@ -91,7 +96,6 @@ export default function UserIcon() {
                 </div>
 
                 <div className="flex flex-col">
-
                   {user.role == "admin" && pathname != "/admin" && (
                     <CustomedLink title="Gérer le site" url="/admin" />
                   )}

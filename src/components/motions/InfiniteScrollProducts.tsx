@@ -33,7 +33,16 @@ export default function InfiniteScrollProducts({
             <div className="absolute bottom-0 left-0 w-[100%] h-[100%] bg-[rgba(0,0,0,0.5)] p-3 z-10 flex flex-col-reverse text-[var(--background)">
               <Link href={`/products/${src.slug}`}>
               <div className="flex flex-row py-1 gap-1">
-              {src.variations?.map((variation,i) => <div className="px-2 py-1 rounded-lg bg-[var(--background)]" key={i}>{toFirstLetterUpper(variation.gender)}</div>)}
+              {src.variations
+  ?.reduce((acc: string[], v) => {
+    if (!acc.includes(v.gender)) acc.push(v.gender);
+    return acc;
+  }, [])
+  .map((gender, i) => (
+    <div className="px-2 py-1 rounded-lg bg-[var(--background)]" key={i}>
+      {toFirstLetterUpper(gender)}
+    </div>
+))}
 
               </div>
 

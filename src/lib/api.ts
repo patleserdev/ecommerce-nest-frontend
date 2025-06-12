@@ -7,10 +7,11 @@ import {
 import Fetch from "./fetch";
 import { addUser } from "@/redux/reducers/userSlice";
 import { AppDispatch } from "@/redux/store/store.js";
-import { AdresseType } from "@/types/adresses.js";
+import { AddressRoleType, AdresseType } from "@/types/adresses";
 import { clearUser } from "@/redux/reducers/userSlice";
 import { useDispatch } from "react-redux";
 const API_BACKEND = process.env.NEXT_PUBLIC_API_BACKEND;
+
 
 /***
  *      _    _  _____ ______ _____   _____
@@ -26,27 +27,18 @@ export async function loginUser(
   password: string,
   dispatch: AppDispatch
 ) {
-  const res = await fetch(`/api/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-    credentials: "include", // très important pour accepter les cookies
+  const data = await Fetch<{ role: string; username: string }>({
+    url: `/api/login`,
+    options: {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    },
   });
-  if (!res.ok) throw new Error("Login failed");
 
-  const data = await res.json();
-  // console.log("userdata", data);
-  if (data) {
-    dispatch(
-      addUser({
-        role: data.role,
-        username: data.username,
-      })
-    );
-  }
+  dispatch(addUser({ role: data.role, username: data.username }));
 
-  const response = { ok: true, role: data.role };
-  return response;
+  return { ok: true, role: data.role };
 }
 
 export async function signupUser(
@@ -54,30 +46,30 @@ export async function signupUser(
   username: string,
   password: string
 ) {
-  const res = await fetch(`/api/signup`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, username, password }),
-    credentials: "include", // très important pour accepter les cookies
+  await Fetch({
+    url: `/api/signup`,
+    options: {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, username, password }),
+    },
   });
-  if (!res.ok) throw new Error("Inscription échouée");
 
-  const response = { ok: true };
-  return response;
+  return { ok: true };
 }
 
 export async function logout() {
-  const res = await fetch(`/api/logout`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
+  await Fetch({
+    url: `/api/logout`,
+    options: {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    },
   });
 
-  if (!res.ok) throw new Error("Logout failed");
-  const data = await res.json();
-  const response = { ok: true };
-  return response;
+  return { ok: true };
 }
+
 /***
  *       _____       _______ ______ _____  ____  _____  _____ ______  _____
  *      / ____|   /\|__   __|  ____/ ____|/ __ \|  __ \|_   _|  ____|/ ____|
@@ -95,6 +87,7 @@ export async function getCategories(): Promise<Category[]> {
       },
     },
   });
+  console.log(response)
   return response;
 }
 
@@ -107,7 +100,7 @@ export async function getCategoriesByParent(id: number): Promise<Category[]> {
       },
     },
   });
-  return response;
+  return response.datas;
 }
 
 export async function getCategoryById(id: number) {
@@ -119,7 +112,7 @@ export async function getCategoryById(id: number) {
       },
     },
   });
-  return response;
+  return response.datas;
 }
 
 export async function getCategoriesByParentId(id: number) {
@@ -131,7 +124,7 @@ export async function getCategoriesByParentId(id: number) {
       },
     },
   });
-  return response;
+  return response.datas;
 }
 
 export async function getCategoryBySlug(slug: string, parentSlug: string) {
@@ -158,11 +151,14 @@ export async function addCategorie({
 }: {
   formData: { name: String; parent_id?: Number };
 }) {
-  const res = await fetch(`${API_BACKEND}/categories`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(formData),
-    credentials: "include", // très important pour accepter les cookies
+  const res = await Fetch({
+    url: `${API_BACKEND}/categories`,
+    options: {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+      credentials: "include", // très important pour accepter les cookies
+    },
   });
   if (!res.ok) throw new Error("Login failed");
   const data = await res.json();
@@ -177,11 +173,14 @@ export async function updateCategorie({
   id: Number;
   formData: { name: String; parent_id?: Number };
 }) {
-  const res = await fetch(`${API_BACKEND}/categories/${id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(formData),
-    credentials: "include", // très important pour accepter les cookies
+  const res = await Fetch({
+    url: `${API_BACKEND}/categories/${id}`,
+    options: {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+      credentials: "include", // très important pour accepter les cookies
+    },
   });
   if (!res.ok) throw new Error("Login failed");
   const data = await res.json();
@@ -190,10 +189,13 @@ export async function updateCategorie({
 }
 
 export async function destroyCategorie(id: Number) {
-  const res = await fetch(`${API_BACKEND}/categories/${id}`, {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include", // très important pour accepter les cookies
+  const res = await Fetch({
+    url: `${API_BACKEND}/categories/${id}`,
+    options: {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include", // très important pour accepter les cookies
+    },
   });
   if (!res.ok) throw new Error("Login failed");
   // const data = await res.json();
@@ -251,11 +253,14 @@ export function getProductBySlug(slug: string) {
 }
 
 export async function addProduct({ formData }: { formData: CreateProduct }) {
-  const res = await fetch(`${API_BACKEND}/products`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(formData),
-    credentials: "include", // très important pour accepter les cookies
+  const res = await Fetch({
+    url: `${API_BACKEND}/products`,
+    options: {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+      credentials: "include", // très important pour accepter les cookies
+    },
   });
   if (!res.ok) throw new Error("Login failed");
   const data = await res.json();
@@ -270,11 +275,14 @@ export async function updateProduct({
   id: Number;
   formData: UpdateProduct;
 }) {
-  const res = await fetch(`${API_BACKEND}/products/${id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(formData),
-    credentials: "include", // très important pour accepter les cookies
+  const res = await Fetch({
+    url: `${API_BACKEND}/products/${id}`,
+    options: {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+      credentials: "include", // très important pour accepter les cookies
+    },
   });
   if (!res.ok) throw new Error("Login failed");
   const data = await res.json();
@@ -283,10 +291,13 @@ export async function updateProduct({
 }
 
 export async function destroyProduct(id: Number) {
-  const res = await fetch(`${API_BACKEND}/products/${id}`, {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include", // très important pour accepter les cookies
+  const res = await Fetch({
+    url: `${API_BACKEND}/products/${id}`,
+    options: {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include", // très important pour accepter les cookies
+    },
   });
   if (!res.ok) throw new Error("Login failed");
   // const data = await res.json();
@@ -316,11 +327,14 @@ export async function getBrands(): Promise<Brand[]> {
 }
 
 export async function addBrand({ formData }: { formData: Brand }) {
-  const res = await fetch(`${API_BACKEND}/brands`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(formData),
-    credentials: "include", // très important pour accepter les cookies
+  const res = await Fetch({
+    url: `${API_BACKEND}/brands`,
+    options: {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+      credentials: "include", // très important pour accepter les cookies
+    },
   });
   if (!res.ok) throw new Error("Login failed");
   const data = await res.json();
@@ -335,12 +349,15 @@ export async function updateBrand({
   id: Number;
   formData: Brand;
 }) {
-  console.log("update product", formData);
-  const res = await fetch(`${API_BACKEND}/brands/${id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(formData),
-    credentials: "include", // très important pour accepter les cookies
+  // console.log("update product", formData);
+  const res = await Fetch({
+    url: `${API_BACKEND}/brands/${id}`,
+    options: {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+      credentials: "include", // très important pour accepter les cookies
+    },
   });
   if (!res.ok) throw new Error("Login failed");
   const data = await res.json();
@@ -349,10 +366,13 @@ export async function updateBrand({
 }
 
 export async function destroyBrand(id: Number) {
-  const res = await fetch(`${API_BACKEND}/brands/${id}`, {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include", // très important pour accepter les cookies
+  const res = await Fetch({
+    url: `${API_BACKEND}/brands/${id}`,
+    options: {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include", // très important pour accepter les cookies
+    },
   });
   if (!res.ok) throw new Error("Login failed");
   // const data = await res.json();
@@ -385,7 +405,6 @@ export async function getAdresses(): Promise<AdresseType[]> {
     url: `${API_BACKEND}/adresses`,
     options: {
       headers: {
-        
         // Authorization: `Bearer ${yourToken}`,
       },
     },
@@ -404,30 +423,30 @@ export async function getAdressesByUser(
           // Authorization: `Bearer ${yourToken}`,
         },
         credentials: "include", // très important pour accepter les cookies
-
       },
     });
     return response;
   } catch (error) {
-
     if (error.statusCode === 401) {
       // dispatch l'action logout ici
       dispatch(clearUser());
-      
     }
     throw new Error("Unauthorized");
   }
 }
 
 export async function addAdress({ formData }: { formData: AdresseType }) {
-  const res = await fetch(`${API_BACKEND}/adresses`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(formData),
-    credentials: "include", // très important pour accepter les cookies
+  const res = await Fetch({
+    url: `${API_BACKEND}/adresses`,
+    options: {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+      credentials: "include", // très important pour accepter les cookies
+    },
   });
-  if (!res.ok) throw new Error("Login failed");
-  const data = await res.json();
+  if (!res) throw new Error("Ajout d'adresse échoué");
+
   const response = { ok: true };
   return response;
 }
@@ -439,28 +458,34 @@ export async function updateAddress({
   id: Number;
   formData: AdresseType;
 }) {
-  console.log("update adress", formData);
-  const res = await fetch(`${API_BACKEND}/adresses/${id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(formData),
-    credentials: "include", // très important pour accepter les cookies
+  // console.log("update adress", formData);
+  const res = await Fetch({
+    url: `${API_BACKEND}/adresses/${id}`,
+    options: {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+      credentials: "include", // très important pour accepter les cookies
+    },
   });
-  if (!res.ok) throw new Error("Login failed");
-  const data = await res.json();
+  if (!res) throw new Error("Mise à jour d'adresse échoué");
+
   const response = { ok: true };
   return response;
 }
 
 export async function destroyAdress(id: Number) {
-  const res = await fetch(`${API_BACKEND}/adresses/${id}`, {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include", // très important pour accepter les cookies
+  const res = await Fetch({
+    url: `${API_BACKEND}/adresses/${id}`,
+    options: {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include", // très important pour accepter les cookies
+    },
   });
-  if (!res.ok) throw new Error("Suppression échouée");
-  // const data = await res.json();
-  console.log(res)
+  if (!res) throw new Error("Suppression échouée");
+
+  console.log(res);
   const response = { ok: true };
   return response;
 }
@@ -475,3 +500,31 @@ export async function destroyAdress(id: Number) {
  *
  *
  */
+
+// pour la gestion des rôles
+// je vais avoir trois rôles possibles pour l'adresse
+// - un rôle lié uniquement à l'userId : adresse globale de facturation ou de livraison
+// - dans la panier , si aucune adresse n'est liée au cart, je prends celle liée au userId, quand le panier est validé, je crée le role de cette adresse avec userId et cartId
+// - dans la commande, je crée également le role de l'adresse lié au userId et orderId
+
+// Dans la gestion de mes adresses
+// - si pas d'adresse de facturation/livraison lié à un user_id  -> je crée un role
+// - si je change l'adresse de livraison
+
+export async function addRole({ formData }: { formData: AddressRoleType }) {
+  // console.log("update adress", formData);
+  const res = await Fetch({
+    url: `${API_BACKEND}/address-roles`,
+    options: {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+      credentials: "include", // très important pour accepter les cookies
+    },
+  });
+  console.log(res)
+  if (!res) throw new Error("Mise à jour d'adresse échoué");
+
+  const response = { ok: true };
+  return response;
+}
