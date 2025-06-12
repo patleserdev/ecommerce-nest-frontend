@@ -154,7 +154,7 @@ export default function DeliveryModule() {
           quand je fais changer, je peux choisir ou créer une autre adresse <br/>
           - si je choisis une autre adresse, je l'affecte a current<br/>
           - si je crée une autre adresse, je la crée puis je l'affecte à current
-          <strike>- s'il user garde celle-ci , je crée le cart et je crée un role user - cart - adresse - type</strike>
+          <span className="line-through"> - s'il user garde celle-ci , je crée le cart et je crée un role user - cart - adresse - type</span>
           ... en fait c'est plus simple.
           En validant cet écran : <br/>
           - je récupère les current adresses <br/>
