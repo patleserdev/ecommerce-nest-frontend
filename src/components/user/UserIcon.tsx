@@ -82,7 +82,7 @@ export default function UserIcon() {
               animate={{ opacity: 1, y: 0, x: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, x: 200, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="absolute bg-[var(--background)] m-5 z-10 top-[2rem] right-0 min-w-50 min-h-100 max-h-500 border transition-all p-5 flex flex-col items-center justify-between gap-5 origin-top-right"
+              className="absolute bg-[var(--background)] m-5 z-10 top-[2rem] left-[-200%] md:right-0 min-w-50 md:min-h-100 md:max-h-500 border transition-all p-5 flex flex-col items-center md:justify-between md:gap-5 md:origin-top-right"
             >
               <div>
                 <div>
@@ -106,7 +106,10 @@ export default function UserIcon() {
               </div>
 
               <div>
-                <CustomedButton onClick={() => handleToLogout()}>
+                <CustomedButton
+                  type={"primary"}
+                  onClick={() => handleToLogout()}
+                >
                   Se déconnecter
                 </CustomedButton>
               </div>

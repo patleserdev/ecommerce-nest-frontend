@@ -148,8 +148,8 @@ export default function Navbar() {
       <ul
         className={
           nav
-            ? "fixed md:hidden left-0 top-0 w-[85%] h-full border-r border-r-gray-900 bg-[#000300] ease-in-out duration-500 z-50"
-            : "ease-in-out w-[90%] duration-500 fixed top-0 bottom-0 left-[-100%]"
+            ? "fixed md:hidden left-0 top-0 w-[85%] h-full border-r border-r-gray-900 bg-[#000300] ease-in-out duration-500 z-50 text-[var(--foreground)] bg-[var(--background)]"
+            : "ease-in-out w-[90%] duration-500 fixed top-0 bottom-0 left-[-100%] z-50"
         }
       >
         <div className="md:w-[50%] items-center justify-center flex flex-row mt-2 mb-5">

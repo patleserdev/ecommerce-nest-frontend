@@ -120,22 +120,22 @@ export default function CartIcon() {
               animate={{ opacity: 1, y: 0, x: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, x: 200, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="    absolute 
-    top-[2rem]
-    left-[-100%]           // Mobile : aligné à gauche
-    md:left-auto     // Supprimé sur desktop
-    md:right-0       // Desktop : aligné à droite
-    bg-[var(--background)]
-    text-[var(--foreground)]
-    md:m-5
-    z-10
-    min-w-80 md:min-w-150
-    min-h-50 md:min-h-100
-    md:max-h-500
-    border
-    md:p-5
-    flex flex-col items-center justify-center gap-5
-    origin-top-left md:origin-top-right"
+              className="absolute 
+              top-[2rem]
+              left-[-50%]           // Mobile : aligné à gauche
+              md:left-auto     // Supprimé sur desktop
+              md:right-0       // Desktop : aligné à droite
+              bg-[var(--background)]
+              text-[var(--foreground)]
+              m-5
+              z-10
+              min-w-50 md:min-w-150
+              min-h-50 md:min-h-100
+              md:max-h-500
+              border
+              p-5
+              flex flex-col items-center justify-center gap-5
+              origin-top-left md:origin-top-right"
             >
               <div>
                 <h2 className="text-lg md:text-3xl p-1 mb-2">
