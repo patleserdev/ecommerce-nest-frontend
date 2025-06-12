@@ -120,19 +120,37 @@ export default function CartIcon() {
               animate={{ opacity: 1, y: 0, x: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, x: 200, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="absolute bg-[var(--background)] bg-[var(--foreground)] md:m-5 z-10 top-[2rem] left-0 md:right-0 md:min-w-150 md:min-h-100 md:max-h-500 border transition-all md:p-5 flex flex-col gap-5 origin-top-left md:origin-top-right"
+              className="    absolute 
+    top-[2rem]
+    left-[-100%]           // Mobile : aligné à gauche
+    md:left-auto     // Supprimé sur desktop
+    md:right-0       // Desktop : aligné à droite
+    bg-[var(--background)]
+    text-[var(--foreground)]
+    md:m-5
+    z-10
+    min-w-80 md:min-w-150
+    min-h-50 md:min-h-100
+    md:max-h-500
+    border
+    md:p-5
+    flex flex-col items-center justify-center gap-5
+    origin-top-left md:origin-top-right"
             >
               <div>
-                <h2 className="text-lg md:text-3xl p-1 mb-2">Contenu de votre panier :</h2>
+                <h2 className="text-lg md:text-3xl p-1 mb-2">
+                  Contenu de votre panier :
+                </h2>
                 <hr />
               </div>
-
+              {/** Panier mobile temporaire **/}
+              <div className="flex md:hidden">{cartCount} produits</div>
               {cart.map((item, i) => (
                 <div
                   key={i}
-                  className="flex flex-row items-center justify-start gap-2 md:gap-10 pb-2 border-b-1 border-[#d8dbde] z-50"
+                  className="hidden md:flex md:flex-row items-center justify-start gap-2 md:gap-10 pb-2 border-b-1 border-[#d8dbde] z-50 p-1"
                 >
-                  <div className="w-[30%]">
+                  <div className="md:w-[30%] hidden md:block">
                     <Image
                       alt="product"
                       src={"https://placehold.co/600x400/EEE/31343C"}
