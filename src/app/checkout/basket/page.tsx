@@ -6,7 +6,7 @@ export default function CheckoutBasket() {
     <div>
       <div className="mt-5 mb-5">
         <CartPage />
-        <div className="place-self-end flex my-5 w-[20%]">
+        <div className="place-self-end flex my-5 md:w-[20%]">
           <CustomedLink
             title={"Valider mon panier"}
             url={"/checkout/delivery"}

@@ -87,7 +87,7 @@ export async function getCategories(): Promise<Category[]> {
       },
     },
   });
-  console.log(response)
+  // console.log(response)
   return response;
 }
 
@@ -427,7 +427,7 @@ export async function getAdressesByUser(
     });
     return response;
   } catch (error) {
-    if (error.statusCode === 401) {
+    if ((error as any).statusCode === 401) {
       // dispatch l'action logout ici
       dispatch(clearUser());
     }

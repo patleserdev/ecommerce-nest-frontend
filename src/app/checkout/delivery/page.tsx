@@ -6,7 +6,7 @@ export default function CheckoutDelivery() {
       <div>
         <DeliveryModule />
       </div>
-      <div className="place-self-start flex my-5 w-[20%]">
+      <div className="place-self-start flex my-5 md:w-[20%]">
         <CustomedLink title={"Poursuivre mes achats"} url={"/categories"} />
       </div>
 
