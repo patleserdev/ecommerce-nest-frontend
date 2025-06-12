@@ -4,7 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 
-export default function LoginForm() {
+type LoginFormProps = {
+  redirectTo?: string; // facultatif
+};
+
+export default function LoginForm({redirectTo}:LoginFormProps) {
   const dispatch = useDispatch();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -25,10 +29,18 @@ export default function LoginForm() {
       if (!res.ok) {
         throw new Error("Email ou mot de passe incorrect");
       }
-      console.log(res)
 
-      console.log("Connexion réussie");
-      router.replace(res.role == "customer" ? "/dashboard" :"/admin");
+      if (redirectTo) {
+        return router.push(redirectTo); // 👈 Si fourni, priorité à cette route
+      }
+  
+      // comportement par défaut
+      if (res.role === 'admin') {
+        return router.push('/admin');
+      }
+  
+      return router.push('/dashboard');
+
     } catch (err: any) {
       console.log(err.message);
       setError(err.message);
@@ -66,7 +78,7 @@ export default function LoginForm() {
           />
         </label>
 
-        <button type="submit" disabled={loading} className={`border w-full px-8 p-2 mt-2 mb-2hover:bg-[var(--foreground)] hover:text-[var(--background)] cursor-pointer transition-all `}>
+        <button type="submit" disabled={loading} className={`border w-full px-8 p-2 mt-2 mb-2 hover:bg-[var(--foreground)] hover:text-[var(--background)] cursor-pointer transition-all `}>
           {loading ? "Connexion..." : "Se connecter"}
         </button>
       </div>

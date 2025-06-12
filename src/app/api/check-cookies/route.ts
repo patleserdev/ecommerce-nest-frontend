@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest): Promise<NextResponse>  {
   const { cookies } = req;
 
   // Nom du cookie à vérifier

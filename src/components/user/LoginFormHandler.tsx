@@ -5,8 +5,15 @@ import { IoCaretForwardOutline } from "react-icons/io5";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link.js";
+import CustomedLink from "../CustomedLink";
+type LoginFormHandlerProps = {
+  redirectTo?: string; // facultatif
+};
 
-export default function LoginFormHandler() {
+export default function LoginFormHandler({
+  redirectTo,
+}: LoginFormHandlerProps) {
   const [isSignup, setIsSignUp] = useState(false);
 
   const variants = {
@@ -73,9 +80,15 @@ export default function LoginFormHandler() {
               initial="initial"
               animate="animate"
               exit="exit"
-              className="absolute w-full"
+              className="absolute w-full flex flex-col gap-2"
             >
-              <LoginForm />
+              <div>
+                <LoginForm redirectTo={redirectTo} />
+              </div>
+
+              <div className="flex flex-row justify-center text-md">
+                <CustomedLink url="/forgot-password" title={"Mot de passe oublié ?"}/>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

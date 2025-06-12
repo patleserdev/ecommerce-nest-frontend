@@ -8,8 +8,6 @@ export default function LoginPage() {
 
 <LoginFormHandler/>
 
-    {/* <div>crée un compte <Link href="/signup">S'inscrire</Link></div>
-    <div><Link href="/forgotPassword">Mot de passe oublié </Link></div> */}
     </div>
   );
 }

@@ -30,7 +30,7 @@ export default function Nav() {
   useEffect(() => {
     (async () => {
       const categories = await getCategories();
-      console.log(categories)
+      // console.log(categories)
       setArbo(categories);
     })();
   }, []);

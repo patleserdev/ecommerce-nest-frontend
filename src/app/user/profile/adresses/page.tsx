@@ -1,5 +1,5 @@
-import AdressList from "@/components/user/adresses/AdressList";
+import AdressModule from "@/components/user/adresses/AdressModule";
 
 export default function AdressesPage() {
-  return <AdressList />;
+  return <AdressModule />;
 }
