@@ -21,6 +21,11 @@ export default function DeliveryModule() {
       {cart.length > 0 && (
         <h2 className="text-xl">J'ai {cart.length} produits dans le panier</h2>
       )}
+
+      <div>
+        <div>Adresse de livraison</div>
+        <div>Adresse de facturation</div>
+      </div>
     </div>
   );
 }

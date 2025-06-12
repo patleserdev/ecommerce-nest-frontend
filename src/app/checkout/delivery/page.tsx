@@ -1,10 +1,13 @@
 import DeliveryModule from "@/components/delivery/DeliveryModule";
-
+import CustomedLink from "@/components/CustomedLink";
 export default function CheckoutDelivery() {
   return (
     <div>
       <div>
         <DeliveryModule />
+      </div>
+      <div className="place-self-start flex my-5 w-[20%]">
+        <CustomedLink title={"Poursuivre mes achats"} url={"/categories"} />
       </div>
 
       <div className="opacity-[0.5]">

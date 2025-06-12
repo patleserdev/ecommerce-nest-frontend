@@ -1,7 +1,7 @@
 import { toFirstLetterUpper } from "@/lib/utils";
-import { adresseType } from "@/types/adresses";
+import { AdresseType } from "@/types/adresses";
 
-export default function DisplayAdress({ adresse }: {adresse:adresseType}) {
+export default function DisplayAdress({ adresse }: {adresse:AdresseType}) {
     return (
       <div className="flex flex-col py-2 text-2xl gap-1">
         <div>
@@ -10,7 +10,7 @@ export default function DisplayAdress({ adresse }: {adresse:adresseType}) {
           {toFirstLetterUpper(adresse.lastName)}
         </div>
         <div>{toFirstLetterUpper(adresse.streetAddress)}</div>
-        <div>{toFirstLetterUpper(adresse.streetAddress2)}</div>
+        {adresse.streetAddress2 && <div>{toFirstLetterUpper(adresse.streetAddress2)}</div>}
         <div>
           {adresse.postalCode} {toFirstLetterUpper(adresse.city)}
         </div>
