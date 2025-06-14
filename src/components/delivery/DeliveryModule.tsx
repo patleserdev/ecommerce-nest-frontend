@@ -1,5 +1,4 @@
 "use client";
-
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store.js";
 import LoginFormHandler from "../user/LoginFormHandler";
@@ -10,7 +9,7 @@ import { findAdresseByType } from "../user/adresses/functions";
 import DisplayAdress from "../user/adresses/DisplayAdress";
 import CustomedButton from "../CustomedButton";
 import Modal from "../Modal";
-
+import TransportChoicer from "./TransportChoicer";
 export default function DeliveryModule() {
   /***
    *          _           _
@@ -31,6 +30,12 @@ export default function DeliveryModule() {
   const [reload, setReload] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const options = [
+    { id: "colissimo", label: "", icon: "/icons/colissimo.svg" },
+    { id: "colissimo_pickup", label: "Pickup", icon: "/icons/colissimo.svg" },
+    { id: "chronopost", label: "", icon: "/icons/chronopost-logo.svg" },
+    { id: "chronopost_pickup", label: "Pickup", icon: "/icons/chronopost-logo.svg" },
+  ];
   /***
    *       __                  _   _
    *      / _|                | | (_)
@@ -94,17 +99,12 @@ export default function DeliveryModule() {
 
   return (
     <div>
-      <h1 className="text-3xl">Delivery module</h1>
-      {user && <h2 className="text-xl">J'ai un user</h2>}
-      {!user && (
-        <h2 className="text-xl">
-          Je ne suis pas connecté{" "}
-          <LoginFormHandler redirectTo={"/checkout/delivery"} />
-        </h2>
-      )}
-      {cart.length > 0 && (
+      <h1 className="text-3xl">Options de livraison (delivery module)</h1>
+      {/* {user && <h2 className="text-xl">J'ai un user</h2>} */}
+      {!user && <LoginFormHandler redirectTo={"/checkout/payment"} />}
+      {/* {cart.length > 0 && (
         <h2 className="text-xl">J'ai {cart.length} produits dans le panier</h2>
-      )}
+      )} */}
 
       <div className="justify-self-center grid grid-cols-1 md:grid-cols-4 grid-rows-1 gap-4 my-5">
         <div className="border p-2 relative">
@@ -143,6 +143,7 @@ export default function DeliveryModule() {
         </div>
         <div className="border p-2">
           <h3>Options de livraison</h3>
+          <TransportChoicer options={options}/>
         </div>
         <div className="border p-2">
           <h3>Rappel du panier</h3>
@@ -150,17 +151,25 @@ export default function DeliveryModule() {
       </div>
       {isModalOpen && (
         <Modal onClose={() => setIsModalOpen(false)}>
-          par défaut, je prends l'adresse du user role :<br/>
-          quand je fais changer, je peux choisir ou créer une autre adresse <br/>
-          - si je choisis une autre adresse, je l'affecte a current<br/>
-          - si je crée une autre adresse, je la crée puis je l'affecte à current
-          <span className="line-through"> - s'il user garde celle-ci , je crée le cart et je crée un role user - cart - adresse - type</span>
-          ... en fait c'est plus simple.
-          En validant cet écran : <br/>
-          - je récupère les current adresses <br/>
-          - je crée un cart<br/>
-          - je crée un role user - cart - adresse - type<br/>
-          j'ai alors un cart qui contient des rôles bien définis sans toucher aux adresses <br/>
+          par défaut, je prends l'adresse du user role :<br />
+          quand je fais changer, je peux choisir ou créer une autre adresse{" "}
+          <br />
+          - si je choisis une autre adresse, je l'affecte a current
+          <br />- si je crée une autre adresse, je la crée puis je l'affecte à
+          current
+          <span className="line-through">
+            {" "}
+            - s'il user garde celle-ci , je crée le cart et je crée un role user
+            - cart - adresse - type
+          </span>
+          ... en fait c'est plus simple. En validant cet écran : <br />
+          - je récupère les current adresses <br />
+          - je crée un cart
+          <br />
+          - je crée un role user - cart - adresse - type
+          <br />
+          j'ai alors un cart qui contient des rôles bien définis sans toucher
+          aux adresses <br />
         </Modal>
       )}
     </div>

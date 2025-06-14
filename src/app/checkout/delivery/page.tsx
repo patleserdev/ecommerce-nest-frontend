@@ -2,14 +2,20 @@ import DeliveryModule from "@/components/delivery/DeliveryModule";
 import CustomedLink from "@/components/CustomedLink";
 export default function CheckoutDelivery() {
   return (
+
     <div>
-      <div>
+      <div className="mt-5 mb-5">
         <DeliveryModule />
+        <div className="place-self-end flex my-5 md:w-[20%]">
+          <CustomedLink
+            title={"Valider mes options de livraison"}
+            url={"/checkout/delivery"}
+          />
+        </div>
       </div>
-      <div className="place-self-start flex my-5 md:w-[20%]">
+      <div className="place-self-start flex my-5 w-[20%]">
         <CustomedLink title={"Poursuivre mes achats"} url={"/categories"} />
       </div>
-
       <div className="opacity-[0.5]">
         <i>
           <span className="line-through">
@@ -26,5 +32,9 @@ export default function CheckoutDelivery() {
         </i>
       </div>
     </div>
+
+
+
+   
   );
 }
