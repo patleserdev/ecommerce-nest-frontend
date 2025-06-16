@@ -129,7 +129,7 @@ export default function AdressModule() {
   useEffect(() => {
     if (user != null) {
       (async () => {
-        const adresses = await getAdressesByUser(dispatch);
+        const adresses = await getAdressesByUser();
         if (adresses) {
           setAdresses(adresses);
         }
