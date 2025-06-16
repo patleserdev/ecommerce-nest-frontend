@@ -27,9 +27,9 @@ export default async function Products({ params }: Props) {
   const product = await getProductBySlug(slug);
 
   // console.log(product)
-  const otherProducts = await getProductsByCategory(product.category.id);
+  const {data,error} = await getProductsByCategory(product.category.id);
 
-  const otherProductsNotThis = otherProducts.filter(
+  const otherProductsNotThis = data && data.filter(
     (prod:Product) => (prod.id != product.id)
   );
 console.log(product)
@@ -61,13 +61,13 @@ console.log(product)
       </div>
 
       <div className="mt-5 border-t-1">
-        {otherProductsNotThis.length > 0 && (
+        {otherProductsNotThis && otherProductsNotThis.length > 0 && (
           <div className="mt-5">
             <h2 className="text-2xl p-5">Voir d'autres produits</h2>
             <InfiniteScrollProducts products={otherProductsNotThis} />
           </div>
         )}
-        {otherProductsNotThis.length == 0 && (
+        {otherProductsNotThis && otherProductsNotThis.length == 0 && (
           <h4 className="">Aucun autre produit dans cette catégorie</h4>
         )}
       </div>

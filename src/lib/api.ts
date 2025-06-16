@@ -237,7 +237,7 @@ export async function getProducts(): Promise<UpdateProduct[]> {
   return data;
 }
 
-export async function getProductsByCategory(id: number): Promise<Product[]> {
+export async function getProductsByCategory(id: number): Promise<{data:Product[]|null,error:boolean}> {
   const { response, data } = await Fetch({
     url: `${API_BACKEND}/products/categories/${id}`,
     options: {
@@ -246,10 +246,11 @@ export async function getProductsByCategory(id: number): Promise<Product[]> {
       },
     },
   });
-  if (!response.ok)
-    throw new Error("Récupération des produits par catégorie échouée");
+  if (!response.ok) {
+    return { data: null, error: true };
+  }
 
-  return data;
+  return { data, error: false };
 }
 export async function getProductBySlug(slug: string) {
   const { response, data } = await Fetch({

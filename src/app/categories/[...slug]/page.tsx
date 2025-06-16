@@ -114,7 +114,8 @@ export default async function CategorieSlug({ params }: Props)
 
   // Récupère les produits de la dernière catégorie
 
-  const products = await getProductsByCategory(currentCategory.id);
+  const { data: products, error } = await getProductsByCategory(currentCategory.id);
+  
   // console.log('products',products)
   let icon = Logo(currentSlug);
 
@@ -125,15 +126,15 @@ export default async function CategorieSlug({ params }: Props)
         {currentCategory.name} {parentSlug}
       </h1>
 
-      {currentCategory.name && products.error && (
+      {currentCategory.name && error && (
         <p className="p-4 text-2xl">Pas de produits</p>
       )}
 
-      {products.length === 0 ? (
+      {products && products.length === 0 ? (
         <p>Aucun produit trouvé.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {!products.error &&
+          {!error && products &&
             products.map((product: any) => (
               <ProductCardLink key={product.id} product={product} />
             ))}
