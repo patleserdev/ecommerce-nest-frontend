@@ -3,6 +3,7 @@ import {
   CreateProduct,
   UpdateProduct,
   Brand,
+  Product,
 } from "@/types/product.js";
 import Fetch from "./fetch";
 import { addUser } from "@/redux/reducers/userSlice";
@@ -11,7 +12,6 @@ import { AddressRoleType, AdresseType } from "@/types/adresses";
 import { clearUser } from "@/redux/reducers/userSlice";
 import { useDispatch } from "react-redux";
 const API_BACKEND = process.env.NEXT_PUBLIC_API_BACKEND;
-
 
 /***
  *      _    _  _____ ______ _____   _____
@@ -27,7 +27,7 @@ export async function loginUser(
   password: string,
   dispatch: AppDispatch
 ) {
-  const data = await Fetch<{ role: string; username: string }>({
+  const { response, data } = await Fetch<{ role: string; username: string }>({
     url: `/api/login`,
     options: {
       method: "POST",
@@ -35,6 +35,7 @@ export async function loginUser(
       body: JSON.stringify({ email, password }),
     },
   });
+  if (!response.ok) throw new Error("Connexion échouée");
 
   dispatch(addUser({ role: data.role, username: data.username }));
 
@@ -46,7 +47,7 @@ export async function signupUser(
   username: string,
   password: string
 ) {
-  await Fetch({
+  const { response, data } = await Fetch({
     url: `/api/signup`,
     options: {
       method: "POST",
@@ -55,17 +56,20 @@ export async function signupUser(
     },
   });
 
-  return { ok: true };
+  if (!response.ok) throw new Error("Connexion échouée");
+
+  return { ok: true, data };
 }
 
 export async function logout() {
-  await Fetch({
+  const { response, data } = await Fetch({
     url: `/api/logout`,
     options: {
       method: "POST",
       headers: { "Content-Type": "application/json" },
     },
   });
+  if (!response.ok) throw new Error("Déconnexion échouée");
 
   return { ok: true };
 }
@@ -79,7 +83,7 @@ export async function logout() {
  *      \_____/_/    \_\_|  |______\_____|\____/|_|  \_\_____|______|_____/
  */
 export async function getCategories(): Promise<Category[]> {
-  const response = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/categories`,
     options: {
       headers: {
@@ -87,12 +91,13 @@ export async function getCategories(): Promise<Category[]> {
       },
     },
   });
+  if (!response.ok) throw new Error("Récupération des catégories");
   // console.log(response)
-  return response;
+  return data;
 }
 
 export async function getCategoriesByParent(id: number): Promise<Category[]> {
-  const response = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/categories/parent/${id}`,
     options: {
       headers: {
@@ -100,11 +105,12 @@ export async function getCategoriesByParent(id: number): Promise<Category[]> {
       },
     },
   });
-  return response.datas;
+  if (!response.ok) throw new Error("Récupération des catégories par parent");
+  return data;
 }
 
 export async function getCategoryById(id: number) {
-  const response = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/categories/${id}`,
     options: {
       headers: {
@@ -112,11 +118,12 @@ export async function getCategoryById(id: number) {
       },
     },
   });
-  return response.datas;
+  if (!response.ok) throw new Error("Récupération de catégorie par id échouée");
+  return data;
 }
 
 export async function getCategoriesByParentId(id: number) {
-  const response = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/categories/sub/${id}`,
     options: {
       headers: {
@@ -124,7 +131,10 @@ export async function getCategoriesByParentId(id: number) {
       },
     },
   });
-  return response.datas;
+  if (!response.ok)
+    throw new Error("Récupération de catégorie par parent id échouée");
+
+  return data;
 }
 
 export async function getCategoryBySlug(slug: string, parentSlug: string) {
@@ -135,7 +145,7 @@ export async function getCategoryBySlug(slug: string, parentSlug: string) {
     parent = `?parent=${cleanParentSlug}`;
   }
   // console.log('cleanSlug',cleanSlug)
-  const response = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/categories/slug/${cleanSlug}${parent}`,
     options: {
       headers: {
@@ -143,7 +153,9 @@ export async function getCategoryBySlug(slug: string, parentSlug: string) {
       },
     },
   });
-  return response;
+  if (!response) throw new Error("Récupération de catégorie par slug échouée");
+
+  return data;
 }
 
 export async function addCategorie({
@@ -151,7 +163,7 @@ export async function addCategorie({
 }: {
   formData: { name: String; parent_id?: Number };
 }) {
-  const res = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/categories`,
     options: {
       method: "POST",
@@ -160,10 +172,9 @@ export async function addCategorie({
       credentials: "include", // très important pour accepter les cookies
     },
   });
-  if (!res.ok) throw new Error("Login failed");
-  const data = await res.json();
-  const response = { ok: true };
-  return response;
+  if (!response.ok) throw new Error("Ajout de catégorie échoué");
+
+  return { ok: true, data };
 }
 
 export async function updateCategorie({
@@ -173,7 +184,7 @@ export async function updateCategorie({
   id: Number;
   formData: { name: String; parent_id?: Number };
 }) {
-  const res = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/categories/${id}`,
     options: {
       method: "PATCH",
@@ -182,14 +193,13 @@ export async function updateCategorie({
       credentials: "include", // très important pour accepter les cookies
     },
   });
-  if (!res.ok) throw new Error("Login failed");
-  const data = await res.json();
-  const response = { ok: true };
-  return response;
+  if (!response.ok) throw new Error("Modification de catégorie échoué");
+
+  return { ok: true, data };
 }
 
 export async function destroyCategorie(id: Number) {
-  const res = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/categories/${id}`,
     options: {
       method: "DELETE",
@@ -197,10 +207,11 @@ export async function destroyCategorie(id: Number) {
       credentials: "include", // très important pour accepter les cookies
     },
   });
-  if (!res.ok) throw new Error("Login failed");
+
+  if (!response.ok) throw new Error("Suppression de catégorie échoué");
   // const data = await res.json();
-  const response = { ok: true };
-  return response;
+
+  return { ok: true };
 }
 
 /***
@@ -213,7 +224,7 @@ export async function destroyCategorie(id: Number) {
  */
 
 export async function getProducts(): Promise<UpdateProduct[]> {
-  const response = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/products`,
     options: {
       headers: {
@@ -221,39 +232,43 @@ export async function getProducts(): Promise<UpdateProduct[]> {
       },
     },
   });
-  return response;
+  if (!response.ok) throw new Error("Récupération des produits échouée");
+
+  return data;
 }
 
-export function getProductsByCategory(id: number) {
-  try {
-    const response = Fetch({
-      url: `${API_BACKEND}/products/categories/${id}`,
-      options: {
-        headers: {
-          // Authorization: `Bearer ${yourToken}`,
-        },
+export async function getProductsByCategory(id: number): Promise<Product[]> {
+  const { response, data } = await Fetch({
+    url: `${API_BACKEND}/products/categories/${id}`,
+    options: {
+      headers: {
+        // Authorization: `Bearer ${yourToken}`,
       },
-    });
-    return response;
-  } catch (error) {}
+    },
+  });
+  if (!response.ok)
+    throw new Error("Récupération des produits par catégorie échouée");
+
+  return data;
 }
-export function getProductBySlug(slug: string) {
-  try {
-    const response = Fetch({
-      url: `${API_BACKEND}/products/slug/${slug}`,
-      options: {
-        next: { tags: ["products"] },
-        headers: {
-          // Authorization: `Bearer ${yourToken}`,
-        },
+export async function getProductBySlug(slug: string) {
+  const { response, data } = await Fetch({
+    url: `${API_BACKEND}/products/slug/${slug}`,
+    options: {
+      next: { tags: ["products"] },
+      headers: {
+        // Authorization: `Bearer ${yourToken}`,
       },
-    });
-    return response;
-  } catch (error) {}
+    },
+  });
+  if (!response.ok)
+    throw new Error("Récupération des produits par slug échouée");
+
+  return data;
 }
 
 export async function addProduct({ formData }: { formData: CreateProduct }) {
-  const res = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/products`,
     options: {
       method: "POST",
@@ -262,10 +277,9 @@ export async function addProduct({ formData }: { formData: CreateProduct }) {
       credentials: "include", // très important pour accepter les cookies
     },
   });
-  if (!res.ok) throw new Error("Login failed");
-  const data = await res.json();
-  const response = { ok: true };
-  return response;
+  if (!response.ok) throw new Error("Ajout d'un produit échoué");
+
+  return { ok: true, data };
 }
 
 export async function updateProduct({
@@ -275,7 +289,7 @@ export async function updateProduct({
   id: Number;
   formData: UpdateProduct;
 }) {
-  const res = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/products/${id}`,
     options: {
       method: "PATCH",
@@ -284,14 +298,13 @@ export async function updateProduct({
       credentials: "include", // très important pour accepter les cookies
     },
   });
-  if (!res.ok) throw new Error("Login failed");
-  const data = await res.json();
-  const response = { ok: true };
-  return response;
+  if (!response.ok) throw new Error("Modification d'un produit échoué");
+
+  return { ok: true, data };
 }
 
 export async function destroyProduct(id: Number) {
-  const res = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/products/${id}`,
     options: {
       method: "DELETE",
@@ -299,10 +312,9 @@ export async function destroyProduct(id: Number) {
       credentials: "include", // très important pour accepter les cookies
     },
   });
-  if (!res.ok) throw new Error("Login failed");
-  // const data = await res.json();
-  const response = { ok: true };
-  return response;
+  if (!response.ok) throw new Error("Destruction d'un produit échoué");
+
+  return { ok: true, data };
 }
 
 /***
@@ -315,19 +327,22 @@ export async function destroyProduct(id: Number) {
  */
 
 export async function getBrands(): Promise<Brand[]> {
-  const response = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/brands`,
     options: {
       headers: {
         // Authorization: `Bearer ${yourToken}`,
       },
+      credentials: "include", // très important pour accepter les cookies
     },
   });
-  return response;
+  if (!response.ok) throw new Error("Récupération des marques échouée");
+
+  return data;
 }
 
 export async function addBrand({ formData }: { formData: Brand }) {
-  const res = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/brands`,
     options: {
       method: "POST",
@@ -336,10 +351,16 @@ export async function addBrand({ formData }: { formData: Brand }) {
       credentials: "include", // très important pour accepter les cookies
     },
   });
-  if (!res.ok) throw new Error("Login failed");
-  const data = await res.json();
-  const response = { ok: true };
-  return response;
+
+  // Vérifie si la réponse HTTP est OK
+  if (!response.ok) {
+    let errorMessage = "Ajout d'une marque échoué";
+    if (data?.message) {
+      errorMessage = data.message;
+    }
+    throw new Error(errorMessage);
+  }
+  return { ok: true, data };
 }
 
 export async function updateBrand({
@@ -350,7 +371,7 @@ export async function updateBrand({
   formData: Brand;
 }) {
   // console.log("update product", formData);
-  const res = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/brands/${id}`,
     options: {
       method: "PATCH",
@@ -359,14 +380,13 @@ export async function updateBrand({
       credentials: "include", // très important pour accepter les cookies
     },
   });
-  if (!res.ok) throw new Error("Login failed");
-  const data = await res.json();
-  const response = { ok: true };
-  return response;
+  if (!response.ok) throw new Error("Modification d'une marque échouée");
+
+  return { ok: true, data };
 }
 
 export async function destroyBrand(id: Number) {
-  const res = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/brands/${id}`,
     options: {
       method: "DELETE",
@@ -374,10 +394,9 @@ export async function destroyBrand(id: Number) {
       credentials: "include", // très important pour accepter les cookies
     },
   });
-  if (!res.ok) throw new Error("Login failed");
-  // const data = await res.json();
-  const response = { ok: true };
-  return response;
+  if (!response.ok) throw new Error("Destruction d'une marque échouée");
+
+  return { ok: true, data };
 }
 
 /***
@@ -401,42 +420,39 @@ export async function destroyBrand(id: Number) {
  */
 
 export async function getAdresses(): Promise<AdresseType[]> {
-  const response = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/adresses`,
     options: {
       headers: {
         // Authorization: `Bearer ${yourToken}`,
       },
+      credentials: "include", // très important pour accepter les cookies
     },
   });
-  return response;
+  if (!response) throw new Error("Récupération des adresses échouée");
+
+  return data;
 }
 
-export async function getAdressesByUser(
-  dispatch: AppDispatch
-): Promise<AdresseType[]> {
-  try {
-    const response = await Fetch({
-      url: `${API_BACKEND}/adresses/user`,
-      options: {
-        headers: {
-          // Authorization: `Bearer ${yourToken}`,
-        },
-        credentials: "include", // très important pour accepter les cookies
+export async function getAdressesByUser(): Promise<AdresseType[]> {
+  const { response, data } = await Fetch({
+    url: `${API_BACKEND}/adresses/user`,
+    options: {
+      headers: {
+        // Authorization: `Bearer ${yourToken}`,
+       "Content-Type": "application/json" 
       },
-    });
-    return response;
-  } catch (error) {
-    if ((error as any).statusCode === 401) {
-      // dispatch l'action logout ici
-      dispatch(clearUser());
-    }
-    throw new Error("Unauthorized");
-  }
+      credentials: "include", // très important pour accepter les cookies
+    },
+  });
+  if (!response)
+    throw new Error("Récupération des adresses par utilisateur échouée");
+
+  return data;
 }
 
 export async function addAdress({ formData }: { formData: AdresseType }) {
-  const res = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/adresses`,
     options: {
       method: "POST",
@@ -445,10 +461,9 @@ export async function addAdress({ formData }: { formData: AdresseType }) {
       credentials: "include", // très important pour accepter les cookies
     },
   });
-  if (!res) throw new Error("Ajout d'adresse échoué");
+  if (!response.ok) throw new Error("Ajout d'une adresse échoué");
 
-  const response = { ok: true };
-  return response;
+  return { ok: true, data };
 }
 
 export async function updateAddress({
@@ -459,7 +474,7 @@ export async function updateAddress({
   formData: AdresseType;
 }) {
   // console.log("update adress", formData);
-  const res = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/adresses/${id}`,
     options: {
       method: "PATCH",
@@ -468,14 +483,13 @@ export async function updateAddress({
       credentials: "include", // très important pour accepter les cookies
     },
   });
-  if (!res) throw new Error("Mise à jour d'adresse échoué");
+  if (!response.ok) throw new Error("Mise à jour d'adresse échoué");
 
-  const response = { ok: true };
-  return response;
+  return { ok: true, data };
 }
 
 export async function destroyAdress(id: Number) {
-  const res = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/adresses/${id}`,
     options: {
       method: "DELETE",
@@ -483,11 +497,10 @@ export async function destroyAdress(id: Number) {
       credentials: "include", // très important pour accepter les cookies
     },
   });
-  if (!res) throw new Error("Suppression échouée");
+  if (!response.ok) throw new Error("Suppression échouée");
 
-  console.log(res);
-  const response = { ok: true };
-  return response;
+
+  return { ok: true ,data};
 }
 
 /***
@@ -513,7 +526,7 @@ export async function destroyAdress(id: Number) {
 
 export async function addRole({ formData }: { formData: AddressRoleType }) {
   // console.log("update adress", formData);
-  const res = await Fetch({
+  const { response, data } = await Fetch({
     url: `${API_BACKEND}/address-roles`,
     options: {
       method: "POST",
@@ -522,9 +535,9 @@ export async function addRole({ formData }: { formData: AddressRoleType }) {
       credentials: "include", // très important pour accepter les cookies
     },
   });
-  console.log(res)
-  if (!res) throw new Error("Mise à jour d'adresse échoué");
 
-  const response = { ok: true };
-  return response;
+  if (!response.ok) throw new Error("Mise à jour d'un rôle d'adresse échoué");
+
+
+  return { ok: true };
 }

@@ -43,8 +43,6 @@ export default function ProductForm({
   };
 
 
- 
-
   const {
     register,
     handleSubmit,

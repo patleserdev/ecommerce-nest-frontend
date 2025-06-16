@@ -3,21 +3,19 @@ export default async function Fetch<T = any>({
   options,
 }: {
   url: string;
-  options?: RequestInit; // au lieu de {}|null
-}): Promise<T> {
+  options?: RequestInit;
+}): Promise<{ response: Response; data: T }> {
   try {
     const response = await fetch(url, options);
-
-    if (!response.ok) {
-      // throw new Error(`HTTP error! status: ${response.status}`);
-      console.log(`HTTP error! status: ${response.status}`);
+    let data
+    if (response.headers.get("content-type")?.includes("application/json")) {
+      data = await response.json();
     }
+ 
 
-    const result: T = await response.json();
-
-    return result;
+    return { response, data };
   } catch (error) {
     console.error("Fetch error:", error);
-    throw error; // on relance l'erreur pour laisser le contrôle à l'appelant
+    throw error;
   }
 }

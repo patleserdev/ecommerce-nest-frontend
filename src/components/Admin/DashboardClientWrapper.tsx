@@ -55,7 +55,7 @@ export default function DashboardClientWrapper({
   const [productbrand, setProductBrand] = useState<Brand | null | undefined>(
     null
   );
-
+  const [errors, setErrors] = useState<string[]>([]);
   const [expanded, setExpanded] = useState<false | number>(0);
   const [isWaiting, setIsWaiting] = useState(false);
 
@@ -63,9 +63,8 @@ export default function DashboardClientWrapper({
     if (isWaiting) {
       setTimeout(() => {
         setIsWaiting(false);
-        setIsEditProduct(null)
+        setIsEditProduct(null);
       }, 500);
-      
     }
   }, [products]);
   /**
@@ -94,6 +93,7 @@ export default function DashboardClientWrapper({
    * @param parent
    */
   const handleOpenAddCategory = async (parent?: Category | null) => {
+    setErrors([])
     setMode("categories");
     setParent(parent);
     setIsModalOpen(true);
@@ -111,11 +111,17 @@ export default function DashboardClientWrapper({
       await addCategorie({ formData: datas });
       console.log("Catégorie ajoutée !");
       setMode("");
+      setIsEditCategory(null);
+      setIsModalOpen(false);
       router.refresh();
+    
 
       // Fermer le modal ou rafraîchir les données ici
     } catch (err) {
       console.error("Erreur lors de l'ajout de la catégorie :", err);
+      const message =
+      err instanceof Error ? err.message : "Une erreur inconnue est survenue";
+      setErrors((prev) => [...prev, message]);
     }
   };
 
@@ -124,6 +130,7 @@ export default function DashboardClientWrapper({
    * @param category
    */
   const handleOpenEditCategory = async (category: Category | Child) => {
+    setErrors([])
     if (typeof category.parent_id !== "number") {
       console.warn("Impossible d’éditer : parent_id manquant !");
       return;
@@ -147,11 +154,16 @@ export default function DashboardClientWrapper({
       console.log("Catégorie modifiée !");
       setMode("");
       setIsEditCategory(null);
+      setIsEditCategory(null);
+      setIsModalOpen(false);
       router.refresh();
 
       // Fermer le modal ou rafraîchir les données ici
     } catch (err) {
       console.error("Erreur lors de l'ajout de la catégorie :", err);
+      const message =
+      err instanceof Error ? err.message : "Une erreur inconnue est survenue";
+      setErrors((prev) => [...prev, message]);
     }
   };
 
@@ -165,8 +177,11 @@ export default function DashboardClientWrapper({
       try {
         await destroyCategorie(id);
         router.refresh();
-      } catch (error) {
-        console.error("Erreur lors de la suppression de la catégorie :", error);
+      } catch (err) {
+        console.error("Erreur lors de la suppression de la marque :", err);
+        const message =
+        err instanceof Error ? err.message : "Une erreur inconnue est survenue";
+        setErrors((prev) => [...prev, message]);
       }
     }
   };
@@ -176,6 +191,7 @@ export default function DashboardClientWrapper({
    * @param category
    */
   const handleOpenAddProduct = (category: Category) => {
+    setErrors([])
     setIsEditProduct(null);
     setIsEditCategory(null);
     setMode("products");
@@ -190,13 +206,16 @@ export default function DashboardClientWrapper({
   const handleAddProduct = async (datas: CreateProduct) => {
     try {
       await addProduct({ formData: datas });
-      console.log("Produit ajouté !");
+      console.log("Produit ajouté !",datas);
       setMode("");
       router.refresh();
 
       // Fermer le modal ou rafraîchir les données ici
     } catch (err) {
       console.error("Erreur lors de l'ajout du produit :", err);
+      const message =
+      err instanceof Error ? err.message : "Une erreur inconnue est survenue";
+      setErrors((prev) => [...prev, message]);
     }
   };
 
@@ -205,14 +224,13 @@ export default function DashboardClientWrapper({
    * @param product
    */
   const handleOpenEditProduct = async (product: Product | null) => {
+    setErrors([])
     setMode("products");
     setIsEditProduct(null); // Reset
 
-
-      setIsModalOpen(true);
-      console.log("passage du product pour edition", product);
-      setIsEditProduct(product);
-    
+    setIsModalOpen(true);
+    console.log("passage du product pour edition", product);
+    setIsEditProduct(product);
   };
 
   /**
@@ -227,16 +245,16 @@ export default function DashboardClientWrapper({
     setIsWaiting(true);
     try {
       await updateProduct({ id: product_id, formData: datas });
-      
+
       console.log("Produit modifiée !", datas);
       setMode("");
-      // setIsEditProduct(null);
       router.refresh();
       await revalidateProducts();
-
-      // Fermer le modal ou rafraîchir les données ici
     } catch (err) {
       console.error("Erreur lors de l'ajout du produit :", err);
+      const message =
+      err instanceof Error ? err.message : "Une erreur inconnue est survenue";
+      setErrors((prev) => [...prev, message]);
     }
   };
 
@@ -261,6 +279,7 @@ export default function DashboardClientWrapper({
    * @param category
    */
   const handleOpenAddBrand = () => {
+    setErrors([])
     setIsEditProduct(null);
     setIsEditCategory(null);
     setIsEditBrand(null);
@@ -274,14 +293,22 @@ export default function DashboardClientWrapper({
    */
   const handleAddBrand = async (datas: Brand) => {
     try {
-      await addBrand({ formData: datas });
-      console.log("Marque ajoutée !");
-      setMode("");
-      router.refresh();
+      const response = await addBrand({ formData: datas });
+      console.log("reponse dans le client", response);
+      if (response) {
+        console.log("Marque ajoutée !");
+        setMode("");
+        setIsEditBrand(null);
+        setIsModalOpen(false);
+        router.refresh();
+      }
 
       // Fermer le modal ou rafraîchir les données ici
     } catch (err) {
       console.error("Erreur lors de l'ajout de la marque :", err);
+      const message =
+      err instanceof Error ? err.message : "Une erreur inconnue est survenue";
+      setErrors((prev) => [...prev, message]);
     }
   };
 
@@ -290,6 +317,7 @@ export default function DashboardClientWrapper({
    * @param product
    */
   const handleOpenEditBrand = async (brand: Brand | null) => {
+    setErrors([])
     setMode("brands");
     setIsEditBrand(brand);
     setIsModalOpen(true);
@@ -309,11 +337,16 @@ export default function DashboardClientWrapper({
         await updateBrand({ id: brand_id, formData: datas });
         console.log("Marque modifiée !");
         setMode("");
+        setIsEditBrand(null);
+        setIsModalOpen(false);
         router.refresh();
 
         // Fermer le modal ou rafraîchir les données ici
       } catch (err) {
-        console.error("Erreur lors de l'ajout de la marque :", err);
+        console.error("Erreur lors de la modification de la marque :", err);
+        const message =
+        err instanceof Error ? err.message : "Une erreur inconnue est survenue";
+        setErrors((prev) => [...prev, message]);
       }
   };
 
@@ -504,7 +537,7 @@ export default function DashboardClientWrapper({
                         </div>
 
                         <div className="flex flex-row-reverse gap-1 w-[10%] pb-1">
-                         <div
+                          <div
                             className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
                             onClick={() => {
                               setProductCategory(parent);
@@ -537,22 +570,23 @@ export default function DashboardClientWrapper({
                                     )}
                                   </div>
 
-                                  {!isWaiting &&  <div
-                                    className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
-                                    onClick={() => {
-                                      setProductCategory(parent);
-                                      handleOpenEditProduct(product);
-                                    }}
-                                  >
-                                    <MdEdit size={18} />
-                                  </div>}
+                                  {!isWaiting && (
+                                    <div
+                                      className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
+                                      onClick={() => {
+                                        setProductCategory(parent);
+                                        handleOpenEditProduct(product);
+                                      }}
+                                    >
+                                      <MdEdit size={18} />
+                                    </div>
+                                  )}
 
-                                  {isWaiting && <div
-                                    className=" opacity-[0.5]"
-                                  ><MoonLoader size={15}/>
-                                  </div>}
-
-                                  
+                                  {isWaiting && (
+                                    <div className=" opacity-[0.5]">
+                                      <MoonLoader size={15} />
+                                    </div>
+                                  )}
 
                                   <div
                                     className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
@@ -712,12 +746,10 @@ export default function DashboardClientWrapper({
                   const safeData = {
                     ...data,
                   };
-                  console.log("Catégorie à ajouter :", safeData);
+
                   isEditBrand
                     ? handleUpdateBrand(isEditBrand.id, safeData)
                     : handleAddBrand(safeData);
-                  setIsEditBrand(null);
-                  setIsModalOpen(false);
                 }}
               />
             )}
@@ -733,12 +765,11 @@ export default function DashboardClientWrapper({
                   const safeData = {
                     ...data,
                   };
-                  console.log("Catégorie à ajouter :", safeData);
+
                   isEditCategory
                     ? handleUpdateCategory(isEditCategory.id, safeData)
                     : handleAddCategory(safeData);
-                  setIsEditCategory(null);
-                  setIsModalOpen(false);
+         
                 }}
               />
             )}
@@ -774,6 +805,9 @@ export default function DashboardClientWrapper({
                 }}
               />
             )}
+            <div className="text-red-500 font-bold">
+              {errors}
+            </div>
         </Modal>
       )}
     </>
