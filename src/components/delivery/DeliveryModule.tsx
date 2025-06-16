@@ -78,7 +78,7 @@ export default function DeliveryModule() {
   useEffect(() => {
     if (user != null) {
       (async () => {
-        const adresses = await getAdressesByUser(dispatch);
+        const adresses = await getAdressesByUser();
         if (adresses) {
           setAddresses(adresses);
         }
