@@ -62,7 +62,7 @@ export default function UserIcon() {
     };
 
     checkCookies();
-  }, []);
+  }, [router]);
 
   return (
     <div

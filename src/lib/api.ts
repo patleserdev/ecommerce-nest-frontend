@@ -169,7 +169,9 @@ export async function addCategorie({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
-      credentials: "include", // très important pour accepter les cookies
+      credentials: "include",
+
+      // très important pour accepter les cookies
     },
   });
   if (!response.ok) throw new Error("Ajout de catégorie échoué");
@@ -190,7 +192,9 @@ export async function updateCategorie({
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
-      credentials: "include", // très important pour accepter les cookies
+      credentials: "include",
+
+      // très important pour accepter les cookies
     },
   });
   if (!response.ok) throw new Error("Modification de catégorie échoué");
@@ -204,7 +208,9 @@ export async function destroyCategorie(id: Number) {
     options: {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      credentials: "include", // très important pour accepter les cookies
+      credentials: "include",
+
+      // très important pour accepter les cookies
     },
   });
 
@@ -237,7 +243,9 @@ export async function getProducts(): Promise<UpdateProduct[]> {
   return data;
 }
 
-export async function getProductsByCategory(id: number): Promise<{data:Product[]|null,error:boolean}> {
+export async function getProductsByCategory(
+  id: number
+): Promise<{ data: Product[] | null; error: boolean }> {
   const { response, data } = await Fetch({
     url: `${API_BACKEND}/products/categories/${id}`,
     options: {
@@ -275,7 +283,9 @@ export async function addProduct({ formData }: { formData: CreateProduct }) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
-      credentials: "include", // très important pour accepter les cookies
+      credentials: "include",
+
+      // très important pour accepter les cookies
     },
   });
   if (!response.ok) throw new Error("Ajout d'un produit échoué");
@@ -296,7 +306,9 @@ export async function updateProduct({
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
-      credentials: "include", // très important pour accepter les cookies
+      credentials: "include",
+
+      // très important pour accepter les cookies
     },
   });
   if (!response.ok) throw new Error("Modification d'un produit échoué");
@@ -310,7 +322,9 @@ export async function destroyProduct(id: Number) {
     options: {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      credentials: "include", // très important pour accepter les cookies
+      credentials: "include",
+
+      // très important pour accepter les cookies
     },
   });
   if (!response.ok) throw new Error("Destruction d'un produit échoué");
@@ -334,7 +348,9 @@ export async function getBrands(): Promise<Brand[]> {
       headers: {
         // Authorization: `Bearer ${yourToken}`,
       },
-      credentials: "include", // très important pour accepter les cookies
+      credentials: "include",
+
+      // très important pour accepter les cookies
     },
   });
   if (!response.ok) throw new Error("Récupération des marques échouée");
@@ -349,7 +365,9 @@ export async function addBrand({ formData }: { formData: Brand }) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
-      credentials: "include", // très important pour accepter les cookies
+      credentials: "include",
+
+      // très important pour accepter les cookies
     },
   });
 
@@ -378,7 +396,9 @@ export async function updateBrand({
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
-      credentials: "include", // très important pour accepter les cookies
+      credentials: "include",
+
+      // très important pour accepter les cookies
     },
   });
   if (!response.ok) throw new Error("Modification d'une marque échouée");
@@ -392,7 +412,9 @@ export async function destroyBrand(id: Number) {
     options: {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      credentials: "include", // très important pour accepter les cookies
+      credentials: "include",
+
+      // très important pour accepter les cookies
     },
   });
   if (!response.ok) throw new Error("Destruction d'une marque échouée");
@@ -427,7 +449,9 @@ export async function getAdresses(): Promise<AdresseType[]> {
       headers: {
         // Authorization: `Bearer ${yourToken}`,
       },
-      credentials: "include", // très important pour accepter les cookies
+      credentials: "include",
+
+      // très important pour accepter les cookies
     },
   });
   if (!response) throw new Error("Récupération des adresses échouée");
@@ -441,9 +465,10 @@ export async function getAdressesByUser(): Promise<AdresseType[]> {
     options: {
       headers: {
         // Authorization: `Bearer ${yourToken}`,
-       "Content-Type": "application/json" 
       },
-      credentials: "include", // très important pour accepter les cookies
+      credentials: "include",
+
+      // très important pour accepter les cookies
     },
   });
   if (!response)
@@ -459,7 +484,9 @@ export async function addAdress({ formData }: { formData: AdresseType }) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
-      credentials: "include", // très important pour accepter les cookies
+      credentials: "include",
+
+      // très important pour accepter les cookies
     },
   });
   if (!response.ok) throw new Error("Ajout d'une adresse échoué");
@@ -481,7 +508,9 @@ export async function updateAddress({
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
-      credentials: "include", // très important pour accepter les cookies
+      credentials: "include",
+
+      // très important pour accepter les cookies
     },
   });
   if (!response.ok) throw new Error("Mise à jour d'adresse échoué");
@@ -495,13 +524,14 @@ export async function destroyAdress(id: Number) {
     options: {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      credentials: "include", // très important pour accepter les cookies
+      credentials: "include",
+
+      // très important pour accepter les cookies
     },
   });
   if (!response.ok) throw new Error("Suppression échouée");
 
-
-  return { ok: true ,data};
+  return { ok: true, data };
 }
 
 /***
@@ -533,12 +563,13 @@ export async function addRole({ formData }: { formData: AddressRoleType }) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
-      credentials: "include", // très important pour accepter les cookies
+      credentials: "include",
+
+      // très important pour accepter les cookies
     },
   });
 
   if (!response.ok) throw new Error("Mise à jour d'un rôle d'adresse échoué");
-
 
   return { ok: true };
 }
