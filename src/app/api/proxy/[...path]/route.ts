@@ -30,24 +30,28 @@ async function handler(req: NextRequest, path: string[]) {
     headers: backendRes.headers,
   });
 }
-
+interface RouteContext {
+  params: {
+    path: string[];
+  };
+}
 // 🔁 UTILISE UNE FONCTION ANONYME POUR CHAQUE MÉTHODE POUR ÉVITER L'ERREUR
-export const POST = async (req: NextRequest, context: { params: { path: string[] } }) => {
+export const POST = async (req: NextRequest, context: RouteContext) => {
   return handler(req, context.params.path);
 };
 
-export const GET = async (req: NextRequest, context: { params: { path: string[] } }) => {
+export const GET = async (req: NextRequest, context: RouteContext) => {
   return handler(req, context.params.path);
 };
 
-export const PUT = async (req: NextRequest, context: { params: { path: string[] } }) => {
+export const PUT = async (req: NextRequest, context: RouteContext) => {
   return handler(req, context.params.path);
 };
 
-export const PATCH = async (req: NextRequest, context: { params: { path: string[] } }) => {
+export const PATCH = async (req: NextRequest, context: RouteContext) => {
   return handler(req, context.params.path);
 };
 
-export const DELETE = async (req: NextRequest, context: { params: { path: string[] } }) => {
+export const DELETE = async (req: NextRequest, context: RouteContext) => {
   return handler(req, context.params.path);
 };
