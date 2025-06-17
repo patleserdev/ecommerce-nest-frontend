@@ -2,7 +2,7 @@ export type AddressRoleType = {
   id?: number;
   adresse?: {id:number}
   user?: {id:number}
-  type?: "livraison" | "facturation";
+  type?: "livraison" | "facturation" | "none";
   cartId?:number,
   orderId?:number
   invoiceId?:number,

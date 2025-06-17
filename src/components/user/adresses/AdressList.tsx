@@ -10,7 +10,7 @@ export default function AdressList({
   isEditing,
 }: {
   adresses: AdresseType[];
-  isReloading: (value:boolean) => void;
+  isReloading: (value: boolean) => void;
   isEditing: (adress: AdresseType) => void;
 }) {
   /***
@@ -47,7 +47,7 @@ export default function AdressList({
     if (adresse.id) {
       const formData = { adresse: { id: adresse.id }, type: type };
       const result = await addRole({ formData });
-      isReloading(true)
+      isReloading(true);
     }
   }
 
@@ -68,10 +68,9 @@ export default function AdressList({
     var result = confirm(`Détruire irrémédiablement l'adresse ${id}`);
     if (result) {
       try {
-        const result =await destroyAdress(id);
-        if(result)
-        {
-          isReloading(true)
+        const result = await destroyAdress(id);
+        if (result) {
+          isReloading(true);
         }
       } catch (error) {
         console.error("Erreur lors de la suppression de l'adresse' :", error);
@@ -107,40 +106,46 @@ export default function AdressList({
           const types = adresse.roles?.map((t) => t.type) ?? [];
           const isFacturation = types.includes("facturation");
           const isLivraison = types.includes("livraison");
-
+          const isNone = types.includes("none");
           return (
             <li
               key={i}
               className="flex flex-col border p-2 relative"
               style={{ borderColor: "rgba(215,211,215,0.7)" }}
             >
-              <div>
+              <div className="w-3/4">
                 {toFirstLetterUpper(adresse.firstName)}{" "}
                 {toFirstLetterUpper(adresse.lastName)}
               </div>
-              <div>{toFirstLetterUpper(adresse.streetAddress)}</div>
+              <div className="w-3/4">
+                {toFirstLetterUpper(adresse.streetAddress)}
+              </div>
               {adresse.streetAddress2 && (
-                <div>{toFirstLetterUpper(adresse.streetAddress2)}</div>
+                <div className="w-3/4">
+                  {toFirstLetterUpper(adresse.streetAddress2)}
+                </div>
               )}
-              <div>
+              <div className="w-3/4">
                 {adresse.postalCode} {toFirstLetterUpper(adresse.city)}
               </div>
 
               {types.length > 0 && (
                 <div className="">
                   <ul className="flex flex-row gap-1 my-1">
-                    {types.map((type) => (
-                      <li
-                        key={type}
-                        className={`${
-                          type === "facturation" || type === "livraison"
-                            ? "bg-[var(--foreground)] text-[var(--background)]"
-                            : ""
-                        } p-2 text-xs rounded-xl text-center`}
-                      >
-                        {type && toFirstLetterUpper(type)}
-                      </li>
-                    ))}
+                    {types
+                      .filter((type) => type != "none")
+                      .map((type) => (
+                        <li
+                          key={type}
+                          className={`${
+                            type === "facturation" || type === "livraison"
+                              ? "bg-[var(--foreground)] text-[var(--background)]"
+                              : ""
+                          } p-2 text-xs rounded-xl text-center`}
+                        >
+                          {type && toFirstLetterUpper(type)}
+                        </li>
+                      ))}
                   </ul>
                 </div>
               )}
