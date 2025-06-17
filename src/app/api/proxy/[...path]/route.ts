@@ -3,6 +3,9 @@ import { NextRequest, NextResponse } from 'next/server';
 const BACKEND_BASE_URL = process.env.NEXT_PUBLIC_API_BACKEND;
 
 async function handler(req: NextRequest, path: string[]) {
+  if (!BACKEND_BASE_URL) {
+    return new NextResponse('Missing BACKEND_BASE_URL env variable', { status: 500 });
+  }
   const method = req.method;
   const search = req.nextUrl.search;
   const targetUrl = `${BACKEND_BASE_URL}/${path.join('/')}${search}`;
