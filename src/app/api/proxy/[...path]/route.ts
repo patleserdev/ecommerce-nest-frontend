@@ -31,38 +31,36 @@ async function handler(req: NextRequest, path: string[]) {
   });
 }
 
+
+type Params = { params: { path: string[] } };
+
 export async function GET(
   req: NextRequest,
-  { params }: { params: { path: string[] } }
-) {
+  { params }: Params) {
   return handler(req, params.path);
 }
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { path: string[] } }
-) {
+  { params }: Params) {
   return handler(req, params.path);
 }
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { path: string[] } }
-) {
+  { params }: Params) {
   return handler(req, params.path);
 }
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { path: string[] } }
-) {
+  { params }: Params) {
   return handler(req, params.path);
 }
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { path: string[] } }
-) {
+  { params }: Params) {
   return handler(req, params.path);
 }
 
