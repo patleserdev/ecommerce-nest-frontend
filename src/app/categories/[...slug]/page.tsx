@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import ProductCardLink from "@/components/products/ProductCardLink";
 import Link from "next/link.js";
-import Nav from "@/components/Nav";
+import Nav from "@/components/BU_Nav";
 import Image from "next/image.js";
 import Logo from "@/components/Logo";
 import {

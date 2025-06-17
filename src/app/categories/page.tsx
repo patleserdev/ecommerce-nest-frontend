@@ -1,4 +1,4 @@
-import Nav from "@/components/Nav";
+import Nav from "@/components/BU_Nav";
 import { notFound } from "next/navigation";
 import { getCategories } from "@/lib/api";
 import { Category, Child } from "@/types/product.js";
