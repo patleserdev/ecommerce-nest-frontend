@@ -30,28 +30,39 @@ async function handler(req: NextRequest, path: string[]) {
     headers: backendRes.headers,
   });
 }
-interface RouteContext {
-  params: {
-    path: string[];
-  };
+
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { path: string[] } }
+) {
+  return handler(req, params.path);
 }
-// 🔁 UTILISE UNE FONCTION ANONYME POUR CHAQUE MÉTHODE POUR ÉVITER L'ERREUR
-export const POST = async (req: NextRequest, context: RouteContext) => {
-  return handler(req, context.params.path);
-};
 
-export const GET = async (req: NextRequest, context: RouteContext) => {
-  return handler(req, context.params.path);
-};
+export async function POST(
+  req: NextRequest,
+  { params }: { params: { path: string[] } }
+) {
+  return handler(req, params.path);
+}
 
-export const PUT = async (req: NextRequest, context: RouteContext) => {
-  return handler(req, context.params.path);
-};
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { path: string[] } }
+) {
+  return handler(req, params.path);
+}
 
-export const PATCH = async (req: NextRequest, context: RouteContext) => {
-  return handler(req, context.params.path);
-};
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { path: string[] } }
+) {
+  return handler(req, params.path);
+}
 
-export const DELETE = async (req: NextRequest, context: RouteContext) => {
-  return handler(req, context.params.path);
-};
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { path: string[] } }
+) {
+  return handler(req, params.path);
+}
+
