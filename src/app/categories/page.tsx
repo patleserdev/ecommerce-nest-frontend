@@ -7,7 +7,6 @@ import Image from "next/image.js";
 import logo from "@/components/Logo";
 import DisplayIcon from "@/components/DisplayIcon";
 
-export const dynamic = "force-static"; // <-- force la génération SSG au moment du build
 export const revalidate = 60;
 
 

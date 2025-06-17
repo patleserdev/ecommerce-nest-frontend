@@ -1,22 +1,25 @@
-import { getCategories, getProducts,getBrands } from "@/lib/api";
+
+export const dynamic = "force-dynamic";
+import { getCategories, getProducts, getBrands } from "@/lib/api";
 import { notFound } from "next/navigation.js";
 import DashboardClientWrapper from "@/components/Admin/DashboardClientWrapper";
-export const dynamic = 'force-dynamic';
 
 
 export default async function Admin() {
-
+  const products = await getProducts();
+  if (!products) return notFound();
 
   const categories = await getCategories();
   if (!categories) return notFound();
-
-  const products = await getProducts();
-  if (!products) return notFound();
 
   const brands = await getBrands();
   if (!brands) return notFound();
 
   return (
-   <DashboardClientWrapper categories={categories} products={products} brands={brands}/>
+    <DashboardClientWrapper
+      categories={categories}
+      products={products}
+      brands={brands}
+    />
   );
 }
