@@ -92,7 +92,7 @@ export async function getCategories(): Promise<Category[]> {
       },
     },
   });
-  if (!response.ok) throw new Error("Récupération des catégories");
+  if (!response.ok) throw new Error(`Récupération des catégories ${SITE_URL}`);
   // console.log(response)
   return data;
 }
