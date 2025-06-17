@@ -50,8 +50,8 @@ export default function AddressForm({ defaultValues, onSubmit }: Props) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="flex flex-row gap-10 mt-5">
-        <div className="flex flex-col w-[50%] gap-2">
+      <div className="flex flex-col md:flex-row md:gap-10 mt-5">
+        <div className="flex flex-col md:w-[50%] gap-2">
           <div className="flex flex-col gap-1">
             <label>Civilité</label>
             <select
@@ -130,7 +130,7 @@ export default function AddressForm({ defaultValues, onSubmit }: Props) {
             )}
           </div>
         </div>
-        <div className="flex flex-col w-[50%] gap-2">
+        <div className="flex flex-col md:w-[50%] gap-2 mb-5">
           <div className="flex flex-col gap-1">
             <label>Code postal</label>
             <input
