@@ -20,7 +20,6 @@ type Props = {
   params: Promise<{ slug: string[] }>;
 };
 
-
 function getSlugChain(category: Category, allCategories: Category[]): string[] {
   const chain = [];
   let current: Category | undefined = category;
@@ -40,16 +39,19 @@ function getSlugChain(category: Category, allCategories: Category[]): string[] {
 }
 
 export async function generateStaticParams() {
-  const allCategories = await getCategories(); // doit retourner tous les slugs
-  return allCategories.map((category: Category) => ({
-    slug: getSlugChain(category, allCategories),
-
-  }));
+  try {
+    const allCategories = await getCategories(); 
+    return allCategories.map((category: Category) => ({
+      slug: getSlugChain(category, allCategories),
+    }));
+  } catch (e) {
+    console.error("Erreur dans generateStaticParams:", e);
+    return []; 
+  }
 }
 
-export default async function CategorieSlug({ params }: Props)
-{
-  const {slug} = await params;
+export default async function CategorieSlug({ params }: Props) {
+  const { slug } = await params;
   if (!slug || slug.length === 0) return notFound();
   // On récupère la catégorie ciblée : la dernière dans l'URL
 
@@ -57,7 +59,6 @@ export default async function CategorieSlug({ params }: Props)
   const parentSlug = slug[slug.length - 2];
   const currentCategory = await getCategoryBySlug(currentSlug, "");
 
- 
   // if (slugs.length == 1) {
   //   const currentCategory = await getCategoryBySlug(currentSlug, "");
   //   const categories = await getCategoriesByParent(currentCategory.id);
@@ -71,7 +72,7 @@ export default async function CategorieSlug({ params }: Props)
   //           return (
   //             <Link key={i} href={`${currentSlug}/${category.name}`}>
   //             <div
-                
+
   //               className="p-2 flex flex-col justify-center items-center opacity-[0.5] hover:opacity-[1] transition-all cursor-pointer"
   //             >
   //               <span className="capitalize font-bold text-2xl">
@@ -114,15 +115,17 @@ export default async function CategorieSlug({ params }: Props)
 
   // Récupère les produits de la dernière catégorie
 
-  const { data: products, error } = await getProductsByCategory(currentCategory.id);
-  
+  const { data: products, error } = await getProductsByCategory(
+    currentCategory.id
+  );
+
   // console.log('products',products)
   let icon = Logo(currentSlug);
 
   return (
     <div className="p-6 border">
       <h1 className="text-3xl font-bold mb-4 capitalize underline flex justify-start align-center gap-2">
-        <DisplayIcon icon={icon} size={50}/>
+        <DisplayIcon icon={icon} size={50} />
         {currentCategory.name} {parentSlug}
       </h1>
 
@@ -134,7 +137,8 @@ export default async function CategorieSlug({ params }: Props)
         <p>Aucun produit trouvé.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {!error && products &&
+          {!error &&
+            products &&
             products.map((product: any) => (
               <ProductCardLink key={product.id} product={product} />
             ))}
