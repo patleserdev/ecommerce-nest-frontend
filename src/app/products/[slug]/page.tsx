@@ -7,17 +7,18 @@ import { Product } from "@/types/product.js";
 import InfiniteScrollProducts from "@/components/motions/InfiniteScrollProducts";
 
 export const revalidate = 60; // ISR toutes les 60s
+export const dynamic = 'force-dynamic';
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
 
-// export async function generateStaticParams() {
-//   const allProducts = await getProducts(); // doit retourner tous les slugs
-//   return allProducts.map((product: Product) => ({
-//     slug: product.slug,
-//   }));
-// }
+export async function generateStaticParams() {
+  const allProducts = await getProducts(); // doit retourner tous les slugs
+  return allProducts.map((product: Product) => ({
+    slug: product.slug,
+  }));
+}
 
 export default async function Products({ params }: Props) {
   const {slug} = await params;

@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import ProductCardLink from "@/components/products/ProductCardLink";
 import Link from "next/link.js";
-import Nav from "@/components/BU_Nav";
 import Image from "next/image.js";
 import Logo from "@/components/Logo";
 import {
@@ -15,6 +14,7 @@ import DisplayIcon from "@/components/DisplayIcon";
 import { Category } from "@/types/product.js";
 
 export const revalidate = 60; // ISR toutes les 60s
+export const dynamic = 'force-dynamic';
 
 type Props = {
   params: Promise<{ slug: string[] }>;
@@ -38,17 +38,17 @@ function getSlugChain(category: Category, allCategories: Category[]): string[] {
   return chain;
 }
 
-// export async function generateStaticParams() {
-//   try {
-//     const allCategories = await getCategories(); 
-//     return allCategories.map((category: Category) => ({
-//       slug: getSlugChain(category, allCategories),
-//     }));
-//   } catch (e) {
-//     console.error("Erreur dans generateStaticParams:", e);
-//     return []; 
-//   }
-// }
+export async function generateStaticParams() {
+  try {
+    const allCategories = await getCategories(); 
+    return allCategories.map((category: Category) => ({
+      slug: getSlugChain(category, allCategories),
+    }));
+  } catch (e) {
+    console.error("Erreur dans generateStaticParams:", e);
+    return []; 
+  }
+}
 
 export default async function CategorieSlug({ params }: Props) {
   const { slug } = await params;

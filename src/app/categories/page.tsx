@@ -1,4 +1,4 @@
-import Nav from "@/components/BU_Nav";
+
 import { notFound } from "next/navigation";
 import { getCategories } from "@/lib/api";
 import { Category, Child } from "@/types/product.js";
@@ -57,6 +57,7 @@ export default async function Categories() {
                       .sort((a, b) => a.name.localeCompare(b.name))
                       .map((child) => {
                         const picture = logo(child.name);
+
                         return (
                           <Link
                             key={child.id}

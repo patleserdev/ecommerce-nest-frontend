@@ -1,11 +1,10 @@
-"use server"
-
 import { getCategories, getProducts,getBrands } from "@/lib/api";
 import { notFound } from "next/navigation.js";
 import DashboardClientWrapper from "@/components/Admin/DashboardClientWrapper";
+export const dynamic = 'force-dynamic';
 
 
-export default async function Dashboard() {
+export default async function Admin() {
 
 
   const categories = await getCategories();

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Lexend } from "next/font/google";
 import "./globals.css";
-import Nav from "@/components/BU_Nav";
 import Providers from "@/redux/providers/Providers";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Navbar from "@/components/Navbar";
@@ -52,7 +51,6 @@ export default function RootLayout({
       <body className={`${lexendRegular.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <Providers>
-            {/* <Nav /> */}
             <Navbar/>
             <main className="relative">
             {children}

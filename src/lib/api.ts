@@ -85,7 +85,7 @@ export async function logout() {
  */
 export async function getCategories(): Promise<Category[]> {
   const { response, data } = await Fetch({
-    url: `${SITE_URL}/api/proxy/categories`,
+    url: `${API_BACKEND}/categories`,
     options: {
       headers: {
         // Authorization: `Bearer ${yourToken}`,
@@ -232,7 +232,7 @@ export async function destroyCategorie(id: Number) {
 
 export async function getProducts(): Promise<UpdateProduct[]> {
   const { response, data } = await Fetch({
-    url: `${SITE_URL}/api/proxy/products`,
+    url: `${API_BACKEND}/products`,
     options: {
       headers: {
         // Authorization: `Bearer ${yourToken}`,
