@@ -62,7 +62,7 @@ export default function logo(categorie: string) {
       break;
 
     default:
-      icon = "";
+      icon = "https://placehold.co/600x400/EEE/31343C";
   }
   return icon;
 }

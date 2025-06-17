@@ -12,7 +12,7 @@ import { AddressRoleType, AdresseType } from "@/types/adresses";
 import { clearUser } from "@/redux/reducers/userSlice";
 import { useDispatch } from "react-redux";
 const API_BACKEND = process.env.NEXT_PUBLIC_API_BACKEND;
-
+const SITE_URL  = process.env.NEXT_PUBLIC_SITE_URL;
 /***
  *      _    _  _____ ______ _____   _____
  *     | |  | |/ ____|  ____|  __ \ / ____|
@@ -38,6 +38,7 @@ export async function loginUser(
   if (!response.ok) throw new Error("Connexion échouée");
 
   dispatch(addUser({ role: data.role, username: data.username }));
+
 
   return { ok: true, role: data.role };
 }
@@ -84,7 +85,7 @@ export async function logout() {
  */
 export async function getCategories(): Promise<Category[]> {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/categories`,
+    url: `${SITE_URL}/api/proxy/categories`,
     options: {
       headers: {
         // Authorization: `Bearer ${yourToken}`,
@@ -98,7 +99,7 @@ export async function getCategories(): Promise<Category[]> {
 
 export async function getCategoriesByParent(id: number): Promise<Category[]> {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/categories/parent/${id}`,
+    url: `${SITE_URL}/api/proxy/categories/parent/${id}`,
     options: {
       headers: {
         // Authorization: `Bearer ${yourToken}`,
@@ -111,7 +112,7 @@ export async function getCategoriesByParent(id: number): Promise<Category[]> {
 
 export async function getCategoryById(id: number) {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/categories/${id}`,
+    url: `${SITE_URL}/api/proxy/categories/${id}`,
     options: {
       headers: {
         // Authorization: `Bearer ${yourToken}`,
@@ -124,7 +125,7 @@ export async function getCategoryById(id: number) {
 
 export async function getCategoriesByParentId(id: number) {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/categories/sub/${id}`,
+    url: `${SITE_URL}/api/proxy/categories/sub/${id}`,
     options: {
       headers: {
         // Authorization: `Bearer ${yourToken}`,
@@ -146,7 +147,7 @@ export async function getCategoryBySlug(slug: string, parentSlug: string) {
   }
   // console.log('cleanSlug',cleanSlug)
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/categories/slug/${cleanSlug}${parent}`,
+    url: `${SITE_URL}/api/proxy/categories/slug/${cleanSlug}${parent}`,
     options: {
       headers: {
         // Authorization: `Bearer ${yourToken}`,
@@ -164,7 +165,7 @@ export async function addCategorie({
   formData: { name: String; parent_id?: Number };
 }) {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/categories`,
+    url: `${SITE_URL}/api/proxy/categories`,
     options: {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -187,7 +188,7 @@ export async function updateCategorie({
   formData: { name: String; parent_id?: Number };
 }) {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/categories/${id}`,
+    url: `${SITE_URL}/api/proxy/categories/${id}`,
     options: {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -204,7 +205,7 @@ export async function updateCategorie({
 
 export async function destroyCategorie(id: Number) {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/categories/${id}`,
+    url: `${SITE_URL}/api/proxy/categories/${id}`,
     options: {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -231,7 +232,7 @@ export async function destroyCategorie(id: Number) {
 
 export async function getProducts(): Promise<UpdateProduct[]> {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/products`,
+    url: `${SITE_URL}/api/proxy/products`,
     options: {
       headers: {
         // Authorization: `Bearer ${yourToken}`,
@@ -247,7 +248,7 @@ export async function getProductsByCategory(
   id: number
 ): Promise<{ data: Product[] | null; error: boolean }> {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/products/categories/${id}`,
+    url: `${SITE_URL}/api/proxy/products/categories/${id}`,
     options: {
       headers: {
         // Authorization: `Bearer ${yourToken}`,
@@ -262,7 +263,7 @@ export async function getProductsByCategory(
 }
 export async function getProductBySlug(slug: string) {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/products/slug/${slug}`,
+    url: `${SITE_URL}/api/proxy/products/slug/${slug}`,
     options: {
       next: { tags: ["products"] },
       headers: {
@@ -278,7 +279,7 @@ export async function getProductBySlug(slug: string) {
 
 export async function addProduct({ formData }: { formData: CreateProduct }) {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/products`,
+    url: `${SITE_URL}/api/proxy/products`,
     options: {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -301,7 +302,7 @@ export async function updateProduct({
   formData: UpdateProduct;
 }) {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/products/${id}`,
+    url: `${SITE_URL}/api/proxy/products/${id}`,
     options: {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -318,7 +319,7 @@ export async function updateProduct({
 
 export async function destroyProduct(id: Number) {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/products/${id}`,
+    url: `${SITE_URL}/api/proxy/products/${id}`,
     options: {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -343,7 +344,7 @@ export async function destroyProduct(id: Number) {
 
 export async function getBrands(): Promise<Brand[]> {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/brands`,
+    url: `${SITE_URL}/api/proxy/brands`,
     options: {
       headers: {
         // Authorization: `Bearer ${yourToken}`,
@@ -360,7 +361,7 @@ export async function getBrands(): Promise<Brand[]> {
 
 export async function addBrand({ formData }: { formData: Brand }) {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/brands`,
+    url: `${SITE_URL}/api/proxy/brands`,
     options: {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -391,7 +392,7 @@ export async function updateBrand({
 }) {
   // console.log("update product", formData);
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/brands/${id}`,
+    url: `${SITE_URL}/api/proxy/brands/${id}`,
     options: {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -408,7 +409,7 @@ export async function updateBrand({
 
 export async function destroyBrand(id: Number) {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/brands/${id}`,
+    url: `${SITE_URL}/api/proxy/brands/${id}`,
     options: {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -444,7 +445,7 @@ export async function destroyBrand(id: Number) {
 
 export async function getAdresses(): Promise<AdresseType[]> {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/adresses`,
+    url: `${SITE_URL}/api/proxy/adresses`,
     options: {
       headers: {
         // Authorization: `Bearer ${yourToken}`,
@@ -461,25 +462,19 @@ export async function getAdresses(): Promise<AdresseType[]> {
 
 export async function getAdressesByUser(): Promise<AdresseType[]> {
   const { response, data } = await Fetch({
-    url: `/api/proxy/adresses/user`,
+    url: `${SITE_URL}/api/proxy/adresses/user`,
     options: {
-      headers: {
-        // Authorization: `Bearer ${yourToken}`,
-      },
       credentials: "include",
-
-      // très important pour accepter les cookies
     },
   });
   if (!response)
     throw new Error("Récupération des adresses par utilisateur échouée");
-
   return data;
 }
 
 export async function addAdress({ formData }: { formData: AdresseType }) {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/adresses`,
+    url: `${SITE_URL}/api/proxy/adresses`,
     options: {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -503,7 +498,7 @@ export async function updateAddress({
 }) {
   // console.log("update adress", formData);
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/adresses/${id}`,
+    url: `${SITE_URL}/api/proxy/adresses/${id}`,
     options: {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -520,7 +515,7 @@ export async function updateAddress({
 
 export async function destroyAdress(id: Number) {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/adresses/${id}`,
+    url: `${SITE_URL}/api/proxy/adresses/${id}`,
     options: {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -558,7 +553,7 @@ export async function destroyAdress(id: Number) {
 export async function addRole({ formData }: { formData: AddressRoleType }) {
   // console.log("update adress", formData);
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/address-roles`,
+    url: `${SITE_URL}/api/proxy/address-roles`,
     options: {
       method: "POST",
       headers: { "Content-Type": "application/json" },

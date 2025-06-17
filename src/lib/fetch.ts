@@ -6,6 +6,7 @@ export default async function Fetch<T = any>({
   options?: RequestInit;
 }): Promise<{ response: Response; data: T }> {
   console.log(url,options)
+  
   try {
     const response = await fetch(url, options);
     let data=null

@@ -57,6 +57,7 @@ export default function UserIcon() {
       const res = await fetch("/api/check-cookies");
       const data = await res.json();
       if (data.clearRedux) {
+        console.log(data.clearRedux,"destroy redux")
         dispatch(clearUser());
         router.push("/");
       }
