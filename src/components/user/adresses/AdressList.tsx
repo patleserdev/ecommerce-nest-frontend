@@ -68,7 +68,11 @@ export default function AdressList({
     var result = confirm(`Détruire irrémédiablement l'adresse ${id}`);
     if (result) {
       try {
-        await destroyAdress(id);
+        const result =await destroyAdress(id);
+        if(result)
+        {
+          isReloading(true)
+        }
       } catch (error) {
         console.error("Erreur lors de la suppression de l'adresse' :", error);
       }
