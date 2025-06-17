@@ -12,12 +12,12 @@ type Props = {
   params: Promise<{ slug: string }>;
 };
 
-export async function generateStaticParams() {
-  const allProducts = await getProducts(); // doit retourner tous les slugs
-  return allProducts.map((product: Product) => ({
-    slug: product.slug,
-  }));
-}
+// export async function generateStaticParams() {
+//   const allProducts = await getProducts(); // doit retourner tous les slugs
+//   return allProducts.map((product: Product) => ({
+//     slug: product.slug,
+//   }));
+// }
 
 export default async function Products({ params }: Props) {
   const {slug} = await params;
@@ -32,7 +32,7 @@ export default async function Products({ params }: Props) {
   const otherProductsNotThis = data && data.filter(
     (prod:Product) => (prod.id != product.id)
   );
-console.log(product)
+// console.log(product)
   return (
     <div className="mt-5 md:mx-10 p-5 flex flex-col gap-5">
       <div className=" flex flex-col-reverse gap-5 md:flex-row justify-between items-center ">

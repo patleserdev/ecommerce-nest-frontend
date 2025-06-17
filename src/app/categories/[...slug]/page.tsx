@@ -38,17 +38,17 @@ function getSlugChain(category: Category, allCategories: Category[]): string[] {
   return chain;
 }
 
-export async function generateStaticParams() {
-  try {
-    const allCategories = await getCategories(); 
-    return allCategories.map((category: Category) => ({
-      slug: getSlugChain(category, allCategories),
-    }));
-  } catch (e) {
-    console.error("Erreur dans generateStaticParams:", e);
-    return []; 
-  }
-}
+// export async function generateStaticParams() {
+//   try {
+//     const allCategories = await getCategories(); 
+//     return allCategories.map((category: Category) => ({
+//       slug: getSlugChain(category, allCategories),
+//     }));
+//   } catch (e) {
+//     console.error("Erreur dans generateStaticParams:", e);
+//     return []; 
+//   }
+// }
 
 export default async function CategorieSlug({ params }: Props) {
   const { slug } = await params;
