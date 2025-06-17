@@ -461,7 +461,7 @@ export async function getAdresses(): Promise<AdresseType[]> {
 
 export async function getAdressesByUser(): Promise<AdresseType[]> {
   const { response, data } = await Fetch({
-    url: `${API_BACKEND}/adresses/user`,
+    url: `/api/proxy/adresses/user`,
     options: {
       headers: {
         // Authorization: `Bearer ${yourToken}`,
