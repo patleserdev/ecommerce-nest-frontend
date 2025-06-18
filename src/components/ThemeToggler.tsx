@@ -20,6 +20,7 @@ export default function ThemeToggle() {
     <div
       className="flex items-center justify-center p-2"
       title="Changer le thème de couleurs"
+      aria-label="Changer le thème de couleurs"
     >
       <AnimatePresence mode="wait">
         {theme === 'dark' ? (

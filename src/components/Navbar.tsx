@@ -45,7 +45,7 @@ export default function Navbar() {
   return (
     <div className="bg-[var(--background)] text-[var(--foreground)] flex justify-between items-center h-24 max-w-[1240px] mx-auto px-4 text-white">
       {/* Logo */}
-      <div className="md:w-[50%]">
+      <div className="md:w-[50%]" >
         <Image
           src={"/logo.png"}
           alt={"logo"}
@@ -54,7 +54,7 @@ export default function Navbar() {
           priority
         />
       </div>
-      <h1 className="w-full text-3xl font-bold text-[#00df9a]">OEB.</h1>
+      <h1 className="w-full text-3xl font-bold text-[#1D5D49]">OEB.</h1>
 
       {/* Desktop Navigation */}
       <div className="hidden md:flex border w-[90%] text-[var(--foreground)] items-center justify-between">
@@ -152,6 +152,7 @@ export default function Navbar() {
             : "ease-in-out w-[90%] duration-500 fixed top-0 bottom-0 left-[-100%] z-50"
         }
       >
+        <li>
         <div className="md:w-[50%] items-center justify-center flex flex-row mt-2 mb-5">
           <Image
             src={"/logo.png"}
@@ -160,8 +161,9 @@ export default function Navbar() {
             height={100}
             priority
           />
-          <h1 className="w-full text-3xl font-bold text-[#00df9a] m-4">OEB.</h1>
+          <h1 className="w-full text-3xl font-bold text-[#1D5D49] m-4">OEB.</h1>
         </div>
+        </li>
         {/* Mobile Logo */}
 
         {/* Mobile Navigation Items */}
