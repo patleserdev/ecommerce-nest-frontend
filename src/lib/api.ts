@@ -12,7 +12,7 @@ import { AddressRoleType, AdresseType } from "@/types/adresses";
 import { clearUser } from "@/redux/reducers/userSlice";
 import { useDispatch } from "react-redux";
 const API_BACKEND = process.env.NEXT_PUBLIC_API_BACKEND;
-const SITE_URL  = process.env.NEXT_PUBLIC_SITE_URL;
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
 /***
  *      _    _  _____ ______ _____   _____
  *     | |  | |/ ____|  ____|  __ \ / ____|
@@ -37,10 +37,13 @@ export async function loginUser(
   });
   if (!response.ok) throw new Error("Connexion échouée");
 
-  dispatch(addUser({ role: data.role, username: data.username }));
-
-
-  return { ok: true, role: data.role };
+  if (data) {
+    dispatch(addUser({ role: data.role, username: data.username }));
+    return { ok: true, role: data.role };
+  }
+  else{
+    return { ok: false };
+  }
 }
 
 export async function signupUser(
