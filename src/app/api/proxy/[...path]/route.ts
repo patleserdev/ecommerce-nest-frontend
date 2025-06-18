@@ -13,6 +13,14 @@ async function handler(req: NextRequest, path: string[]) {
   const targetUrl = `${BACKEND_BASE_URL}/${path.join("/")}${search}`;
 
   const headers = new Headers(req.headers);
+
+  for (const [key, value] of req.headers.entries()) {
+    if (key.toLowerCase() !== "accept-encoding") {
+      headers.set(key, value);
+    }
+  }
+  
+  headers.set("accept-encoding", "identity"); // force no compression
   headers.set("cookie", req.headers.get("cookie") || "");
 
   const body =
