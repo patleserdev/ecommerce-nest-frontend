@@ -110,7 +110,7 @@ export default function AdressList({
           return (
             <li
               key={i}
-              className="flex flex-col border p-2 relative"
+              className="flex flex-col border p-2 relative w-full"
               style={{ borderColor: "rgba(215,211,215,0.7)" }}
             >
               <div className="w-3/4">

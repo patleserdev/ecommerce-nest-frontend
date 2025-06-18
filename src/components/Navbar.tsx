@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store.js";
 import UserIcon from "./user/UserIcon";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
+import { FaQuestionCircle } from "react-icons/fa";
 
 export default function Navbar() {
   // State to manage the navbar's visibility
@@ -40,12 +41,18 @@ export default function Navbar() {
     })();
   }, []);
 
+  const closeNav = () => {
+    setTimeout(() => {
+      setNav(false);
+    }, 500);
+  };
+
   const structured = transformCategories(arbo);
 
   return (
     <div className="bg-[var(--background)] text-[var(--foreground)] flex justify-between items-center h-24 max-w-[1240px] mx-auto px-4 text-white">
       {/* Logo */}
-      <div className="md:w-[50%]" >
+      <div className="md:w-[50%]">
         <Image
           src={"/logo.png"}
           alt={"logo"}
@@ -153,16 +160,18 @@ export default function Navbar() {
         }
       >
         <li>
-        <div className="md:w-[50%] items-center justify-center flex flex-row mt-2 mb-5">
-          <Image
-            src={"/logo.png"}
-            alt={"logo"}
-            width={100}
-            height={100}
-            priority
-          />
-          <h1 className="w-full text-3xl font-bold text-[#1D5D49] m-4">OEB.</h1>
-        </div>
+          <div className="md:w-[50%] items-center justify-center flex flex-row mt-2 mb-5">
+            <Image
+              src={"/logo.png"}
+              alt={"logo"}
+              width={100}
+              height={100}
+              priority
+            />
+            <h1 className="w-full text-3xl font-bold text-[#1D5D49] m-4">
+              OEB.
+            </h1>
+          </div>
         </li>
         {/* Mobile Logo */}
 
@@ -174,7 +183,7 @@ export default function Navbar() {
 
           {!user && (
             <li className="flex items-center justify-start p-2">
-              <Link href="/login" title="Se connecter">
+              <Link href="/login" title="Se connecter" onClick={closeNav}>
                 <MdLogin size={30} />
               </Link>
             </li>
@@ -188,15 +197,29 @@ export default function Navbar() {
           <li className="relative p-2 flex items-center justify-start p-2">
             <ThemeToggle />
           </li>
+
+          <li className="flex items-center justify-start p-2">
+            <Link
+              href="/infos"
+              title="Voir la roadmap de construction"
+              onClick={closeNav}
+            >
+              <FaQuestionCircle size={30}/>
+            </Link>
+          </li>
         </ul>
 
         <ul className="flex flex-col justify-center items-center text-xl gap-5 ">
           <li className="relative p-2 w-30">
-            <Link href="/">Home</Link>
+            <Link href="/" onClick={closeNav}>
+              Home
+            </Link>
           </li>
 
           <li className="relative p-2 w-30">
-            <Link href="/products">Produits</Link>
+            <Link href="/products" onClick={closeNav}>
+              Produits
+            </Link>
           </li>
 
           {/* Le conteneur du dropdown */}
@@ -205,7 +228,7 @@ export default function Navbar() {
             onMouseEnter={() => setIsDropdownOpen(true)}
             onMouseLeave={() => setIsDropdownOpen(false)}
           >
-            <Link href="/categories">
+            <Link href="/categories" onClick={closeNav}>
               <span className="cursor-pointer">Catégories</span>
             </Link>
 

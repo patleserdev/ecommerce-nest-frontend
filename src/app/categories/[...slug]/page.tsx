@@ -123,7 +123,7 @@ export default async function CategorieSlug({ params }: Props) {
   let icon = Logo(currentSlug);
 
   return (
-    <div className="p-6 border">
+    <div className="p-6 min-h-[100vh]">
       <h1 className="text-3xl font-bold mb-4 capitalize underline flex justify-start align-center gap-2">
         <DisplayIcon icon={icon} size={50} />
         {currentCategory.name} {parentSlug}
@@ -134,7 +134,7 @@ export default async function CategorieSlug({ params }: Props) {
       )}
 
       {products && products.length === 0 ? (
-        <p>Aucun produit trouvé.</p>
+        <p className="p-4 text-2xl">Aucun produit trouvé.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {!error &&

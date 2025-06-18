@@ -8,14 +8,38 @@ import { IoMdTrash } from "react-icons/io";
 import { updateQuantity, removeFromCart } from "@/redux/reducers/cartSlice";
 import { AnimatePresence, motion } from "framer-motion";
 import CustomedLink from "../CustomedLink";
+
 export default function CartIcon() {
+  /***
+   *          _           _
+   *         | |         | |
+   *       __| | ___  ___| | __ _ _ __ ___
+   *      / _` |/ _ \/ __| |/ _` | '__/ _ \
+   *     | (_| |  __/ (__| | (_| | | |  __/
+   *      \__,_|\___|\___|_|\__,_|_|  \___|
+   *
+   *
+   */
   const cart = useSelector((state: RootState) => state.cart.items);
   const [isHovered, setIsHovered] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [cartCount, setCartCount] = useState(cart.length);
+  const [isMobile, setIsMobile] = useState(false);
 
   const dispatch = useDispatch();
 
+  const cartRef = useRef<HTMLDivElement>(null);
+
+  /***
+   *       __                  _   _
+   *      / _|                | | (_)
+   *     | |_ _   _ _ __   ___| |_ _  ___  _ __  ___
+   *     |  _| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
+   *     | | | |_| | | | | (__| |_| | (_) | | | \__ \
+   *     |_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+   *
+   *
+   */
   const handleMouseEnter = () => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
@@ -81,18 +105,72 @@ export default function CartIcon() {
       );
     }
   };
+  /***
+   *                           __  __          _
+   *                          / _|/ _|        | |
+   *      _   _ ___  ___  ___| |_| |_ ___  ___| |_ ___
+   *     | | | / __|/ _ \/ _ \  _|  _/ _ \/ __| __/ __|
+   *     | |_| \__ \  __/  __/ | | ||  __/ (__| |_\__ \
+   *      \__,_|___/\___|\___|_| |_| \___|\___|\__|___/
+   *
+   *
+   */
 
-  // Mise à jour pour forcer l'animation sur changement
+  /**
+   *  Mise à jour pour forcer l'animation sur changement
+   */
   useEffect(() => {
     setCartCount(cart.length);
   }, [cart.length]);
+
+  /**
+   *  Vérification si mobile hover = click
+   */
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768); // 768px : seuil de mobile
+    };
+
+    checkIfMobile(); // Initial check
+    window.addEventListener("resize", checkIfMobile); // Update on resize
+
+    return () => window.removeEventListener("resize", checkIfMobile);
+  }, []);
+
+  /**
+   *  en desktop , fermer le cart si not hover
+   */
+  useEffect(() => {
+    if (!isMobile || !isHovered) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (cartRef.current && !cartRef.current.contains(event.target as Node)) {
+        setIsHovered(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isMobile, isHovered]);
+
+  /***
+   *          _ _           _
+   *         | (_)         | |
+   *       __| |_ ___ _ __ | | __ _ _   _
+   *      / _` | / __| '_ \| |/ _` | | | |
+   *     | (_| | \__ \ |_) | | (_| | |_| |
+   *      \__,_|_|___/ .__/|_|\__,_|\__, |
+   *                 | |             __/ |
+   *                 |_|            |___/
+   */
 
   return (
     <div
       className="flex flex-row cursor-pointer z-10"
       title="Accéder au panier"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={!isMobile ? handleMouseEnter : undefined}
+      onMouseLeave={!isMobile ? handleMouseLeave : undefined}
+      onClick={isMobile ? () => setIsHovered((prev) => !prev) : undefined}
     >
       <div className="relative transition-all p-2">
         <MdOutlineShoppingCart size={30} />
@@ -115,6 +193,7 @@ export default function CartIcon() {
         {isHovered && cart.length > 0 && (
           <AnimatePresence>
             <motion.div
+              ref={cartRef}
               key="dropdown"
               initial={{ opacity: 0, y: 0, x: 0, scale: 0 }}
               animate={{ opacity: 1, y: 0, x: 0, scale: 1 }}

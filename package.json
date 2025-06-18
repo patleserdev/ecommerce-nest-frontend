@@ -29,5 +29,10 @@
     "@types/react-dom": "^19",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "browserslist": [
+    "defaults and supports es6-module",
+    "not IE 11",
+    "not op_mini all"
+  ]
 }
