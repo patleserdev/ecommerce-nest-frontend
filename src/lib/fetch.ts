@@ -8,7 +8,16 @@ export default async function Fetch<T = any>({
  // console.log(url,options)
   
   try {
-    const response = await fetch(url, options);
+
+    const safeOptions = {
+      ...options,
+      headers: {
+        ...(options?.headers || {}),
+        'Accept-Encoding': 'identity', // Désactive compression
+      },
+    };
+
+    const response = await fetch(url, safeOptions);
     let data=null
     if (response.headers.get("content-type")?.includes("application/json")) {
       data = await response.json();
