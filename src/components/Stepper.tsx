@@ -25,7 +25,7 @@ export default function Stepper() {
 
   const line = <div className="flex-1 h-px bg-gray-300"></div>;
   return (
-    <div className="flex items-center justify-center space-x-8 py-6">
+    <div className="flex items-center px-2 justify-center md:space-x-8 py-2 md:py-6">
       {steps.map((step) => {
         return (
           <React.Fragment key={step.id}>

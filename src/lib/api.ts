@@ -233,7 +233,7 @@ export async function destroyCategorie(id: Number) {
  *     |_|    |_|  \_\\____/|_____/ \____/ \_____|  |_| |_____/
  */
 
-export async function getProducts(): Promise<UpdateProduct[]> {
+export async function getProducts(): Promise<Product[]> {
   const { response, data } = await Fetch({
     url: `${API_BACKEND}/products`,
     options: {

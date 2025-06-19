@@ -50,13 +50,13 @@ export default function CartPage() {
   return (
     <table className="table-auto md:w-full">
       <thead>
-        <tr className="flex flex-row items-center justify-around gap-2 mb-5">
-          <th className="w-[10%]  py-2"></th>
+        <tr className="flex flex-row items-center justify-around md:gap-2 mb-5">
+          <th className="hidden md:w-[10%]  py-2"></th>
           <th className="w-[25%] border py-2">Produit</th>
-          <th className="w-[10%] border py-2">Couleur</th>
-          <th className="w-[15%] border py-2">Prix</th>
-          <th className="w-[15%] border py-2">Quantité</th>
-          <th className="w-[20%] border py-2">Total</th>
+          <th className="w-[20%] border py-2">Couleur</th>
+          <th className="w-[10%] border py-2">Prix</th>
+          <th className="w-[20%] border py-2">Quantité</th>
+          <th className="w-[15%] border py-2">Total</th>
         </tr>
       </thead>
       <tbody>
@@ -65,10 +65,10 @@ export default function CartPage() {
           return (
             <tr
               key={i}
-              className="flex flex-row items-center justify-around py-5 px-5 border-opacity-20 border-b"
+              className="flex flex-row items-center justify-around md:py-5 md:px-5 border-opacity-20 border-b"
               style={{ borderBottomColor: "rgba(211, 211, 211, 0.7)" }}
             >
-              <td className="w-[10%] flex flex-row items-center justify-center">
+              <td className="hidden md:w-[10%] flex flex-row items-center justify-center">
                 <Image
                   alt="product"
                   src={"https://placehold.co/600x400/EEE/31343C"}
@@ -76,26 +76,26 @@ export default function CartPage() {
                   width={150}
                 />
               </td>
-              <td className="w-[25%] px-5 text-xl font-light tracking-wide">
+              <td className="w-[30%] md:w-[25%] md:px-5 text-xl font-light tracking-wide">
                 {element.product.name}
                 {" | "}
                 {element.variation.gender.toUpperCase()}
                 {" | "}
                 {element.variation.size}
               </td>
-              <td className="w-[10%] flex flex-row items-center justify-center text-center">
+              <td className="w-[15%] flex flex-row items-center justify-center text-center">
                 <div
                   className="w-10 h-5 "
                   style={{ backgroundColor: element.variation.color }}
                 ></div>
               </td>
-              <td className="w-[15%] text-center">{element.price} €</td>
-              <td className="w-[15%] text-center flex flex-row items-center justify-center gap-5">
+              <td className="w-[10%] text-center">{element.price} €</td>
+              <td className="w-[15%] text-center flex flex-row items-center justify-center gap-1 md:gap-5">
                 <MdIndeterminateCheckBox
                   size={24}
                   title="Supprimer une quantité"
                   onClick={() => {
-                    if (element.product.id &&  element.variation.id)
+                    if (element.product.id && element.variation.id)
                       handleToReduceQuantity(
                         element.product.id,
                         element.variation.id,
@@ -108,7 +108,7 @@ export default function CartPage() {
                   size={24}
                   title="Ajouter une quantité"
                   onClick={() => {
-                    if (element.product.id &&  element.variation.id)
+                    if (element.product.id && element.variation.id)
                       handleToAddQuantity(
                         element.product.id,
                         element.variation.id,
@@ -117,7 +117,7 @@ export default function CartPage() {
                   }}
                 />
               </td>
-              <td className="w-[20%] text-center">
+              <td className="w-[15%] text-center">
                 {element.price * element.quantity} €
               </td>
             </tr>

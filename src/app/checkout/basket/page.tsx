@@ -6,14 +6,11 @@ export default function CheckoutBasket() {
     <div>
       <div className="mt-5 mb-5">
         <CartPage />
-        <div className="place-self-end flex my-5 md:w-[20%]">
-          <CustomedLink
-            title={"Valider mon panier"}
-            url={"/checkout/delivery"}
-          />
+        <div className="place-self-end flex my-5 w-full md:w-[20%]">
+          <CustomedLink title={"Valider mon panier"} url={"/checkout/delivery"}/>
         </div>
       </div>
-      <div className="place-self-start flex my-5 w-[20%]">
+      <div className="place-self-start flex my-5 w-full md:w-[20%]">
         <CustomedLink title={"Poursuivre mes achats"} url={"/categories"} />
       </div>
       <div className="opacity-[0.5]">

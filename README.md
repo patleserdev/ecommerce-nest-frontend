@@ -2,66 +2,77 @@
 
 [Version démo](https://ecommerce-nest-frontend.vercel.app/)
 
+---
+
 ## ✅ Objectifs atteints
 
-- Mise en production (Frontend Next et backend Nest sur Vercel, BDD MySQL sur Railway)
+- Mise en production (Frontend **Next.js**, Backend **Nest.js**, DB **MySQL Railway**)
 - Connexion et session **OK**
 - Thème dark **OK** – Thème clair par défaut
-- Routage par *slug*
+- Routage par **slug**
 - Redux : **CART**
 - Redux Persist
 - Admin :
   - CRUD **marque** OK
   - CRUD **catégorie** OK
   - CRUD **produit** OK
-- Affichage de la liste des catégories
-- Affichage des produits d'une catégorie *(via slug)*
-- Affichage d'une fiche produit *(via slug)*
+- Affichage de la liste des **catégories**
+- Affichage des **produits** d'une catégorie *(via slug)*
+- Affichage d'une **fiche produit** *(via slug)*
 - Dans la fiche produit :
   - Sélecteur de produit *(quantité, taille, genre)*
   - Carousel Framer des produits de la même catégorie
-- Panier dynamique dans la navbar
+- Panier dynamique dans la **navbar**
 - Optimisation des temps de réponse *(SSG)*
-- Tester les rôles *(Admin / Customer)*
-- Valider les quantités de produits **par variation** (pas globalement)
+- Nav responsive avec comportements distincts **mobile / desktop**
+- Optimisation des requêtes backend
+- **Test des rôles** *(Admin / Customer)*
+- Validation des **quantités** par **variation** (et non globalement)
 - Gestion des **rôles** pour l’accès à l’admin
 - Ajout d’**icônes** aux catégories
-  
+
 ---
 
 ## 🚧 Objectifs suivants
 
-- Créer un module **médiathèque** (front/back)
+- Créer un **formulaire unique** pour tous les contextes *(produits, catégories, marques, panier, etc.)*
+- Ajouter une **recherche dans la navbar** avec autocomplete
+- Créer un module **médiathèque** (front / back)
 - Implémenter le **checkout** (validation du panier)
-- Sécuriser le panier pour qu’il persiste même sans session
+- Sécuriser le panier : **persistance sans session**
+  
+### Tunnel d’achat à mettre en place
 
-- Créer le tunnel d’achat :
-  - Validation du panier
-  - Création de compte
-  - Création de commande *(livraison/adresse)*
-  - Paiement
-  - Confirmation
+- Validation du panier
+- Création de compte
+- Création de commande *(adresse de livraison)*
+- Paiement
+- Page de confirmation
 
-- Mettre en place un **module de mailing** :
-  - Inscription au site avec lien de validation
-  - Inscription à la newsletter
-  - Mail de bienvenue avec offre spéciale (-10 %)
-  - Relance panier abandonné avec réduction incitative
-  - Confirmation de commande
-  - Confirmation de paiement
-  - Facture
-  - Mise à jour de l’état de la commande
-  - Suivi de livraison
-  - Confirmation de livraison
-  - Demande d’avis
-  - SAV : confirmation de demande
-  - SAV : réponse à une réclamation
-  - Retour : confirmation de demande de retour
+### Module de mailing
+
+- Inscription avec lien de validation
+- Inscription à la newsletter
+- Bienvenue avec offre spéciale (-10 %)
+- Relance panier abandonné avec réduction
+- Confirmation de commande
+- Confirmation de paiement
+- Génération de facture
+- Suivi de l’état de la commande
+- Suivi de livraison
+- Confirmation de livraison
+- Demande d’avis
+- SAV :
+  - Confirmation de demande
+  - Réponse à une réclamation
+- Retour :
+  - Confirmation de demande de retour
   - Suivi du remboursement
-- ReTester les rôles *(Admin / Customer)*
 
 ---
 
 ## ❌ Objectifs manquants
 
 - Gestion des **codes promotionnels**
+
+---

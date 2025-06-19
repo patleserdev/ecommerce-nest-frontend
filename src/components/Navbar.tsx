@@ -33,6 +33,33 @@ export default function Navbar() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [arbo, setArbo] = useState<Category[]>([]);
 
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerWidth <= 768) {
+        // Seulement pour mobile
+        const currentScrollY = window.scrollY;
+
+        if (currentScrollY > lastScrollY) {
+          setNav(false); // Scroll vers le bas -> cacher
+        }
+
+        // else {
+        //   setNav(true); // Scroll vers le haut -> montrer
+        // }
+
+        setLastScrollY(currentScrollY);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScrollY]);
+
   useEffect(() => {
     (async () => {
       const categories = await getCategories();
@@ -140,6 +167,16 @@ export default function Navbar() {
               <UserIcon />
             </li>
           )}
+
+          <li className="flex items-center justify-start p-2">
+            <Link
+              href="/infos"
+              title="Voir la roadmap de construction"
+              onClick={closeNav}
+            >
+              <FaQuestionCircle size={30} />
+            </Link>
+          </li>
         </ul>
       </div>
 
@@ -204,7 +241,7 @@ export default function Navbar() {
               title="Voir la roadmap de construction"
               onClick={closeNav}
             >
-              <FaQuestionCircle size={30}/>
+              <FaQuestionCircle size={30} />
             </Link>
           </li>
         </ul>

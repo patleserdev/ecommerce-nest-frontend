@@ -9,9 +9,7 @@ export default function CheckoutLayout({
   return (
     <div className="flex min-h-screen">
       <main className="flex-1 md:p-6 text-[var(--foreground)] bg-[var(--background)] pb-5">
-        <div className="w-full md:w-[60%] justify-self-center">
-        <Stepper/>
-        </div>
+
         
         {children}
       </main>

@@ -34,7 +34,11 @@ export default function DeliveryModule() {
     { id: "colissimo", label: "", icon: "/icons/colissimo.svg" },
     { id: "colissimo_pickup", label: "Pickup", icon: "/icons/colissimo.svg" },
     { id: "chronopost", label: "", icon: "/icons/chronopost-logo.svg" },
-    { id: "chronopost_pickup", label: "Pickup", icon: "/icons/chronopost-logo.svg" },
+    {
+      id: "chronopost_pickup",
+      label: "Pickup",
+      icon: "/icons/chronopost-logo.svg",
+    },
   ];
   /***
    *       __                  _   _
@@ -109,22 +113,26 @@ export default function DeliveryModule() {
       <div className="justify-self-center grid grid-cols-1 md:grid-cols-4 grid-rows-1 gap-4 my-5">
         <div className="border p-2 relative">
           <h3>Adresse de livraison</h3>
-          <div className="w-[80%]">
-            {currentLivraison && <DisplayAdress adresse={currentLivraison} />}
-            {!currentLivraison && <p>Non définie</p>}
-          </div>
-
-          {currentLivraison && (
-            <div className="absolute top-0 right-0 m-2">
-              <CustomedButton onClick={() => handleChangeCartLivraisonAdress()}>
-                Changer
-              </CustomedButton>
+   
+            <div className="w-[80%] h-[80%]">
+              {currentLivraison && <DisplayAdress adresse={currentLivraison} />}
+              {!currentLivraison && <p>Non définie</p>}
             </div>
-          )}
-        </div>
+
+            {currentLivraison && (
+              <div className="m-2">
+                <CustomedButton
+                  onClick={() => handleChangeCartLivraisonAdress()}
+                >
+                  Changer
+                </CustomedButton>
+              </div>
+            )}
+          </div>
+        
         <div className="border p-2 relative">
           <h3>Adresse de facturation</h3>
-          <div className="w-[80%]">
+          <div className="w-[80%] h-[80%]">
             {currentFacturation && (
               <DisplayAdress adresse={currentFacturation} />
             )}
@@ -132,7 +140,7 @@ export default function DeliveryModule() {
           </div>
 
           {currentFacturation && (
-            <div className="absolute top-0 right-0 m-2">
+            <div className="m-2">
               <CustomedButton
                 onClick={() => handleChangeCartFacturationAdress()}
               >
@@ -143,7 +151,7 @@ export default function DeliveryModule() {
         </div>
         <div className="border p-2">
           <h3>Options de livraison</h3>
-          <TransportChoicer options={options}/>
+          <TransportChoicer options={options} />
         </div>
         <div className="border p-2">
           <h3>Rappel du panier</h3>

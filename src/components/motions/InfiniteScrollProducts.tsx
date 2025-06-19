@@ -19,7 +19,7 @@ export default function InfiniteScrollProducts({
 
   return (
     <div
-      className="overflow-hidden h-[50vh] w-full relative shadowbordered"
+      className="overflow-hidden  md:h-[50vh] w-full relative shadowbordered"
       // style={{ "--scrollcolor":   bgcolor,
       // } as React.CSSProperties}
     >
@@ -56,8 +56,8 @@ export default function InfiniteScrollProducts({
                 alt={`img-${i}`}
                 width={600}
                 height={400}
-                style={{ objectFit: "contain" }}
-                className="relative shrink-0 object-cover md:object-cover"
+                style={{ objectFit: "cover" }}
+                className="max-w-[80vw] md:max-w-[100vw] h-50 md:h-full relative shrink-0 object-cover md:object-cover"
               />
 
           </div>
