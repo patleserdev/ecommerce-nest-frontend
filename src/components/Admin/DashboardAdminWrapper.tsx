@@ -24,13 +24,15 @@ import Accordion from "../motions/Accordion";
 import { revalidateProducts } from "@/actions/revalidate";
 import { MdWarningAmber } from "react-icons/md";
 import { MoonLoader } from "react-spinners";
+import { AiOutlinePicture } from "react-icons/ai";
+
 type Props = {
   categories: Category[];
   products: Product[];
   brands: Brand[];
 };
 
-export default function DashboardClientWrapper({
+export default function DashboardAdminWrapper({
   categories,
   products,
   brands,
@@ -412,6 +414,14 @@ export default function DashboardClientWrapper({
                       onClick={() => handleToDestroyBrand(brand.id)}
                     >
                       <MdCancel size={18} />
+                    </div>
+
+                    <div
+                      className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
+                      onClick={() => handleToLinkPicture('brand',brand.id)}
+                    >
+                      <AiOutlinePicture size={18}/>
+
                     </div>
                   </div>
                 </span>

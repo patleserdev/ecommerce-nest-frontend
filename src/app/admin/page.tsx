@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 import { getCategories, getProducts, getBrands } from "@/lib/api";
 import { notFound } from "next/navigation.js";
-import DashboardClientWrapper from "@/components/Admin/DashboardClientWrapper";
+import DashboardAdminWrapper from "@/components/Admin/DashboardAdminWrapper";
 import CustomedLink from "@/components/CustomedLink";
 
 export default async function Admin() {
@@ -26,7 +26,7 @@ export default async function Admin() {
 
       </div>
 
-      <DashboardClientWrapper
+      <DashboardAdminWrapper
         categories={categories}
         products={products}
         brands={brands}

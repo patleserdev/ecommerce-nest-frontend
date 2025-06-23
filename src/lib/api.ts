@@ -11,6 +11,7 @@ import { AppDispatch } from "@/redux/store/store.js";
 import { AddressRoleType, AdresseType } from "@/types/adresses";
 import { clearUser } from "@/redux/reducers/userSlice";
 import { useDispatch } from "react-redux";
+import { MediaType } from "@/types/medias";
 const API_BACKEND = process.env.NEXT_PUBLIC_API_BACKEND;
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
 /***
@@ -40,8 +41,7 @@ export async function loginUser(
   if (data) {
     dispatch(addUser({ role: data.role, username: data.username }));
     return { ok: true, role: data.role };
-  }
-  else{
+  } else {
     return { ok: false };
   }
 }
@@ -450,12 +450,7 @@ export async function getAdresses(): Promise<AdresseType[]> {
   const { response, data } = await Fetch({
     url: `${SITE_URL}/api/proxy/adresses`,
     options: {
-      headers: {
-        // Authorization: `Bearer ${yourToken}`,
-      },
       credentials: "include",
-
-      // très important pour accepter les cookies
     },
   });
   if (!response) throw new Error("Récupération des adresses échouée");
@@ -570,4 +565,96 @@ export async function addRole({ formData }: { formData: AddressRoleType }) {
   if (!response.ok) throw new Error("Mise à jour d'un rôle d'adresse échoué");
 
   return { ok: true };
+}
+
+/***
+ *      __  __ ______ _____ _____           _____
+ *     |  \/  |  ____|  __ \_   _|   /\    / ____|
+ *     | \  / | |__  | |  | || |    /  \  | (___
+ *     | |\/| |  __| | |  | || |   / /\ \  \___ \
+ *     | |  | | |____| |__| || |_ / ____ \ ____) |
+ *     |_|  |_|______|_____/_____/_/    \_\_____/
+ */
+export async function getMedias(): Promise<MediaType[]> {
+  const { response, data } = await Fetch({
+    url: `${SITE_URL}/api/proxy/medias`,
+    options: {
+      credentials: "include",
+    },
+  });
+  console.log('response',response)
+  if (!response.ok) throw new Error(`Récupération des médias ${SITE_URL}`);
+  // console.log(response)
+  return data;
+}
+
+
+export async function addMedia({ formData }: { formData: MediaType }) {
+  // console.log("update adress", formData);
+  const dataToSend = new FormData();
+  dataToSend.append("title", formData.title);
+  dataToSend.append("description", formData.description);
+  if (formData.file) {
+    dataToSend.append("file", formData.file); // le fichier
+  }
+
+  const { response, data } = await Fetch({
+    url: `${SITE_URL}/api/proxy/medias`,
+    options: {
+      method: "POST",
+      body: dataToSend,
+      credentials: "include",
+
+      // très important pour accepter les cookies
+    },
+  });
+  console.log(response);
+
+  if (!response.ok) throw new Error("Ajout d'un média échoué");
+
+  return { ok: true };
+}
+
+export async function updateMedia({
+  id,
+  formData,
+}: {
+  id: string;
+  formData: MediaType;
+}) {
+  const dataToSend = new FormData();
+  dataToSend.append("title", formData.title);
+  dataToSend.append("description", formData.description);
+  if (formData.file) {
+    dataToSend.append("file", formData.file); // le fichier
+  }
+  const { response, data } = await Fetch({
+    url: `${SITE_URL}/api/proxy/medias/${id}`,
+    options: {
+      method: "PATCH",
+      body: dataToSend,
+      credentials: "include",
+
+      // très important pour accepter les cookies
+    },
+  });
+  if (!response.ok) throw new Error("Modification de media échoué");
+
+  return { ok: true, data };
+}
+
+export async function destroyMedia(id: string) {
+  const { response, data } = await Fetch({
+    url: `${SITE_URL}/api/proxy/medias/${id}`,
+    options: {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+
+      // très important pour accepter les cookies
+    },
+  });
+  if (!response.ok) throw new Error("Suppression échouée");
+
+  return { ok: true, data };
 }

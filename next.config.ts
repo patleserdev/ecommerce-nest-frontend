@@ -11,6 +11,11 @@ const nextConfig: NextConfig = {
         hostname: "placehold.co",
         pathname: "/600x400/**",
       },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
     ],
   },
   

@@ -2,108 +2,55 @@ import { NextRequest, NextResponse } from "next/server";
 
 const BACKEND_BASE_URL = process.env.NEXT_PUBLIC_API_BACKEND;
 
+type HandlerContext = {
+  params: {
+    path: string[];
+  };
+};
+
 async function handler(req: NextRequest, path: string[]) {
   if (!BACKEND_BASE_URL) {
-    return new NextResponse("Missing BACKEND_BASE_URL env variable", {
-      status: 500,
-    });
+    return new NextResponse("Missing BACKEND_BASE_URL env var", { status: 500 });
   }
   const method = req.method;
   const search = req.nextUrl.search;
   const targetUrl = `${BACKEND_BASE_URL}/${path.join("/")}${search}`;
 
-  const headers = new Headers(req.headers);
+  // Récupère tout le corps en raw buffer (pour POST/PATCH/PUT)
+  const rawBody = method === "GET" || method === "HEAD" ? undefined : await req.arrayBuffer();
 
+  const headers = new Headers(req.headers);
   for (const [key, value] of req.headers.entries()) {
-    if (key.toLowerCase() !== "accept-encoding") {
+    if (!["accept-encoding", "content-length"].includes(key.toLowerCase())) {
       headers.set(key, value);
     }
   }
-  
-  headers.set("accept-encoding", "identity"); // force no compression
+  headers.set("accept-encoding", "identity");
   headers.set("cookie", req.headers.get("cookie") || "");
-
-  const body =
-    method !== "GET" && method !== "HEAD" ? await req.text() : undefined;
 
   const backendRes = await fetch(targetUrl, {
     method,
     headers,
-    body,
+    body: rawBody ? new Uint8Array(rawBody) : undefined,
+    credentials: 'include', // 👈 essentiel pour transmettre les cookies
+    duplex: "half",
     redirect: "manual",
-  });
+  } as any);
 
-  const responseBody = await backendRes.text();
+  const responseHeaders = new Headers(backendRes.headers);
+  responseHeaders.set("Access-Control-Allow-Credentials", "true");
 
-  return new NextResponse(responseBody, {
+  responseHeaders.delete("content-encoding");
+  responseHeaders.delete("content-length");
+
+  return new NextResponse(backendRes.body, {
     status: backendRes.status,
-    headers: backendRes.headers,
+    headers: responseHeaders,
   });
 }
 
-type Params = { params: Promise<{ path: string[] }> };
-
-export async function GET(req: NextRequest, { params }: Params) {
-  const path= (await params).path
-  return handler(req, path);
-}
-
-export async function POST(req: NextRequest, { params }: Params) {
-  const path= (await params).path
-  return handler(req, path);
-}
-
-export async function PUT(req: NextRequest, { params }: Params) {
-  const path= (await params).path
-  return handler(req, path);
-}
-
-export async function PATCH(req: NextRequest, { params }: Params) {
-  const path= (await params).path
-  return handler(req, path);
-}
-
-export async function DELETE(req: NextRequest, { params }: Params) {
-  const path= (await params).path
-  return handler(req, path);
-}
-
-// export async function GET(
-//   req: NextRequest,
-//   { params }: { params: Promise<{ path: string[] }> }
-// ) {
-//   const { path } = await params;
-//   return handler(req, path);
-// }
-
-// export async function POST(
-//   req: NextRequest,
-//   { params }: { params: Promise<{ path: string[] }> }
-// ) {
-//   const { path } = await params;
-//   return handler(req, path);
-// }
-
-// export async function PUT(
-//   req: NextRequest,
-//   { params }: { params: Promise<{ path: string[] }> }
-// ) {
-//   const { path } = await params;
-//   return handler(req, path);
-// }
-
-// export async function PATCH(
-//   req: NextRequest,
-//   { params }: { params: Promise<{ path: string[] }> }
-// ) {
-//   const { path } = await params;
-//   return handler(req, path);
-// }
-
-// export async function DELETE(
-//   req: NextRequest,
-//   { params }: { params: Promise<{ path: string[] }> }
-// ) {
-//   const { path } = await params;
-//   return handler(req, path);
-// }
+export const GET = (req:NextRequest, ctx:HandlerContext) => handler(req, ctx.params.path);
+export const POST = (req:NextRequest, ctx:HandlerContext) => handler(req, ctx.params.path);
+export const PATCH = (req:NextRequest, ctx:HandlerContext) => handler(req, ctx.params.path);
+export const PUT = (req:NextRequest, ctx:HandlerContext) => handler(req, ctx.params.path);
+export const DELETE = (req:NextRequest, ctx:HandlerContext) => handler(req, ctx.params.path);
