@@ -369,7 +369,10 @@ export default function DashboardAdminWrapper({
       }
     }
   };
+  
+  const handleToLinkPicture = (type:string,id:number|undefined)=>{
 
+  }
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 p-2">
@@ -416,13 +419,13 @@ export default function DashboardAdminWrapper({
                       <MdCancel size={18} />
                     </div>
 
-                    <div
+                    {brand.id && <div
                       className="cursor-pointer opacity-[0.5] hover:opacity-[1] transition-all"
                       onClick={() => handleToLinkPicture('brand',brand.id)}
                     >
                       <AiOutlinePicture size={18}/>
 
-                    </div>
+                    </div>}
                   </div>
                 </span>
               </li>
